@@ -2,16 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PuzzleDefine;
-using static PuzzleDefine.PuzzleDefine;
+using static GameManager;
+using static PuzzleDefine;
 using static ObjectMove_2D.ObjectMove_2D;
+using static GimmicksController;
 
 public class PieceManager : MonoBehaviour
 {
     [Header("駒プレハブの取得")]
     [SerializeField]
     GameObject[] piecePrefabArr;
- 
+
+    [Header("ギミックプレハブの取得")]
+    [SerializeField]
+    gimmickArr[] gimmickPrefabArr;
+    [System.Serializable]
+    public class gimmickArr
+    { public GameObject[] prefab; }
+
     [Header("リバーシ盤の取得")]
     [SerializeField]
     Transform reversiBoardTra;
@@ -20,20 +28,25 @@ public class PieceManager : MonoBehaviour
     [SerializeField]
     Transform nextPieceBoxesTra;
 
-    string[]     pieceTagsArr;         //駒タグ配列
-    GameObject[] pieceObjArr;          //駒のオブジェクト配列
-    Transform[]  pieceTraArr;          //駒のTransform配列
-    GameObject[] squareObjArr;         //マスのオブジェクト配列
-    Transform[]  squareTraArr;         //マスのTransform配列
-    GameObject[] nextPieceObjArr;      //待機駒のオブジェクト配列
-    Transform[]  nextPieceTraArr;      //待機駒のTransform配列
-    GameObject[] nextPieceBoxObjArr;   //待機駒の箱オブジェクト配列
-    Transform[]  nextPieceBoxTraArr;   //待機駒の箱Transform配列
+    GameObject[] pieceObjArr;          //駒オブジェクト配列
+    Transform[]  pieceTraArr;          //駒Transform配列
+    GameObject[] squareObjArr;         //マスオブジェクト配列
+    Transform[]  squareTraArr;         //マスTransform配列
+    GameObject[] nextPieceObjArr;      //待機駒オブジェクト配列
+    Transform[]  nextPieceTraArr;      //待機駒Transform配列
+    GameObject[] nextPieceBoxObjArr;   //待機駒箱オブジェクト配列
+    Transform[]  nextPieceBoxTraArr;   //待機駒箱Transform配列
+    GameObject[] gimmickObjArr;        //ギミックオブジェクト配列
     int squaresCount;                  //マスの個数
     int nextPiecesCount;               //待機駒の個数
-    int[] directionsIntArr;            //8方向の管理番号配列
+    string[] pieceTagsArr;             //駒タグ配列
+    int[]    gimmicksIntArr;           //ギミックの管理番号配列
+    int[]    directionsIntArr;         //8方向の管理番号配列
 
-    List<int> destroyPiecesIndexList = new List<int>(); //削除駒の管理番号リスト
+    [System.NonSerialized]
+    public static List<int> destroyPiecesIndexList = new List<int>();        //削除駒の管理番号リスト
+    [System.NonSerialized]
+    public static List<Coroutine> gimmickCorList   = new List<Coroutine>();  //動作中ギミックリスト
 
     //==========================================================//
     //----------------------初期設定,取得-----------------------//
@@ -53,10 +66,18 @@ public class PieceManager : MonoBehaviour
         foreach (Directions direction in directions)
         { directionsIntArr[(int)direction] = (int)direction; }
 
+        //ギミックの管理番号取得
+        System.Array gimmicks = Enum.GetValues(typeof(Gimmicks));
+        gimmicksIntArr = new int[gimmicks.Length];
+        foreach (Directions gimmick in gimmicks)
+        { gimmicksIntArr[(int)gimmick] = (int)gimmick; }
+
         //マス取得
         squaresCount = BOARD_COLUMN_COUNT * BOARD_LINE_COUNT;
         squareObjArr = new GameObject[squaresCount];
         squareTraArr = new Transform[squaresCount];
+        pieceTraArr  = new Transform[squaresCount];
+        pieceObjArr  = new GameObject[squaresCount];
         for (int i = 0; i < squaresCount; i++)
         {
             squareObjArr[i] = reversiBoardTra.GetChild(i).gameObject;
@@ -64,16 +85,21 @@ public class PieceManager : MonoBehaviour
         }
 
         //使用しないマスを非表示
-        foreach (int i in HIDE_SQUARE)
+        foreach (int i in HIDE_SQUARE_ARR)
         { squareObjArr[i].SetActive(false); }
 
+        //ギミックを配置
+        int gimmickCount = GIMMICK_INFO_ARR.Length;
+        gimmickObjArr = new GameObject[gimmickCount];
+        for (int i = 0; i < gimmickCount; i++)
+        { GeneraeGimmick(i); }
+
         //駒のランダム配置
-        pieceTraArr = new Transform[squaresCount];
-        pieceObjArr = new GameObject[squaresCount];
         for (int i = 0; i < squaresCount; i++)
         {
-            //非表示マスは処理を飛ばす
-            if (!squareObjArr[i].activeSelf) continue;
+            if (!squareObjArr[i].activeSelf) continue; //非表示マスは処理を飛ばす
+            if (pieceObjArr[i] != null) continue;     //ギミックマスは処理を飛ばす
+
             int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
             GeneratePiece(pieceGeneIndex, i);
         }
@@ -141,6 +167,35 @@ public class PieceManager : MonoBehaviour
     }
 
     /// <summary>
+    /// ギミック作成
+    /// </summary>
+    /// /// <param name="gimmickIndex">ギミック管理番号</param>
+    void GeneraeGimmick(int gimmickIndex)
+    {
+        gimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICK_INFO_ARR[gimmickIndex][GIMMICK]].prefab[GIMMICK_INFO_ARR[gimmickIndex][COLOR]]);
+
+        //駒としても管理する
+        pieceObjArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]] = gimmickObjArr[gimmickIndex];
+        pieceTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]] = gimmickObjArr[gimmickIndex].transform;
+        pieceTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]].SetParent(squareTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]], false);
+    }
+
+    /// <summary>
+    /// ギミック削除
+    /// </summary>
+    /// /// <param name="pieceIndex">削除駒の管理番号</param>
+    public void DeleteGimmick(GameObject gimmickObj)
+    {
+        int gimmickIndex = Array.IndexOf(gimmickObjArr, gimmickObj);
+        gimmickObjArr[gimmickIndex] = null;
+        pieceObjArr[gimmickIndex]   = null;
+
+        int pieceIndex = Array.IndexOf(pieceObjArr, gimmickObj);
+        DeletePiece(pieceIndex);
+    }
+
+
+    /// <summary>
     /// 管理番号の更新
     /// </summary>
     /// <param name="oldIndex">更新前の管理番号</param>
@@ -170,6 +225,9 @@ public class PieceManager : MonoBehaviour
     {
         //盤上の駒でなければ処理しない
         if (Array.IndexOf(pieceObjArr, deletePiece) < 0) yield break;
+
+        //ギミックには直置きできない
+        if (Array.IndexOf(gimmickObjArr, deletePiece) >= 0) yield break;
 
         //配置中フラグセット
         NOW_PUTTING_PIECES = true;
@@ -272,14 +330,14 @@ public class PieceManager : MonoBehaviour
     {
         switch (directions)
         {
-            case (int)Directions.Up: return up;                              //上
-            case (int)Directions.UpRight: return (up <= right) ? up : right;      //右上
-            case (int)Directions.Right: return right;                           //右
+            case (int)Directions.Up:        return up;                              //上
+            case (int)Directions.UpRight:   return (up <= right) ? up : right;      //右上
+            case (int)Directions.Right:     return right;                           //右
             case (int)Directions.DownRight: return (down <= right) ? down : right;  //右下
-            case (int)Directions.Down: return down;                            //下
-            case (int)Directions.DownLeft: return (down <= left) ? down : left;    //左下
-            case (int)Directions.Left: return left;                            //左
-            case (int)Directions.UpLeft: return (up <= left) ? up : left;        //左上
+            case (int)Directions.Down:      return down;                            //下
+            case (int)Directions.DownLeft:  return (down <= left) ? down : left;    //左下
+            case (int)Directions.Left:      return left;                            //左
+            case (int)Directions.UpLeft:    return (up <= left) ? up : left;        //左上
             default: return 0;
         }
     }
@@ -287,18 +345,29 @@ public class PieceManager : MonoBehaviour
     /// <summary>
     /// 指定方向の反転オブジェクトの管理番号取得
     /// </summary>
-    /// <param name="putPieceIndex">  基準駒の管理番号</param>
-    /// <param name="putPieceTag">    基準駒のタグ</param>
-    /// <param name="loopCount">      指定方向にあるマスの数</param>
-    /// <param name="direction">      指定方向の管理番号</param>
+    /// <param name="putPieceIndex">基準駒の管理番号</param>
+    /// <param name="putPieceTag">  基準駒のタグ</param>
+    /// <param name="loopCount">    指定方向にあるマスの数</param>
+    /// <param name="direction">    指定方向の管理番号</param>
     /// <returns>指定方向の反転オブジェクトの管理番号配列</returns>
     int[] GetReversIndex_SpecifiedDirection(ref int putPieceIndex, ref string putPieceTag, ref int loopCount, int direction)
     {
         List<int> reversIndexList = new List<int>();
         for (int i = 1; i <= loopCount; i++)
         {
-            //指定方向の同タグ駒を検索
+            //指定方向のインデックス番号取得
             int refIndex = GetPlaceIndex(ref direction, ref putPieceIndex, ref i);
+
+            //ギミックマスの場合はダメージを与えられるかの確認
+            if (pieceObjArr[refIndex].tag == GIMMICK_TAG)
+            {
+                //ダメージが与えられない場合はnullを返す
+                int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[refIndex]);
+                bool damage = sGimmicksController.DamageCheck(ref putPieceTag, ref gimmickIndex, refIndex, ref pieceObjArr[refIndex]);
+                if (!damage) return null;
+            }
+
+            //同タグ駒を検索
             if (pieceObjArr[refIndex].tag == putPieceTag)
             {
                 //隣が同タグの場合はnullを返す
@@ -327,14 +396,14 @@ public class PieceManager : MonoBehaviour
     {
         switch (direction)
         {
-            case (int)Directions.Up: return baseIndex - distance;                                //上
-            case (int)Directions.UpRight: return baseIndex + BOARD_LINE_COUNT * distance - distance;  //右上
-            case (int)Directions.Right: return baseIndex + BOARD_LINE_COUNT * distance;             //右
+            case (int)Directions.Up:        return baseIndex - distance;                                //上
+            case (int)Directions.UpRight:   return baseIndex + BOARD_LINE_COUNT * distance - distance;  //右上
+            case (int)Directions.Right:     return baseIndex + BOARD_LINE_COUNT * distance;             //右
             case (int)Directions.DownRight: return baseIndex + BOARD_LINE_COUNT * distance + distance;  //右下
-            case (int)Directions.Down: return baseIndex + distance;                                //下
-            case (int)Directions.DownLeft: return baseIndex - BOARD_LINE_COUNT * distance + distance;  //左下
-            case (int)Directions.Left: return baseIndex - BOARD_LINE_COUNT * distance;             //左
-            case (int)Directions.UpLeft: return baseIndex - BOARD_LINE_COUNT * distance - distance;  //左上
+            case (int)Directions.Down:      return baseIndex + distance;                                //下
+            case (int)Directions.DownLeft:  return baseIndex - BOARD_LINE_COUNT * distance + distance;  //左下
+            case (int)Directions.Left:      return baseIndex - BOARD_LINE_COUNT * distance;             //左
+            case (int)Directions.UpLeft:    return baseIndex - BOARD_LINE_COUNT * distance - distance;  //左上
             default: return 0;
         }
     }
@@ -366,6 +435,14 @@ public class PieceManager : MonoBehaviour
             if (reversIndexArr == null) continue;
             foreach (int reversIndex in reversIndexArr)
             {
+                //ギミックであればギミック破壊動作に移る
+                int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[reversIndex]);
+                if (gimmickIndex >= 0)
+                {
+                    sGimmicksController.DamageGimmick(ref putPieceTag, ref gimmickIndex, reversIndex, ref pieceObjArr[reversIndex]);
+                    continue;
+                }
+
                 //削除対象に反転駒の管理番号追加
                 destroyPiecesIndexList.Add(reversIndex);
 
@@ -375,6 +452,11 @@ public class PieceManager : MonoBehaviour
             }
             yield return PIECE_GROUP_REVERSAL_INTERVAL;
         }
+
+        //ギミック終了待機
+        foreach (Coroutine gimmickCor in gimmickCorList)
+        { yield return gimmickCor; }
+        gimmickCorList = new List<Coroutine>();
 
         //反転終了待機
         yield return coroutine;

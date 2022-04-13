@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PuzzleDefine;
-using static PuzzleDefine.PuzzleDefine;
+using static PuzzleDefine;
 
 public class ScreenTap : MonoBehaviour
 {
