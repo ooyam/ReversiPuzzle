@@ -5,17 +5,19 @@ using UnityEngine;
 public class PuzzleDefine : MonoBehaviour
 {
     //駒の色
-    public enum PieceColors
+    public enum Colors
     {
-        Blue = 0,  //青色
-        Red,       //赤色
-        Yellow,    //黄色
-        Green,     //緑色
-        Violet,    //紫色
-        Orange,    //橙色
-        Pink,      //桃色
-        LightBlue  //水色
+        Blue = 0,       //青色
+        Red,            //赤色
+        Yellow,         //黄色
+        Green,          //緑色
+        Violet,         //紫色
+        Orange,         //橙色
+        Pink,           //桃色
+        LightBlue       //水色
     }
+    public const int    COLORLESS_NUM = -1;                     //無色(番号)
+    public const string COLORLESS_ANI_STATE_NAME = "Colorless"; //無色(animationステート名)
 
     //ギミック
     public enum Gimmicks
@@ -23,7 +25,7 @@ public class PuzzleDefine : MonoBehaviour
         Balloon = 0,          //風船
         Balloon_Color,        //風船(色)
         DiscoBall,            //ミラーボール
-        Stone,                //石
+        Wall,                 //壁
         Flower,               //種→蕾→お花
         ColorFrame,           //色の枠
         ColorFrame_Blinking,  //色の枠(点滅)
@@ -66,8 +68,8 @@ public class PuzzleDefine : MonoBehaviour
     public const int NULL_NUMBER        = -99;     //nullの代用定数(int型でnullを代入したい場合に使用)
     public const float SQUARE_DISTANCE  = 0.73f;   //1マスの距離
     public const float PIECE_DEFAULT_SCALE = 0.6f; //駒のスケール
-    public static readonly Vector3 PIECE_DEFAULT_POS     = new Vector3(0.0f, 0.0f, -0.1f);       //駒の基本座標
-    public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f); //駒の生成時の角度
+    public static readonly Vector3 PIECE_DEFAULT_POS     = new Vector3(0.0f, 0.0f, -0.1f);        //駒の基本座標
+    public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
 
     //駒反転
     public static readonly Vector3 REVERSE_PIECE_ROT_SPEED              = new Vector3(0.0f, 10.0f, 0.0f);  //駒反転速度
@@ -116,6 +118,13 @@ public class PuzzleDefine : MonoBehaviour
         NOW_FALLING_PIECES    = false;
     }
 
+    //ギミック情報
+    public static int[]    GIMMICK_ID;            //管理ID
+    public static string[] GIMMICK_NAME;          //名称
+    public static bool[]   GIMMICK_FREE_FALL;     //自由落下する？
+    public static int[]    GIMMICK_DAMAGE_TIMES;  //必要ダメージ回数
+    public static bool[]   GIMMICK_CONTINUOUS;    //連続ダメージ？
+
     //ギミック情報配列のインデックス番号
     public const int SQUARE  = 0;
     public const int GIMMICK = 1;
@@ -123,6 +132,27 @@ public class PuzzleDefine : MonoBehaviour
 
     //ギミックオブジェクトのタグ
     public const string GIMMICK_TAG = "Gimmick";
+
+    //ギミック情報取得
+    public static void GimmickSetting()
+    {
+        GimmicksData gimmicksData = Resources.Load("gimmicks_data") as GimmicksData;
+
+        int paramCount = gimmicksData.param.Count;
+        GIMMICK_ID           = new int[paramCount];
+        GIMMICK_NAME         = new string[paramCount];
+        GIMMICK_FREE_FALL    = new bool[paramCount];
+        GIMMICK_DAMAGE_TIMES = new int[paramCount];
+        GIMMICK_CONTINUOUS   = new bool[paramCount];
+        for (int i = 0; i < paramCount; i++)
+        {
+            GIMMICK_ID[i]           = gimmicksData.param[i].id;
+            GIMMICK_NAME[i]         = gimmicksData.param[i].name;
+            GIMMICK_FREE_FALL[i]    = gimmicksData.param[i].free_fall;
+            GIMMICK_DAMAGE_TIMES[i] = gimmicksData.param[i].damage_times;
+            GIMMICK_CONTINUOUS[i]   = gimmicksData.param[i].continuous;
+        }
+    }
 
     //ステージ別定数
     public static int     STAGE_NUMBER;        //ステージ番号
@@ -136,18 +166,17 @@ public class PuzzleDefine : MonoBehaviour
         STAGE_NUMBER = 1;
         USE_PIECE_COUNT = 8;
         HIDE_SQUARE_ARR = new int[0];
-        GIMMICK_INFO_ARR = new int[12][];
-        GIMMICK_INFO_ARR[0]  = new int[] { 8,  (int)Gimmicks.Balloon, 0 };
-        GIMMICK_INFO_ARR[1]  = new int[] { 9,  (int)Gimmicks.Balloon, 0 };
-        GIMMICK_INFO_ARR[2]  = new int[] { 10, (int)Gimmicks.Balloon, 0 };
-        GIMMICK_INFO_ARR[3]  = new int[] { 11, (int)Gimmicks.Balloon, 0 };
-        GIMMICK_INFO_ARR[4]  = new int[] { 27, (int)Gimmicks.Balloon_Color, 0 };
-        GIMMICK_INFO_ARR[5]  = new int[] { 28, (int)Gimmicks.Balloon_Color, 1 };
-        GIMMICK_INFO_ARR[6]  = new int[] { 29, (int)Gimmicks.Balloon_Color, 2 };
-        GIMMICK_INFO_ARR[7]  = new int[] { 30, (int)Gimmicks.Balloon_Color, 3 };
-        GIMMICK_INFO_ARR[8]  = new int[] { 50, (int)Gimmicks.Balloon_Color, 4 };
-        GIMMICK_INFO_ARR[9]  = new int[] { 51, (int)Gimmicks.Balloon_Color, 5 };
-        GIMMICK_INFO_ARR[10] = new int[] { 52, (int)Gimmicks.Balloon_Color, 6 };
-        GIMMICK_INFO_ARR[11] = new int[] { 53, (int)Gimmicks.Balloon_Color, 7 };
+        GIMMICK_INFO_ARR = new int[11][];
+        GIMMICK_INFO_ARR[0] = new int[] { 8,  (int)Gimmicks.Balloon,       COLORLESS_NUM };
+        GIMMICK_INFO_ARR[1] = new int[] { 9,  (int)Gimmicks.Balloon,       COLORLESS_NUM };
+        GIMMICK_INFO_ARR[2] = new int[] { 10, (int)Gimmicks.Balloon,       COLORLESS_NUM };
+        GIMMICK_INFO_ARR[3] = new int[] { 11, (int)Gimmicks.Balloon,       COLORLESS_NUM };
+        GIMMICK_INFO_ARR[4] = new int[] { 20, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[5] = new int[] { 21, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[6] = new int[] { 22, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
+        GIMMICK_INFO_ARR[7] = new int[] { 23, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
+        GIMMICK_INFO_ARR[8] = new int[] { 28, (int)Gimmicks.Wall,          COLORLESS_NUM };
+        GIMMICK_INFO_ARR[9] = new int[] { 36, (int)Gimmicks.Wall,          COLORLESS_NUM };
+        GIMMICK_INFO_ARR[10] = new int[] { 44, (int)Gimmicks.Wall,         COLORLESS_NUM };
     }
 }

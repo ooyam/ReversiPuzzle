@@ -9,6 +9,10 @@ using static GimmicksController;
 
 public class PieceManager : MonoBehaviour
 {
+    [Header("GimmicksControllerの取得")]
+    [SerializeField]
+    GimmicksController gimmicksCon;
+
     [Header("駒プレハブの取得")]
     [SerializeField]
     GameObject[] piecePrefabArr;
@@ -36,7 +40,10 @@ public class PieceManager : MonoBehaviour
     Transform[]  nextPieceTraArr;      //待機駒Transform配列
     GameObject[] nextPieceBoxObjArr;   //待機駒箱オブジェクト配列
     Transform[]  nextPieceBoxTraArr;   //待機駒箱Transform配列
+    Transform    nextPieceFrameTra;    //次に置くコマの指定フレーム
     GameObject[] gimmickObjArr;        //ギミックオブジェクト配列
+    int nextPuPieceIndex = 0;          //次に置く駒の管理番号
+    int[] gimmickRemainingTimesArr;    //ギミックにダメージを与える残り回数
     int squaresCount;                  //マスの個数
     int nextPiecesCount;               //待機駒の個数
     string[] pieceTagsArr;             //駒タグ配列
@@ -55,10 +62,10 @@ public class PieceManager : MonoBehaviour
     void Start()
     {
         //駒のタグ取得
-        System.Array pieceColors = Enum.GetValues(typeof(PieceColors));
+        System.Array pieceColors = Enum.GetValues(typeof(Colors));
         pieceTagsArr = new string[pieceColors.Length];
-        foreach (PieceColors pieceColor in pieceColors)
-        { pieceTagsArr[(int)pieceColor] = Enum.GetName(typeof(PieceColors), pieceColor); }
+        foreach (Colors pieceColor in pieceColors)
+        { pieceTagsArr[(int)pieceColor] = Enum.GetName(typeof(Colors), pieceColor); }
 
         //8方向の管理番号取得
         System.Array directions = Enum.GetValues(typeof(Directions));
@@ -91,6 +98,7 @@ public class PieceManager : MonoBehaviour
         //ギミックを配置
         int gimmickCount = GIMMICK_INFO_ARR.Length;
         gimmickObjArr = new GameObject[gimmickCount];
+        gimmickRemainingTimesArr = new int[gimmickCount];
         for (int i = 0; i < gimmickCount; i++)
         { GeneraeGimmick(i); }
 
@@ -98,21 +106,25 @@ public class PieceManager : MonoBehaviour
         for (int i = 0; i < squaresCount; i++)
         {
             if (!squareObjArr[i].activeSelf) continue; //非表示マスは処理を飛ばす
-            if (pieceObjArr[i] != null) continue;     //ギミックマスは処理を飛ばす
+            if (pieceObjArr[i] != null)      continue; //ギミックマスは処理を飛ばす
 
             int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
             GeneratePiece(pieceGeneIndex, i);
         }
 
         //待機駒の箱取得
-        nextPiecesCount     = nextPieceBoxesTra.childCount;
-        nextPieceBoxObjArr  = new GameObject[nextPiecesCount];
-        nextPieceBoxTraArr  = new Transform[nextPiecesCount];
+        nextPiecesCount    = nextPieceBoxesTra.childCount;
+        nextPieceBoxObjArr = new GameObject[nextPiecesCount];
+        nextPieceBoxTraArr = new Transform[nextPiecesCount];
         for (int i = 0; i < nextPiecesCount; i++)
         {
             nextPieceBoxObjArr[i] = nextPieceBoxesTra.GetChild(i).gameObject;
             nextPieceBoxTraArr[i] = nextPieceBoxObjArr[i].transform;
+
         }
+
+        //次に置くコマの指定フレーム取得
+        nextPieceFrameTra = nextPieceBoxTraArr[0].GetChild(0).gameObject.transform;
 
         //待機駒生成
         nextPieceObjArr = new GameObject[nextPiecesCount];
@@ -172,7 +184,9 @@ public class PieceManager : MonoBehaviour
     /// /// <param name="gimmickIndex">ギミック管理番号</param>
     void GeneraeGimmick(int gimmickIndex)
     {
-        gimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICK_INFO_ARR[gimmickIndex][GIMMICK]].prefab[GIMMICK_INFO_ARR[gimmickIndex][COLOR]]);
+        int colorNum = (GIMMICK_INFO_ARR[gimmickIndex][COLOR] < 0) ? 0 : GIMMICK_INFO_ARR[gimmickIndex][COLOR];
+        gimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICK_INFO_ARR[gimmickIndex][GIMMICK]].prefab[colorNum]);
+        gimmickRemainingTimesArr[gimmickIndex] = GIMMICK_DAMAGE_TIMES[GIMMICK_INFO_ARR[gimmickIndex][GIMMICK]];
 
         //駒としても管理する
         pieceObjArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]] = gimmickObjArr[gimmickIndex];
@@ -218,55 +232,54 @@ public class PieceManager : MonoBehaviour
     //==========================================================//
 
     /// <summary>
+    /// オブジェクトがタップされた
+    /// </summary>
+    /// <param name="tapObj"></param>
+    public void TapObject(GameObject tapObj)
+    {
+        //ギミックには直置きできない
+        if (tapObj.tag == GIMMICK_TAG) return;
+
+        //盤上の駒の場合
+        if (Array.IndexOf(pieceObjArr, tapObj) >= 0) StartCoroutine(PutPieceToSquare(tapObj));
+
+        //待機駒の場合
+        if (Array.IndexOf(nextPieceObjArr, tapObj) >= 0) MoveNextPieceFrame(tapObj);
+    }
+
+    /// <summary>
     /// マスに駒を置く
     /// </summary>
     /// <param name="deletePiece">削除駒</param>
-    public IEnumerator PutPieceToSquare(GameObject deletePiece)
+    IEnumerator PutPieceToSquare(GameObject deletePiece)
     {
-        //盤上の駒でなければ処理しない
-        if (Array.IndexOf(pieceObjArr, deletePiece) < 0) yield break;
-
-        //ギミックには直置きできない
-        if (Array.IndexOf(gimmickObjArr, deletePiece) >= 0) yield break;
-
         //配置中フラグセット
         NOW_PUTTING_PIECES = true;
 
         //削除する駒のマスに先頭の待機駒をセットする
         int putIndex = Array.IndexOf(pieceObjArr, deletePiece);
-        nextPieceTraArr[0].SetParent(squareTraArr[putIndex], true);
+        nextPieceTraArr[nextPuPieceIndex].SetParent(squareTraArr[putIndex], true);
 
         //駒拡大
-        Coroutine scaleUpCoroutine = StartCoroutine(AllScaleChange(nextPieceTraArr[0], PUT_PIECE_SCALING_SPEED, PUT_PIECE_CHANGE_SCALE));
+        Coroutine scaleUpCoroutine = StartCoroutine(AllScaleChange(nextPieceTraArr[nextPuPieceIndex], PUT_PIECE_SCALING_SPEED, PUT_PIECE_CHANGE_SCALE));
 
         //待機駒の移動
-        Vector3 nowPos = nextPieceTraArr[0].localPosition;
-        nextPieceTraArr[0].localPosition = new Vector3(nowPos.x, nowPos.y, PUT_PIECE_MOVE_START_Z);
-        yield return StartCoroutine(DecelerationMovement(nextPieceTraArr[0], PUT_PIECE_MOVE_SPEED, PIECE_DEFAULT_POS));
+        Vector3 nowPos = nextPieceTraArr[nextPuPieceIndex].localPosition;
+        nextPieceTraArr[nextPuPieceIndex].localPosition = new Vector3(nowPos.x, nowPos.y, PUT_PIECE_MOVE_START_Z);
+        yield return StartCoroutine(DecelerationMovement(nextPieceTraArr[nextPuPieceIndex], PUT_PIECE_MOVE_SPEED, PIECE_DEFAULT_POS));
 
         //駒削除,管理配列差し替え
         DeletePiece(putIndex);
-        pieceObjArr[putIndex] = nextPieceObjArr[0];
-        pieceTraArr[putIndex] = nextPieceTraArr[0];
-
-        //待機駒を繰り上げる
-        for (int i = 0; i < nextPiecesCount - 1; i++)
-        {
-            int n = i + 1;
-            nextPieceTraArr[n].SetParent(nextPieceBoxTraArr[i], true);
-            nextPieceObjArr[i] = nextPieceObjArr[n];
-            nextPieceTraArr[i] = nextPieceTraArr[n];
-            StartCoroutine(DecelerationMovement(nextPieceTraArr[i], NEXT_PIECE_SLIDE_SPEED, PIECE_DEFAULT_POS));
-        }
+        pieceObjArr[putIndex] = nextPieceObjArr[nextPuPieceIndex];
+        pieceTraArr[putIndex] = nextPieceTraArr[nextPuPieceIndex];
 
         //待機駒生成
         int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
-        int nextPieceIndex = nextPiecesCount - 1;
-        GenerateNextPiece(pieceGeneIndex, nextPieceIndex);
+        GenerateNextPiece(pieceGeneIndex, nextPuPieceIndex);
 
         //90°回転
-        nextPieceTraArr[nextPieceIndex].localRotation = PIECE_GENERATE_QUA;
-        StartCoroutine(RotateMovement(nextPieceTraArr[nextPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_FRONT_ROT));
+        nextPieceTraArr[nextPuPieceIndex].localRotation = PIECE_GENERATE_QUA;
+        StartCoroutine(RotateMovement(nextPieceTraArr[nextPuPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_FRONT_ROT));
 
         //駒縮小
         StopCoroutine(scaleUpCoroutine);
@@ -358,12 +371,15 @@ public class PieceManager : MonoBehaviour
             //指定方向のインデックス番号取得
             int refIndex = GetPlaceIndex(ref direction, ref putPieceIndex, ref i);
 
+            //空マスの場合はnullを返す
+            if (pieceObjArr[refIndex] == null) return null;
+
             //ギミックマスの場合はダメージを与えられるかの確認
             if (pieceObjArr[refIndex].tag == GIMMICK_TAG)
             {
                 //ダメージが与えられない場合はnullを返す
                 int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[refIndex]);
-                bool damage = sGimmicksController.DamageCheck(ref putPieceTag, ref gimmickIndex, refIndex, ref pieceObjArr[refIndex]);
+                bool damage = gimmicksCon.DamageCheck(ref putPieceTag, ref gimmickIndex, refIndex, ref pieceObjArr[refIndex]);
                 if (!damage) return null;
             }
 
@@ -411,6 +427,26 @@ public class PieceManager : MonoBehaviour
     //==========================================================//
 
 
+    //==========================================================//
+    //---------------次に置く駒指定フレームの動作---------------//
+    //==========================================================//
+
+    /// <summary>
+    /// 次投擲駒の指定フレーム移動
+    /// </summary>
+    /// <param name="tapPieceObj"></param>
+    /// <returns></returns>
+    void MoveNextPieceFrame(GameObject tapPieceObj)
+    {
+        //次に置くコマの管理番号更新
+        nextPuPieceIndex = Array.IndexOf(nextPieceObjArr, tapPieceObj);
+
+        //移動
+        nextPieceFrameTra.SetParent(nextPieceBoxTraArr[nextPuPieceIndex], false);
+    }
+
+    //==========================================================//
+
 
     //==========================================================//
     //-----------------------駒反転動作-------------------------//
@@ -439,7 +475,8 @@ public class PieceManager : MonoBehaviour
                 int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[reversIndex]);
                 if (gimmickIndex >= 0)
                 {
-                    sGimmicksController.DamageGimmick(ref putPieceTag, ref gimmickIndex, reversIndex, ref pieceObjArr[reversIndex]);
+                    gimmicksCon.DamageGimmick(ref putPieceTag, ref gimmickIndex, reversIndex, ref pieceObjArr[reversIndex], ref gimmickRemainingTimesArr[gimmickIndex]);
+                    yield return PIECE_REVERSAL_INTERVAL;
                     continue;
                 }
 
@@ -542,7 +579,10 @@ public class PieceManager : MonoBehaviour
         //落下開始
         Coroutine coroutine = null;
         foreach (int fallPieceIndex in fallPiecesIndexList)
-        { coroutine = StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, FALL_PIECE_ACCELE_RATE, PIECE_DEFAULT_POS)); }
+        {
+            if (pieceTraArr[fallPieceIndex] != null)
+                coroutine = StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, FALL_PIECE_ACCELE_RATE, PIECE_DEFAULT_POS));
+        }
         yield return coroutine;
 
         //駒落下中フラグリセット
@@ -569,10 +609,12 @@ public class PieceManager : MonoBehaviour
             for (int n = 0; n <= loopCount; n++)
             {
                 //自身よりn個上の番号が空でない場合
-                if (pieceObjArr[i - n] != null)
+                int refIndex = i - n;
+                if (pieceObjArr[refIndex] != null)
                 {
-                    //管理番号更新
-                    UpdateManagementIndex(i - n, i);
+                    //自由落下無しギミックではない場合、管理番号更新
+                    if (pieceObjArr[refIndex].tag != GIMMICK_TAG || GimmickFreeFallFlag(ref pieceObjArr[refIndex]))
+                        UpdateManagementIndex(i - n, i);
                     break;
                 }
 
@@ -589,5 +631,17 @@ public class PieceManager : MonoBehaviour
         }
 
         return fallPiecesIndexList;
+    }
+
+    /// <summary>
+    /// ギミックの自由落下フラグ取得
+    /// </summary>
+    /// <param name="pieceObj"></param>
+    /// <returns></returns>
+    bool GimmickFreeFallFlag(ref GameObject pieceObj)
+    {
+        int gimObjIndex = Array.IndexOf(gimmickObjArr, pieceObj);
+        int gimId = GIMMICK_INFO_ARR[gimObjIndex][GIMMICK];
+        return GIMMICK_FREE_FALL[gimId];
     }
 }
