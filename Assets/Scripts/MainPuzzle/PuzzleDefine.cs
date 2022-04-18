@@ -166,17 +166,10 @@ public class PuzzleDefine : MonoBehaviour
         STAGE_NUMBER = 1;
         USE_PIECE_COUNT = 8;
         HIDE_SQUARE_ARR = new int[0];
-        GIMMICK_INFO_ARR = new int[11][];
-        GIMMICK_INFO_ARR[0] = new int[] { 8,  (int)Gimmicks.Balloon,       COLORLESS_NUM };
-        GIMMICK_INFO_ARR[1] = new int[] { 9,  (int)Gimmicks.Balloon,       COLORLESS_NUM };
-        GIMMICK_INFO_ARR[2] = new int[] { 10, (int)Gimmicks.Balloon,       COLORLESS_NUM };
-        GIMMICK_INFO_ARR[3] = new int[] { 11, (int)Gimmicks.Balloon,       COLORLESS_NUM };
-        GIMMICK_INFO_ARR[4] = new int[] { 20, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[5] = new int[] { 21, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[6] = new int[] { 22, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
-        GIMMICK_INFO_ARR[7] = new int[] { 23, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
-        GIMMICK_INFO_ARR[8] = new int[] { 28, (int)Gimmicks.Wall,          COLORLESS_NUM };
-        GIMMICK_INFO_ARR[9] = new int[] { 36, (int)Gimmicks.Wall,          COLORLESS_NUM };
-        GIMMICK_INFO_ARR[10] = new int[] { 44, (int)Gimmicks.Wall,         COLORLESS_NUM };
+        GIMMICK_INFO_ARR = new int[4][];
+        GIMMICK_INFO_ARR[0] = new int[] { 8,   (int)Gimmicks.Flower, COLORLESS_NUM };
+        GIMMICK_INFO_ARR[1] = new int[] { 16,  (int)Gimmicks.Flower, COLORLESS_NUM };
+        GIMMICK_INFO_ARR[2] = new int[] { 24,  (int)Gimmicks.Flower, COLORLESS_NUM };
+        GIMMICK_INFO_ARR[3] = new int[] { 25,  (int)Gimmicks.Flower, COLORLESS_NUM };
     }
 }

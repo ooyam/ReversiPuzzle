@@ -23,6 +23,7 @@ public class GimmicksController : MonoBehaviour
         {
             case (int)Gimmicks.Balloon:  //風船
             case (int)Gimmicks.Wall:     //壁
+            case (int)Gimmicks.Flower:   //花
                 damage = true;
                 break;
 
@@ -48,31 +49,36 @@ public class GimmicksController : MonoBehaviour
     /// /// <param name="gimmickRemainingTimes"> ギミック残りダメージ回数</param>
     public void DamageGimmick(ref string putPieceTag, ref int gimmickIndex, int squareIndex, ref GameObject gimmickObj, ref int gimmickRemainingTimes)
     {
+        int damageTimesfixNum = 0; //ステート名算出用
+        string stateName = "";     //ステート名
+
         switch (GIMMICK_INFO_ARR[gimmickIndex][GIMMICK])
         {
-            //----------------------
             //風船
-            //----------------------
             case (int)Gimmicks.Balloon:
-                gimmickCorList.Add(StartCoroutine(DamageAnimationStart(gimmickObj, COLORLESS_ANI_STATE_NAME)));
+                stateName = COLORLESS_ANI_STATE_NAME;
                 break;
 
-            //----------------------
             //風船(色)
-            //----------------------
             case (int)Gimmicks.Balloon_Color:
-                gimmickCorList.Add(StartCoroutine(DamageAnimationStart(gimmickObj, putPieceTag)));
+                stateName = putPieceTag;
                 break;
 
-            //----------------------
             //壁
-            //----------------------
             case (int)Gimmicks.Wall:
-                int fixNum = GIMMICK_DAMAGE_TIMES[(int)Gimmicks.Wall] + 1;
-                string stateName = "WallDamage" + (-gimmickRemainingTimes + fixNum).ToString();
-                gimmickCorList.Add(StartCoroutine(DamageAnimationStart(gimmickObj, stateName)));
+                damageTimesfixNum = GIMMICK_DAMAGE_TIMES[(int)Gimmicks.Wall] + 1;
+                stateName = "WallDamage" + (-gimmickRemainingTimes + damageTimesfixNum).ToString();
+                break;
+
+            //花
+            case (int)Gimmicks.Flower:
+                damageTimesfixNum = GIMMICK_DAMAGE_TIMES[(int)Gimmicks.Flower] + 1;
+                stateName = "FlowerDamage" + (-gimmickRemainingTimes + damageTimesfixNum).ToString();
                 break;
         }
+
+        //ダメージアニメーション開始
+        gimmickCorList.Add(StartCoroutine(DamageAnimationStart(gimmickObj, stateName)));
 
         //ダメージ回数計算
         gimmickRemainingTimes--;

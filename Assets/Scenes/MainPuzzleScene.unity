@@ -4267,6 +4267,8 @@ MonoBehaviour:
     - {fileID: 0}
   - prefab:
     - {fileID: 1254900303936368927, guid: fce9bbfa858e71b449f5eb7e24671f22, type: 3}
+  - prefab:
+    - {fileID: 1391713765904314326, guid: f1cb4f82d68b75745bae29394d190874, type: 3}
   reversiBoardTra: {fileID: 787325015}
   nextPieceBoxesTra: {fileID: 736909303}
 --- !u!4 &1298695332
