@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4443197921532943093}
   - component: {fileID: 4443197921532943090}
   - component: {fileID: 7404829067262817516}
+  - component: {fileID: 8941920714930200712}
   m_Layer: 0
   m_Name: Balloon_5_Orange
   m_TagString: Gimmick
@@ -103,3 +104,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8941920714930200712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4443197921532943092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9439bba0e826c347abfe5a109fc70d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

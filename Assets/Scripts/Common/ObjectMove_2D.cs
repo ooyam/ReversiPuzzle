@@ -478,11 +478,11 @@ namespace ObjectMove_2D
         /// <param name="compArray">  比較番号指定配列(0:R 1:G 2:B 3:A)</param>
         /// <param name="chengeCount">ループ回数(配列1周で1カウント、-1指定で無限再生)</param>
         /// <returns></returns>
-        public static IEnumerator SpriteRendererPaletteChange(SpriteRenderer spri, float changeSpeed, Color[] colArray, int[] compArray, int chengeCount)
+        public static IEnumerator SpriteRendererPaletteChange(SpriteRenderer spri, float changeSpeed, Color[] colArray, int[] compArray, int chengeCount = 1)
         {
-            int loopTimes      = 0;                //繰り返し回数
-            int colCount       = colArray.Length;  //変更色の数
-            bool infinite      = chengeCount < 0;  //無限ループ？
+            int loopTimes = 0;                //繰り返し回数
+            int colCount  = colArray.Length;  //変更色の数
+            bool infinite = chengeCount < 0;  //無限ループ？
 
             int nowIndex  = 0;    //現在の色
             int nextIndex = 1;    //次の色
@@ -492,14 +492,16 @@ namespace ObjectMove_2D
             spri.color = colArray[nowIndex];
             while (infinite || loopTimes < chengeCount)
             {
+                if (spri == null) yield break;
                 spri.color = Color.Lerp(spri.color, colArray[nextIndex], changeSpeed);
                 float nowCompCol = spri.color[compArray[nowIndex]];
                 if (nowCompCol + judgeRange >= nextCompCol && nextCompCol >= nowCompCol - judgeRange)
                 {
+                    loopTimes++;
+                    if (loopTimes == chengeCount) break;
                     nowIndex    = nextIndex;
                     nextIndex   = (nextIndex + 1 >= colCount) ? 0 : nextIndex + 1;
                     nextCompCol = colArray[nextIndex][compArray[nowIndex]];
-                    loopTimes++;
                 }
                 yield return new WaitForSecondsRealtime(ONE_FRAME_TIMES);
             }

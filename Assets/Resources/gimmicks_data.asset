@@ -24,9 +24,9 @@ MonoBehaviour:
     damage_times: 1
     continuous: 0
   - id: 2
-    name: DiscoBall
+    name: Jewelry
     free_fall: 1
-    damage_times: 2
+    damage_times: 1
     continuous: 0
   - id: 3
     name: Wall

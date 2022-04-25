@@ -12,11 +12,9 @@ public class PuzzleDefine : MonoBehaviour
         Yellow,         //黄色
         Green,          //緑色
         Violet,         //紫色
-        Orange,         //橙色
-        Pink,           //桃色
-        LightBlue       //水色
+        Orange          //橙色
     }
-    public const int    COLORLESS_NUM = -1;                     //無色(番号)
+    public const int COLORLESS_NUM = -1;                     //無色(番号)
     public const string COLORLESS_ANI_STATE_NAME = "Colorless"; //無色(animationステート名)
 
     //ギミック
@@ -24,7 +22,7 @@ public class PuzzleDefine : MonoBehaviour
     {
         Balloon = 0,          //風船
         Balloon_Color,        //風船(色)
-        DiscoBall,            //ミラーボール
+        Jewelry,              //宝石
         Wall,                 //壁
         Flower,               //種→蕾→お花
         ColorFrame,           //色の枠
@@ -64,12 +62,18 @@ public class PuzzleDefine : MonoBehaviour
 
     //汎用定数
     public const int BOARD_COLUMN_COUNT = 8;       //ボード列数
-    public const int BOARD_LINE_COUNT   = 8;       //ボード行数
-    public const int NULL_NUMBER        = -99;     //nullの代用定数(int型でnullを代入したい場合に使用)
-    public const float SQUARE_DISTANCE  = 0.73f;   //1マスの距離
+    public const int BOARD_LINE_COUNT = 8;         //ボード行数
+    public const int NULL_NUMBER = -99;            //nullの代用定数(int型でnullを代入したい場合に使用)
+    public const float SQUARE_DISTANCE = 0.73f;    //1マスの距離
     public const float PIECE_DEFAULT_SCALE = 0.6f; //駒のスケール
-    public static readonly Vector3 PIECE_DEFAULT_POS     = new Vector3(0.0f, 0.0f, -0.1f);        //駒の基本座標
+    public static readonly Vector3 PIECE_DEFAULT_POS = new Vector3(0.0f, 0.0f, -0.1f);            //駒の基本座標
     public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
+
+    public static readonly Color COLOR_PRIMARY    = new Color(1.0f, 1.0f, 1.0f, 1.0f);               //原色
+    public static readonly Color COLOR_ALPHA_ZERO = new Color(1.0f, 1.0f, 1.0f, 0.0f);               //透明
+    public static readonly Color[] COLOR_FADE_OUT = new Color[] { COLOR_PRIMARY, COLOR_ALPHA_ZERO }; //フェードアウト
+    public static readonly Color[] COLOR_FADE_IN  = new Color[] { COLOR_ALPHA_ZERO, COLOR_PRIMARY }; //フェードイン
+    public static readonly int[] COLOR_FADE_COMPARE_INDEX = new int[] { 3 };                         //alpha値変更時の判定配列(ObjectMove_2Dで使用)
 
     //駒反転
     public static readonly Vector3 REVERSE_PIECE_ROT_SPEED              = new Vector3(0.0f, 10.0f, 0.0f);  //駒反転速度
@@ -125,11 +129,6 @@ public class PuzzleDefine : MonoBehaviour
     public static int[]    GIMMICK_DAMAGE_TIMES;  //必要ダメージ回数
     public static bool[]   GIMMICK_CONTINUOUS;    //連続ダメージ？
 
-    //ギミック情報配列のインデックス番号
-    public const int SQUARE  = 0;
-    public const int GIMMICK = 1;
-    public const int COLOR   = 2;
-
     //ギミックオブジェクトのタグ
     public const string GIMMICK_TAG = "Gimmick";
 
@@ -160,16 +159,32 @@ public class PuzzleDefine : MonoBehaviour
     public static int[]   HIDE_SQUARE_ARR;     //非表示マスの管理番号
     public static int[][] GIMMICK_INFO_ARR;    //ギミックの種類とマスの管理番号
 
+    //ギミック情報配列のインデックス番号
+    public const int SQUARE  = 0;
+    public const int GIMMICK = 1;
+    public const int COLOR   = 2;
+
     //ステージ設定
     public static void StageSetting()
     {
-        STAGE_NUMBER = 1;
-        USE_PIECE_COUNT = 8;
-        HIDE_SQUARE_ARR = new int[0];
-        GIMMICK_INFO_ARR = new int[4][];
-        GIMMICK_INFO_ARR[0] = new int[] { 8,   (int)Gimmicks.Flower, COLORLESS_NUM };
-        GIMMICK_INFO_ARR[1] = new int[] { 16,  (int)Gimmicks.Flower, COLORLESS_NUM };
-        GIMMICK_INFO_ARR[2] = new int[] { 24,  (int)Gimmicks.Flower, COLORLESS_NUM };
-        GIMMICK_INFO_ARR[3] = new int[] { 25,  (int)Gimmicks.Flower, COLORLESS_NUM };
+        STAGE_NUMBER        = 1;
+        USE_PIECE_COUNT     = 6;
+        HIDE_SQUARE_ARR     = new int[0];
+        GIMMICK_INFO_ARR    = new int[8][];
+        GIMMICK_INFO_ARR[0] = new int[] { 8,  (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[1] = new int[] { 16, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[2] = new int[] { 24, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[3] = new int[] { 25, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[4] = new int[] { 26, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[5] = new int[] { 27, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+
+        GIMMICK_INFO_ARR[6] = new int[] { 40, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[7] = new int[] { 41, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
     }
+
+
+    //=============ギミック動作=============//
+
+    //宝石フェードアウト速度
+    public const float JEWELRY_CHANGE_SPEED = 0.1f;
 }

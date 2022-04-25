@@ -4241,7 +4241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565caab21fa32e148a705d033310efc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gimmicksCon: {fileID: 1883297730}
+  gimmicksMan: {fileID: 1883297730}
   piecePrefabArr:
   - {fileID: 4172719542707375490, guid: 2aff9f2182c9c034ca7713c1adbc77ee, type: 3}
   - {fileID: 7499989595812202290, guid: 0612ec233bde6db47b5548d25ae914d0, type: 3}
@@ -4264,7 +4264,12 @@ MonoBehaviour:
     - {fileID: 5356521598042007555, guid: b5b713cc259aef840b91d071cb534f17, type: 3}
     - {fileID: 2288715002063765111, guid: 029161a2462d99246b82c58c4836caa2, type: 3}
   - prefab:
-    - {fileID: 0}
+    - {fileID: 4011911233645673750, guid: 0148b44693846d449bedf10a48898531, type: 3}
+    - {fileID: 8494783888263072934, guid: 218bb1d01e469f74882d0abfda737b97, type: 3}
+    - {fileID: 2282899012803715858, guid: e6a2d31062c49464693a79d7ba836b42, type: 3}
+    - {fileID: 6853246682952833605, guid: e0bff051c9d9df44a842274d31f56217, type: 3}
+    - {fileID: 8718703714248381338, guid: dc529cc95d4cc0241bef9d930cdf9009, type: 3}
+    - {fileID: 4574079881329888388, guid: 9b3103781e00df24cba23dc2c89f516a, type: 3}
   - prefab:
     - {fileID: 1254900303936368927, guid: fce9bbfa858e71b449f5eb7e24671f22, type: 3}
   - prefab:
@@ -5724,7 +5729,7 @@ GameObject:
   - component: {fileID: 1883297729}
   - component: {fileID: 1883297730}
   m_Layer: 0
-  m_Name: GimmicksController
+  m_Name: GimmicksManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5756,6 +5761,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034152e86e0f5244cb67cc1daa5d871d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jewelrySpr:
+  - {fileID: 5567795520561486652, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
+  - {fileID: -7798462679561967036, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
+  - {fileID: -4469628551084069323, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
+  - {fileID: 4006725995379760852, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
+  - {fileID: 1754987422170008035, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
+  - {fileID: -1263972305209987985, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
 --- !u!1 &1928235680
 GameObject:
   m_ObjectHideFlags: 0

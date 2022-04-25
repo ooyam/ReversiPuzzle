@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 69df13390769ee9489f051f08f98dafc
+guid: 349cc3215f478f84b85e672609d41655
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5356574185940491189
-    second: Wall_0
-  - first:
-      213: 7088962694465329434
-    second: Wall_1
-  - first:
-      213: 6120593257351612271
-    second: Wall_2
+      213: -4729505395924116786
+    second: 3WallBurst_0
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -136,64 +130,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wall_0
+      name: 3WallBurst_0
       rect:
         serializedVersion: 2
-        x: 813
-        y: 705
-        width: 616
-        height: 616
+        x: 152
+        y: 130
+        width: 1005
+        height: 597
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b446df18820a9a5b0800000000000000
-      internalID: -5356574185940491189
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Wall_1
-      rect:
-        serializedVersion: 2
-        x: 146
-        y: 708
-        width: 616
-        height: 615
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a191a9df20e016260800000000000000
-      internalID: 7088962694465329434
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Wall_2
-      rect:
-        serializedVersion: 2
-        x: 146
-        y: 41
-        width: 616
-        height: 615
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f670817a327b0f450800000000000000
-      internalID: 6120593257351612271
+      spriteID: eca56a086eb6d5eb0800000000000000
+      internalID: -4729505395924116786
       vertices: []
       indices: 
       edges: []

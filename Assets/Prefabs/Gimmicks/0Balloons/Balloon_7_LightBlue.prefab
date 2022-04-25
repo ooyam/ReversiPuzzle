@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2288715002063765110}
   - component: {fileID: 2288715002063765105}
   - component: {fileID: -1436544855545935902}
+  - component: {fileID: -8317587608036624254}
   m_Layer: 0
   m_Name: Balloon_7_LightBlue
   m_TagString: Gimmick
@@ -104,3 +105,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-8317587608036624254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2288715002063765111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9439bba0e826c347abfe5a109fc70d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

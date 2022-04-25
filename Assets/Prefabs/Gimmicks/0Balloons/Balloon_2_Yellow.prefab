@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1183272810836873536}
   - component: {fileID: 1183272810836873543}
   - component: {fileID: -8550631089656402722}
+  - component: {fileID: 1698977411550663000}
   m_Layer: 0
   m_Name: Balloon_2_Yellow
   m_TagString: Gimmick
@@ -103,3 +104,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1698977411550663000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183272810836873537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9439bba0e826c347abfe5a109fc70d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
