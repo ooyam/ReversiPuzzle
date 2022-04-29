@@ -5,12 +5,28 @@ using System;
 using static PuzzleDefine;
 using static PuzzleMain.PieceManager;
 using static ObjectMove_2D.ObjectMove_2D;
+using static GimmickInformation;
 
 public class GimmicksManager : MonoBehaviour
 {
     [Header("宝石のsprite")]
     [SerializeField]
     Sprite[] jewelrySpr;
+
+    //アニメーションステート名
+    const string STATE_NAME_EMPTY        = "Empty";       //初期状態
+    const string STATE_NAME_WAIT         = "Wait";        //待機
+    const string STATE_NAME_COLORLESS    = "Colorless";   //色指定無し
+    const string STATE_NAME_BURST        = "Burst";       //色指定有り
+    const string STATE_NAME_DAMAGE       = "Damage";      //複数回ダメージ
+    const string STATE_NAME_RETURN_STATE = "ReturnState"; //状態を戻す
+
+    void Awake()
+    {
+        //ギミックの設定読み込み
+        GimmickSetting();
+        StageSetting();
+    }
 
     /// <summary>
     /// ギミックにダメージがあるかの確認
@@ -27,6 +43,7 @@ public class GimmicksManager : MonoBehaviour
             case (int)Gimmicks.Balloon:  //風船
             case (int)Gimmicks.Wall:     //壁
             case (int)Gimmicks.Flower:   //花
+            case (int)Gimmicks.Hamster:  //ハムスター
                 damage = true;
                 break;
 
@@ -57,27 +74,24 @@ public class GimmicksManager : MonoBehaviour
 
         switch (gimmInfo.id)
         {
-            //風船
-            case (int)Gimmicks.Balloon:
-                stateName = COLORLESS_ANI_STATE_NAME;
+            //無条件
+            case (int)Gimmicks.Balloon: //風船
+                stateName = STATE_NAME_COLORLESS;
                 break;
 
-            //色指定ギミック
+            //色指定
             case (int)Gimmicks.Balloon_Color: //風船(色)
             case (int)Gimmicks.Jewelry:       //宝石
-                stateName = "Burst" + putPieceTag;
+                stateName = STATE_NAME_BURST + putPieceTag;
                 break;
 
-            //壁
-            case (int)Gimmicks.Wall:
-                damageTimesfixNum = GIMMICK_DAMAGE_TIMES[(int)Gimmicks.Wall] + 1;
-                stateName = "WallDamage" + (-gimmInfo.remainingTimes + damageTimesfixNum).ToString();
-                break;
-
-            //花
-            case (int)Gimmicks.Flower:
-                damageTimesfixNum = GIMMICK_DAMAGE_TIMES[(int)Gimmicks.Flower] + 1;
-                stateName = "FlowerDamage" + (-gimmInfo.remainingTimes + damageTimesfixNum).ToString();
+            //複数回ダメージ
+            case (int)Gimmicks.Wall:    //壁
+            case (int)Gimmicks.Flower:  //花
+            case (int)Gimmicks.Hamster: //ハムスター
+                damageTimesfixNum = GIMMICK_DAMAGE_TIMES[gimmInfo.id] + 1;
+                stateName = STATE_NAME_DAMAGE + (-gimmInfo.remainingTimes + damageTimesfixNum).ToString();
+                if (!gimmInfo.destructible) gimmInfo.destructible = true;
                 break;
         }
 
@@ -86,6 +100,9 @@ public class GimmicksManager : MonoBehaviour
 
         //ダメージ回数計算
         gimmInfo.remainingTimes--;
+
+        //今のターンにダメージを受けたかのフラグON
+        gimmInfo.nowTurnDamage = true;
 
         //ダメージ残回数が0で破壊
         if (gimmInfo.remainingTimes <= 0)
@@ -123,7 +140,30 @@ public class GimmicksManager : MonoBehaviour
                 gimmInfo.spriRen.color = COLOR_PRIMARY;
                 gimmInfo.ani.enabled = true;
                 Colors colorEnum = (Colors)Enum.ToObject(typeof(Colors), gimmInfo.colorNum);
-                LoopAnimationStart(gimmInfo.ani, "Wait" + colorEnum.ToString());
+                LoopAnimationStart(gimmInfo.ani, STATE_NAME_WAIT + colorEnum.ToString());
+                break;
+
+            //ハムスター(連続フラグ確認)
+            case (int)Gimmicks.Hamster:
+
+                //ダメージ1状態
+                if (gimmInfo.destructible)
+                {
+                    //このターンにダメージを受けた
+                    if (gimmInfo.nowTurnDamage)
+                    {
+                        //ダメージ1待機状態
+                        LoopAnimationStart(gimmInfo.ani, STATE_NAME_WAIT);
+                    }
+                    else
+                    {
+                        //初期状態に戻す
+                        gimmInfo.destructible = false;
+                        gimmInfo.remainingTimes++;
+                        yield return StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN_STATE));
+                        LoopAnimationStart(gimmInfo.ani);
+                    }
+                }
                 break;
         }
     }
@@ -137,12 +177,12 @@ public class GimmicksManager : MonoBehaviour
     {
         //アニメーション開始
         ani.Play(stateName, 0, 0.0f);
-        ani.speed = 1.0f;
+        //ani.speed = 1.0f;
 
         //アニメーション終了待機
         yield return null;
-        yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f);
-        ani.speed = 0.0f;
+        yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f);
+        //ani.speed = 0.0f;
     }
 
     /// <summary>
@@ -150,10 +190,10 @@ public class GimmicksManager : MonoBehaviour
     /// </summary>
     /// <param name="ani">      破壊するオブジェクトのAnimator</param>
     /// <param name="stateName">再生アニメーションステート名</param>
-    void LoopAnimationStart(Animator ani, string stateName = "Empty")
+    void LoopAnimationStart(Animator ani, string stateName = STATE_NAME_EMPTY)
     {
         //アニメーション開始
         ani.Play(stateName, 0, 0.0f);
-        ani.speed = 1.0f;
+        //ani.speed = 1.0f;
     }
 }

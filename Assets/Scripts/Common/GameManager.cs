@@ -7,8 +7,5 @@ using static GimmicksManager;
 public class GameManager : MonoBehaviour
 {
     void Awake()
-    {
-        GimmickSetting();
-        StageSetting();
-    }
+    { }
 }

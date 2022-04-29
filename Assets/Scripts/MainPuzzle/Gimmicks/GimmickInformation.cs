@@ -11,12 +11,14 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public Transform tra;
 
     //ギミック情報
-    [System.NonSerialized] public int  objIndex;       //ステージ毎の管理番号
-    [System.NonSerialized] public int  id;             //ギミック番号
-    [System.NonSerialized] public int  colorNum;       //色番号
-    [System.NonSerialized] public int  remainingTimes; //残りダメージ回数
-    [System.NonSerialized] public bool freeFall;       //自由落下フラグ
-    [System.NonSerialized] public bool destructible;   //連続ダメージフラグ(trueの時破壊可能)
+    [System.NonSerialized] public int     objIndex;       //ステージ毎の管理番号
+    [System.NonSerialized] public int     id;             //ギミック番号
+    [System.NonSerialized] public int     colorNum;       //色番号
+    [System.NonSerialized] public int     remainingTimes; //残りダメージ回数
+    [System.NonSerialized] public bool    freeFall;       //自由落下フラグ
+    [System.NonSerialized] public bool    destructible;   //連続ダメージフラグ(trueの時破壊可能)
+    [System.NonSerialized] public bool    nowTurnDamage;  //今のターンにダメージを受けたかのフラグ
+    [System.NonSerialized] public Vector3 defaultPos;     //基準座標
 
     void Start()
     {
@@ -37,5 +39,6 @@ public class GimmickInformation : MonoBehaviour
         remainingTimes = GIMMICK_DAMAGE_TIMES[id];
         freeFall       = GIMMICK_FREE_FALL[id];
         destructible   = !GIMMICK_CONTINUOUS[id];
+        defaultPos = new Vector3(GIMMICK_POS_X[id], GIMMICK_POS_Y[id], PIECE_DEFAULT_POS.z);
     }
 }

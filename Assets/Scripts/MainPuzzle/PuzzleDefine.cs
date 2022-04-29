@@ -15,7 +15,6 @@ public class PuzzleDefine : MonoBehaviour
         Orange          //橙色
     }
     public const int COLORLESS_NUM = -1;                     //無色(番号)
-    public const string COLORLESS_ANI_STATE_NAME = "Colorless"; //無色(animationステート名)
 
     //ギミック
     public enum Gimmicks
@@ -128,6 +127,8 @@ public class PuzzleDefine : MonoBehaviour
     public static bool[]   GIMMICK_FREE_FALL;     //自由落下する？
     public static int[]    GIMMICK_DAMAGE_TIMES;  //必要ダメージ回数
     public static bool[]   GIMMICK_CONTINUOUS;    //連続ダメージ？
+    public static float[]  GIMMICK_POS_X;         //通常座標X
+    public static float[]  GIMMICK_POS_Y;         //通常座標Y
 
     //ギミックオブジェクトのタグ
     public const string GIMMICK_TAG = "Gimmick";
@@ -143,6 +144,8 @@ public class PuzzleDefine : MonoBehaviour
         GIMMICK_FREE_FALL    = new bool[paramCount];
         GIMMICK_DAMAGE_TIMES = new int[paramCount];
         GIMMICK_CONTINUOUS   = new bool[paramCount];
+        GIMMICK_POS_X        = new float[paramCount];
+        GIMMICK_POS_Y        = new float[paramCount];
         for (int i = 0; i < paramCount; i++)
         {
             GIMMICK_ID[i]           = gimmicksData.param[i].id;
@@ -150,6 +153,8 @@ public class PuzzleDefine : MonoBehaviour
             GIMMICK_FREE_FALL[i]    = gimmicksData.param[i].free_fall;
             GIMMICK_DAMAGE_TIMES[i] = gimmicksData.param[i].damage_times;
             GIMMICK_CONTINUOUS[i]   = gimmicksData.param[i].continuous;
+            GIMMICK_POS_X[i]        = gimmicksData.param[i].position_x;
+            GIMMICK_POS_Y[i]        = gimmicksData.param[i].position_y;
         }
     }
 
@@ -170,16 +175,21 @@ public class PuzzleDefine : MonoBehaviour
         STAGE_NUMBER        = 1;
         USE_PIECE_COUNT     = 6;
         HIDE_SQUARE_ARR     = new int[0];
-        GIMMICK_INFO_ARR    = new int[8][];
+        GIMMICK_INFO_ARR    = new int[12][];
         GIMMICK_INFO_ARR[0] = new int[] { 8,  (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[1] = new int[] { 16, (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[2] = new int[] { 24, (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[3] = new int[] { 25, (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[4] = new int[] { 26, (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[5] = new int[] { 27, (int)Gimmicks.Jewelry, (int)Colors.Blue };
+        GIMMICK_INFO_ARR[1] = new int[] { 10, (int)Gimmicks.Jewelry, (int)Colors.Green };
+        GIMMICK_INFO_ARR[2] = new int[] { 24, (int)Gimmicks.Balloon, COLORLESS_NUM };
+
+        GIMMICK_INFO_ARR[3] = new int[] { 25, (int)Gimmicks.Wall, COLORLESS_NUM };
+        GIMMICK_INFO_ARR[4] = new int[] { 26, (int)Gimmicks.Flower, COLORLESS_NUM };
+        GIMMICK_INFO_ARR[5] = new int[] { 27, (int)Gimmicks.Hamster, COLORLESS_NUM };
 
         GIMMICK_INFO_ARR[6] = new int[] { 40, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
         GIMMICK_INFO_ARR[7] = new int[] { 41, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
+        GIMMICK_INFO_ARR[8] = new int[] { 42, (int)Gimmicks.Balloon_Color, (int)Colors.Yellow };
+        GIMMICK_INFO_ARR[9] = new int[] { 43, (int)Gimmicks.Balloon_Color, (int)Colors.Green };
+        GIMMICK_INFO_ARR[10] = new int[] { 44, (int)Gimmicks.Balloon_Color, (int)Colors.Violet };
+        GIMMICK_INFO_ARR[11] = new int[] { 45, (int)Gimmicks.Balloon_Color, (int)Colors.Orange };
     }
 
 

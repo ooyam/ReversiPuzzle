@@ -133,9 +133,10 @@ namespace ObjectMove_2D
         /// </summary>
         /// <param name="tra">       動作オブジェクトのTransform</param>
         /// <param name="moveSpeed"> 動作速度</param>
-        /// <param name="acceleRate">加速率(等速移動は0.0f指定)</param>
         /// <param name="targetPos"> 目標座標</param>
-        public static IEnumerator ConstantSpeedMovement(Transform tra, float moveSpeed, float acceleRate, Vector3 targetPos)
+        /// <param name="acceleRate">加速率(等速移動は0.0f指定)</param>
+        const float DEFAULT_ACCELE_RATE = 1.0f;
+        public static IEnumerator ConstantSpeedMovement(Transform tra, float moveSpeed, Vector3 targetPos, float acceleRate = DEFAULT_ACCELE_RATE)
         {
             float minSpeed = 0.01f;             //最低速度指定(無限ループ対策)
             float offset   = 0.05f;             //停止場所のオフセット

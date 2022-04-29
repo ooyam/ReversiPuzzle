@@ -188,14 +188,15 @@ namespace PuzzleMain
             int colorNum = (GIMMICK_INFO_ARR[gimmickIndex][COLOR] < 0) ? 0 : GIMMICK_INFO_ARR[gimmickIndex][COLOR];
             gimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICK_INFO_ARR[gimmickIndex][GIMMICK]].prefab[colorNum]);
 
+            //Component取得
+            gimmickInfoArr[gimmickIndex] = gimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
+            gimmickInfoArr[gimmickIndex].informationSetting(gimmickIndex);
+
             //駒としても管理する
             pieceObjArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]] = gimmickObjArr[gimmickIndex];
             pieceTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]] = gimmickObjArr[gimmickIndex].transform;
             pieceTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]].SetParent(squareTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]], false);
-
-            //Component取得
-            gimmickInfoArr[gimmickIndex] = gimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
-            gimmickInfoArr[gimmickIndex].informationSetting(gimmickIndex);
+            pieceTraArr[GIMMICK_INFO_ARR[gimmickIndex][SQUARE]].localPosition = gimmickInfoArr[gimmickIndex].defaultPos;
         }
 
         /// <summary>
@@ -553,11 +554,13 @@ namespace PuzzleMain
 
             //駒縮小
             int destroyPiecesCount = destroyPiecesIndexList.Count;
+            Coroutine coroutine = null;
             for (int i = 0; i < destroyPiecesCount; i++)
             {
-                Coroutine coroutine = StartCoroutine(AllScaleChange(pieceTraArr[destroyPiecesIndexList[i]], DESTROY_PIECE_SCALING_SPEED, DESTROY_PIECE_CHANGE_SCALE));
-                if (i == destroyPiecesCount - 1) yield return coroutine;
+                if (pieceTraArr[destroyPiecesIndexList[i]].gameObject.tag == GIMMICK_TAG) continue;
+                coroutine = StartCoroutine(AllScaleChange(pieceTraArr[destroyPiecesIndexList[i]], DESTROY_PIECE_SCALING_SPEED, DESTROY_PIECE_CHANGE_SCALE));
             }
+            yield return coroutine;
 
             //駒削除
             foreach (int pieceIndex in destroyPiecesIndexList)
@@ -593,7 +596,12 @@ namespace PuzzleMain
             foreach (int fallPieceIndex in fallPiecesIndexList)
             {
                 if (pieceTraArr[fallPieceIndex] != null)
-                    coroutine = StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, FALL_PIECE_ACCELE_RATE, PIECE_DEFAULT_POS));
+                {
+                    Vector3 targetPos = PIECE_DEFAULT_POS;
+                    int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceTraArr[fallPieceIndex].gameObject);
+                    if (gimmickIndex >= 0) targetPos = gimmickInfoArr[gimmickIndex].defaultPos;
+                    coroutine = StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, targetPos, FALL_PIECE_ACCELE_RATE));
+                }
             }
             yield return coroutine;
 
@@ -665,6 +673,10 @@ namespace PuzzleMain
         //------------------ギミック状態変化動作--------------------//
         //==========================================================//
 
+        /// <summary>
+        /// ギミックの状態変化開始
+        /// </summary>
+        /// <returns></returns>
         IEnumerator StartChangeGimmickState()
         {
             Coroutine coroutine = null;
@@ -673,12 +685,26 @@ namespace PuzzleMain
                 if (gimmickObjArr[i] == null) continue;
                 switch (GIMMICK_INFO_ARR[i][GIMMICK])
                 {
-                    case (int)Gimmicks.Jewelry:
+                    case (int)Gimmicks.Jewelry: //宝石
+                    case (int)Gimmicks.Hamster: //ハムスター
                         coroutine = StartCoroutine(gimmicksMan.ChangeGimmickState(i));
                         break;
                 }
             }
             yield return coroutine;
+
+            //ターン終了
+            TurnEnd();
+        }
+
+        /// <summary>
+        /// ターン終了
+        /// </summary>
+        void TurnEnd()
+        {
+            //ギミックのフラグリセット
+            foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
+            { gimmickInfo.nowTurnDamage = false; }
         }
     }
 }

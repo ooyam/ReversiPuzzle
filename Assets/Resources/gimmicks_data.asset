@@ -18,88 +18,124 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 1
     name: Balloon_Color
     free_fall: 1
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 2
     name: Jewelry
     free_fall: 1
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 3
     name: Wall
     free_fall: 0
     damage_times: 3
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 4
     name: Flower
     free_fall: 1
     damage_times: 3
     continuous: 0
+    position_x: 0
+    position_y: -0.65
   - id: 5
     name: ColorFrame
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 6
     name: ColorFrame_Blinking
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 7
     name: ColorFrame_Thick
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 8
     name: Hamster
-    free_fall: 0
+    free_fall: 1
     damage_times: 2
     continuous: 1
+    position_x: 0
+    position_y: -0.72
   - id: 9
     name: GreenWorm
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 10
     name: GreenWorm_Color
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 11
     name: Cage
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 12
     name: NumberTag
     free_fall: 1
     damage_times: 1
     continuous: 1
+    position_x: 0
+    position_y: 0
   - id: 13
     name: Thief
     free_fall: 1
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 14
     name: Steel
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 15
     name: FireworksBox
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 16
     name: RocketBox
     free_fall: 0
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
   - id: 17
     name: Tornado
     free_fall: 1
     damage_times: 1
     continuous: 0
+    position_x: 0
+    position_y: 0
