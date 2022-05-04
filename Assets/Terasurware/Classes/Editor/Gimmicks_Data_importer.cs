@@ -65,6 +65,7 @@ public class Gimmicks_Data_importer : AssetPostprocessor
 					cell = row.GetCell(4); p.continuous = (cell == null ? false : cell.BooleanCellValue);
 					cell = row.GetCell(5); p.position_x = (float)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(6); p.position_y = (float)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(7); p.in_square = (cell == null ? false : cell.BooleanCellValue);
 
                         data.param.Add(p);
                     }

@@ -17,5 +17,6 @@ public class GimmicksData : ScriptableObject
 		public bool continuous;
 		public float position_x;
 		public float position_y;
+		public bool in_square;
 	}
 }

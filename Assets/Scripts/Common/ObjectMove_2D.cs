@@ -476,33 +476,63 @@ namespace ObjectMove_2D
         /// <param name="spri">       変更対象SpriteRenderer</param>
         /// <param name="changeSpeed">変更速度</param>
         /// <param name="colArray">   変更色の配列(0:現在の色)</param>
-        /// <param name="compArray">  比較番号指定配列(0:R 1:G 2:B 3:A)</param>
         /// <param name="chengeCount">ループ回数(配列1周で1カウント、-1指定で無限再生)</param>
         /// <returns></returns>
-        public static IEnumerator SpriteRendererPaletteChange(SpriteRenderer spri, float changeSpeed, Color[] colArray, int[] compArray, int chengeCount = 1)
+        public static IEnumerator SpriteRendererPaletteChange(SpriteRenderer spri, float changeSpeed, Color[] colArray, int chengeCount = 1)
         {
-            int loopTimes = 0;                //繰り返し回数
-            int colCount  = colArray.Length;  //変更色の数
-            bool infinite = chengeCount < 0;  //無限ループ？
+            int loopTimes = 0;                  //繰り返し回数
+            int colCount  = colArray.Length;    //変更色の数
+            bool infinite = chengeCount < 0;    //無限ループ？
 
-            int nowIndex  = 0;    //現在の色
-            int nextIndex = 1;    //次の色
-            float nextCompCol = colArray[nextIndex][compArray[nowIndex]];   //比較色指定
-            float judgeRange  = 5.0f / 255.0f;                              //判定範囲
+            int nowIndex  = 0;                  //現在の色
+            int nextIndex = 1;                  //次の色
+            float judgeRange  = 5.0f / 255.0f;  //判定範囲
+
+            float nowCompCol  = colArray[nowIndex][0];  //比較色指定now
+            float nextCompCol = colArray[nextIndex][0]; //比較色指定next
+            float difference  = 0.0f;                   //変更前色との差分計算用
+            int RGBA = 4;                               //RGBAの4ループ
+
+            //次の比較数値計算
+            for (int i = 0; i < RGBA; i++)
+            {
+                float difference_dummy = Mathf.Abs(colArray[nowIndex][i] - colArray[nextIndex][i]);
+                if (difference < difference_dummy)
+                {
+                    difference  = difference_dummy;
+                    nowCompCol  = colArray[nowIndex][i];
+                    nextCompCol = colArray[nextIndex][i];
+                }
+            }
 
             spri.color = colArray[nowIndex];
             while (infinite || loopTimes < chengeCount)
             {
                 if (spri == null) yield break;
+
+                //色変更開始
                 spri.color = Color.Lerp(spri.color, colArray[nextIndex], changeSpeed);
-                float nowCompCol = spri.color[compArray[nowIndex]];
+
+                //変更終了
                 if (nowCompCol + judgeRange >= nextCompCol && nextCompCol >= nowCompCol - judgeRange)
                 {
                     loopTimes++;
                     if (loopTimes == chengeCount) break;
                     nowIndex    = nextIndex;
                     nextIndex   = (nextIndex + 1 >= colCount) ? 0 : nextIndex + 1;
-                    nextCompCol = colArray[nextIndex][compArray[nowIndex]];
+
+                    //次の比較数値計算
+                    difference = 0.0f;
+                    for (int i = 0; i < RGBA; i++)
+                    {
+                        float difference_dummy = Mathf.Abs(colArray[nowIndex][i] - colArray[nextIndex][i]);
+                        if (difference < difference_dummy)
+                        {
+                            difference  = difference_dummy;
+                            nowCompCol  = colArray[nowIndex][i];
+                            nextCompCol = colArray[nextIndex][i];
+                        }
+                    }
                 }
                 yield return new WaitForSecondsRealtime(ONE_FRAME_TIMES);
             }

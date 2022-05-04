@@ -20,6 +20,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 1
     name: Balloon_Color
     free_fall: 1
@@ -27,6 +28,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 2
     name: Jewelry
     free_fall: 1
@@ -34,6 +36,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 3
     name: Wall
     free_fall: 0
@@ -41,6 +44,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 4
     name: Flower
     free_fall: 1
@@ -48,27 +52,31 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: -0.65
+    in_square: 1
   - id: 5
-    name: ColorFrame
+    name: Frame
     free_fall: 0
     damage_times: 1
     continuous: 0
-    position_x: 0
-    position_y: 0
+    position_x: 0.73
+    position_y: 0.73
+    in_square: 0
   - id: 6
-    name: ColorFrame_Blinking
+    name: Frame_Color
     free_fall: 0
     damage_times: 1
     continuous: 0
-    position_x: 0
-    position_y: 0
+    position_x: 0.73
+    position_y: 0.73
+    in_square: 0
   - id: 7
-    name: ColorFrame_Thick
+    name: Frame_Color_Change
     free_fall: 0
     damage_times: 1
     continuous: 0
-    position_x: 0
-    position_y: 0
+    position_x: 0.73
+    position_y: 0.73
+    in_square: 0
   - id: 8
     name: Hamster
     free_fall: 1
@@ -76,6 +84,7 @@ MonoBehaviour:
     continuous: 1
     position_x: 0
     position_y: -0.72
+    in_square: 1
   - id: 9
     name: GreenWorm
     free_fall: 0
@@ -83,6 +92,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 10
     name: GreenWorm_Color
     free_fall: 0
@@ -90,6 +100,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 11
     name: Cage
     free_fall: 0
@@ -97,6 +108,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 0
   - id: 12
     name: NumberTag
     free_fall: 1
@@ -104,6 +116,7 @@ MonoBehaviour:
     continuous: 1
     position_x: 0
     position_y: 0
+    in_square: 0
   - id: 13
     name: Thief
     free_fall: 1
@@ -111,6 +124,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 14
     name: Steel
     free_fall: 0
@@ -118,6 +132,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
   - id: 15
     name: FireworksBox
     free_fall: 0
@@ -125,6 +140,7 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 0
   - id: 16
     name: RocketBox
     free_fall: 0
@@ -132,10 +148,28 @@ MonoBehaviour:
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 0
   - id: 17
     name: Tornado
     free_fall: 1
+    damage_times: 0
+    continuous: 0
+    position_x: 0
+    position_y: 0
+    in_square: 1
+  - id: 18
+    name: TrafficLight
+    free_fall: 0
     damage_times: 1
     continuous: 0
     position_x: 0
     position_y: 0
+    in_square: 1
+  - id: 0
+    name: 
+    free_fall: 0
+    damage_times: 0
+    continuous: 0
+    position_x: 0
+    position_y: 0
+    in_square: 0

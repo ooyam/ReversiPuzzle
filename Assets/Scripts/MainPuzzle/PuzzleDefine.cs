@@ -1,32 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PuzzleDefine : MonoBehaviour
 {
     //駒の色
     public enum Colors
     {
-        Blue = 0,       //青色
-        Red,            //赤色
-        Yellow,         //黄色
-        Green,          //緑色
-        Violet,         //紫色
-        Orange          //橙色
+        Blue,           //青
+        Red,            //赤
+        Yellow,         //黄
+        Green,          //緑
+        Violet,         //紫
+        Orange          //橙
     }
-    public const int COLORLESS_NUM = -1;                     //無色(番号)
+    public const int COLORLESS_ID = -1; //無色(管理番号)
+    public static readonly int COLORS_COUNT = Enum.GetValues(typeof(Colors)).Length; //色の数
 
     //ギミック
     public enum Gimmicks
     {
-        Balloon = 0,          //風船
+        Balloon,              //風船
         Balloon_Color,        //風船(色)
         Jewelry,              //宝石
         Wall,                 //壁
         Flower,               //種→蕾→お花
-        ColorFrame,           //色の枠
-        ColorFrame_Blinking,  //色の枠(点滅)
-        ColorFrame_Thick,     //色の枠(太)
+        Frame,                //枠
+        Frame_Color,          //枠(色)
+        Frame_Color_Change,   //枠(色変化)
         Hamster,              //ハムスター
         GreenWorm,            //青虫
         GreenWorm_Color,      //青虫(色)
@@ -42,29 +44,42 @@ public class PuzzleDefine : MonoBehaviour
     //援護アイテム
     public enum SupportItems
     {
-        Firework = 0,  //花火箱
+        Firework,      //花火箱
         Rocket         //ロケット箱
     }
 
     //方向
     public enum Directions
     {
-        Up = 0,     //上
-        UpRight,    //右上
-        Right,      //右
-        DownRight,  //右下
+        Up,         //上
         Down,       //下
-        DownLeft,   //左下
         Left,       //左
-        UpLeft      //左上
+        Right,      //右
+        UpLeft,     //左上
+        UpRight,    //右上
+        DownLeft,   //左下
+        DownRight   //右下
+    }
+
+    //マス
+    public enum Squares
+    {
+        A1, A2, A3, A4, A5, A6, A7, A8,
+        B1, B2, B3, B4, B5, B6, B7, B8,
+        C1, C2, C3, C4, C5, C6, C7, C8,
+        D1, D2, D3, D4, D5, D6, D7, D8,
+        E1, E2, E3, E4, E5, E6, E7, E8,
+        F1, F2, F3, F4, F5, F6, F7, F8,
+        G1, G2, G3, G4, G5, G6, G7, G8,
+        H1, H2, H3, H4, H5, H6, H7, H8,
     }
 
     //汎用定数
-    public const int BOARD_COLUMN_COUNT = 8;       //ボード列数
-    public const int BOARD_LINE_COUNT = 8;         //ボード行数
-    public const int NULL_NUMBER = -99;            //nullの代用定数(int型でnullを代入したい場合に使用)
-    public const float SQUARE_DISTANCE = 0.73f;    //1マスの距離
-    public const float PIECE_DEFAULT_SCALE = 0.6f; //駒のスケール
+    public const int BOARD_COLUMN_COUNT = 8;            //ボード列数
+    public const int BOARD_LINE_COUNT = 8;              //ボード行数
+    public const int INT_NULL = -99;                    //nullの代用定数(int型でnullを代入したい場合に使用)
+    public const float SQUARE_DISTANCE_HALF = 0.73f;    //半マスの距離
+    public const float PIECE_DEFAULT_SCALE = 0.6f;      //駒のスケール
     public static readonly Vector3 PIECE_DEFAULT_POS = new Vector3(0.0f, 0.0f, -0.1f);            //駒の基本座標
     public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
 
@@ -72,7 +87,16 @@ public class PuzzleDefine : MonoBehaviour
     public static readonly Color COLOR_ALPHA_ZERO = new Color(1.0f, 1.0f, 1.0f, 0.0f);               //透明
     public static readonly Color[] COLOR_FADE_OUT = new Color[] { COLOR_PRIMARY, COLOR_ALPHA_ZERO }; //フェードアウト
     public static readonly Color[] COLOR_FADE_IN  = new Color[] { COLOR_ALPHA_ZERO, COLOR_PRIMARY }; //フェードイン
-    public static readonly int[] COLOR_FADE_COMPARE_INDEX = new int[] { 3 };                         //alpha値変更時の判定配列(ObjectMove_2Dで使用)
+
+    //マス色
+    public static readonly Color SQUARE_BLUE   = new Color(0.6f, 0.6f, 1.0f, 1.0f);   //青
+    public static readonly Color SQUARE_RED    = new Color(1.0f, 0.6f, 0.6f, 1.0f);   //赤
+    public static readonly Color SQUARE_YELLOW = new Color(1.0f, 1.0f, 0.6f, 1.0f);   //黄
+    public static readonly Color SQUARE_GREEN  = new Color(0.6f, 1.0f, 0.6f, 1.0f);   //緑
+    public static readonly Color SQUARE_VIOLET = new Color(1.0f, 0.6f, 1.0f, 1.0f);   //紫
+    public static readonly Color SQUARE_ORANGE = new Color(1.0f, 0.6f, 0.3f, 1.0f);   //橙
+    public static readonly Color SQUARE_BLACK  = new Color(0.6f, 0.6f, 0.6f, 1.0f);   //黒
+    public static readonly Color SQUARE_WHITE  = new Color(1.0f, 1.0f, 1.0f, 1.0f);   //白
 
     //駒反転
     public static readonly Vector3 REVERSE_PIECE_ROT_SPEED              = new Vector3(0.0f, 10.0f, 0.0f);  //駒反転速度
@@ -95,101 +119,94 @@ public class PuzzleDefine : MonoBehaviour
     public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;   //待機駒のスライド速度
 
     //駒落下
-    public static readonly Vector3 FALL_PIECE_GENERATE_POS = new Vector3(PIECE_DEFAULT_POS.x, SQUARE_DISTANCE * BOARD_LINE_COUNT, PIECE_DEFAULT_POS.z);  //駒反転速度
+    public static readonly Vector3 FALL_PIECE_GENERATE_POS = new Vector3(PIECE_DEFAULT_POS.x, SQUARE_DISTANCE_HALF * BOARD_LINE_COUNT, PIECE_DEFAULT_POS.z);  //駒反転速度
     public const float FALL_PIECE_MOVE_SPEED  = 0.07f;  //落下速度
     public const float FALL_PIECE_ACCELE_RATE = 0.02f;  //落下加速
 
 
     //フラグ
-    public static bool GAME_START            = false;  //ゲーム開始？
-    public static bool GAME_OVER             = false;  //ゲームオーバー？
-    public static bool GAME_CLEAR            = false;  //ゲームクリア？
-    public static bool NOW_PUTTING_PIECES    = false;  //駒配置中？
-    public static bool NOW_REVERSING_PIECES  = false;  //駒反転中？
-    public static bool NOW_DESTROYING_PIECES = false;  //駒破壊中？
-    public static bool NOW_FALLING_PIECES    = false;  //駒落下中？
+    public static bool GAME_START               = false;  //ゲーム開始？
+    public static bool GAME_OVER                = false;  //ゲームオーバー？
+    public static bool GAME_CLEAR               = false;  //ゲームクリア？
+    public static bool NOW_PUTTING_PIECES       = false;  //駒配置中？
+    public static bool NOW_REVERSING_PIECES     = false;  //駒反転中？
+    public static bool NOW_DESTROYING_PIECES    = false;  //駒破壊中？
+    public static bool NOW_FALLING_PIECES       = false;  //駒落下中？
+    public static bool NOW_GIMMICK_DAMAGE_WAIT  = false;  //ギミックダメージ待機中？
+    public static bool NOW_GIMMICK_STATE_CHANGE = false;  //ギミック状態変化中？
 
     //フラグリセット
     public static void FlagReset()
     {
-        GAME_START            = false;
-        GAME_OVER             = false;
-        GAME_CLEAR            = false;
-        NOW_PUTTING_PIECES    = false;
-        NOW_REVERSING_PIECES  = false;
-        NOW_DESTROYING_PIECES = false;
-        NOW_FALLING_PIECES    = false;
-    }
-
-    //ギミック情報
-    public static int[]    GIMMICK_ID;            //管理ID
-    public static string[] GIMMICK_NAME;          //名称
-    public static bool[]   GIMMICK_FREE_FALL;     //自由落下する？
-    public static int[]    GIMMICK_DAMAGE_TIMES;  //必要ダメージ回数
-    public static bool[]   GIMMICK_CONTINUOUS;    //連続ダメージ？
-    public static float[]  GIMMICK_POS_X;         //通常座標X
-    public static float[]  GIMMICK_POS_Y;         //通常座標Y
-
-    //ギミックオブジェクトのタグ
-    public const string GIMMICK_TAG = "Gimmick";
-
-    //ギミック情報取得
-    public static void GimmickSetting()
-    {
-        GimmicksData gimmicksData = Resources.Load("gimmicks_data") as GimmicksData;
-
-        int paramCount = gimmicksData.param.Count;
-        GIMMICK_ID           = new int[paramCount];
-        GIMMICK_NAME         = new string[paramCount];
-        GIMMICK_FREE_FALL    = new bool[paramCount];
-        GIMMICK_DAMAGE_TIMES = new int[paramCount];
-        GIMMICK_CONTINUOUS   = new bool[paramCount];
-        GIMMICK_POS_X        = new float[paramCount];
-        GIMMICK_POS_Y        = new float[paramCount];
-        for (int i = 0; i < paramCount; i++)
-        {
-            GIMMICK_ID[i]           = gimmicksData.param[i].id;
-            GIMMICK_NAME[i]         = gimmicksData.param[i].name;
-            GIMMICK_FREE_FALL[i]    = gimmicksData.param[i].free_fall;
-            GIMMICK_DAMAGE_TIMES[i] = gimmicksData.param[i].damage_times;
-            GIMMICK_CONTINUOUS[i]   = gimmicksData.param[i].continuous;
-            GIMMICK_POS_X[i]        = gimmicksData.param[i].position_x;
-            GIMMICK_POS_Y[i]        = gimmicksData.param[i].position_y;
-        }
+        GAME_START               = false;
+        GAME_OVER                = false;
+        GAME_CLEAR               = false;
+        NOW_PUTTING_PIECES       = false;
+        NOW_REVERSING_PIECES     = false;
+        NOW_DESTROYING_PIECES    = false;
+        NOW_FALLING_PIECES       = false;
+        NOW_GIMMICK_DAMAGE_WAIT  = false;
+        NOW_GIMMICK_STATE_CHANGE = false;
     }
 
     //ステージ別定数
-    public static int     STAGE_NUMBER;        //ステージ番号
-    public static int     USE_PIECE_COUNT;     //使用駒の種類数
-    public static int[]   HIDE_SQUARE_ARR;     //非表示マスの管理番号
-    public static int[][] GIMMICK_INFO_ARR;    //ギミックの種類とマスの管理番号
+    public static int     STAGE_NUMBER;         //ステージ番号
+    public static int     USE_PIECE_COUNT;      //使用駒の種類数
+    public static int[]   HIDE_SQUARE_ARR;      //非表示マスの管理番号
+    public static int     GIMMICKS_COUNT;       //ギミックの設定数
+    public static int     GIMMICKS_GROUP_COUNT; //ギミックのグループの設定数
+    public static int[][] GIMMICKS_INFO_ARR;    //ギミックの種類とマスの管理番号
+
+    //ギミックデータ
+    public static GimmicksData GIMMICKS_DATA;
+
+    //ギミックデータ取得
+    public static void GimmickSetting()
+    {
+        GIMMICKS_DATA = Resources.Load("gimmicks_data") as GimmicksData;
+    }
 
     //ギミック情報配列のインデックス番号
     public const int SQUARE  = 0;
     public const int GIMMICK = 1;
     public const int COLOR   = 2;
+    public const int GROUP   = 3;
+
+    //ギミックオブジェクトのタグ
+    public const string GIMMICK_TAG = "Gimmick";
+
+    //グループ化しないギミックのグループ番号
+    public const int NOT_GROUP_ID = -1;
 
     //ステージ設定
     public static void StageSetting()
     {
-        STAGE_NUMBER        = 1;
-        USE_PIECE_COUNT     = 6;
-        HIDE_SQUARE_ARR     = new int[0];
-        GIMMICK_INFO_ARR    = new int[12][];
-        GIMMICK_INFO_ARR[0] = new int[] { 8,  (int)Gimmicks.Jewelry, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[1] = new int[] { 10, (int)Gimmicks.Jewelry, (int)Colors.Green };
-        GIMMICK_INFO_ARR[2] = new int[] { 24, (int)Gimmicks.Balloon, COLORLESS_NUM };
+        STAGE_NUMBER         = 1;
+        USE_PIECE_COUNT      = 6;
+        HIDE_SQUARE_ARR      = new int[0];
+        GIMMICKS_COUNT       = 8;
+        GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
+        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry, (int)Colors.Blue, NOT_GROUP_ID };
+        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.B2, (int)Gimmicks.Balloon, COLORLESS_ID,     NOT_GROUP_ID };
 
-        GIMMICK_INFO_ARR[3] = new int[] { 25, (int)Gimmicks.Wall, COLORLESS_NUM };
-        GIMMICK_INFO_ARR[4] = new int[] { 26, (int)Gimmicks.Flower, COLORLESS_NUM };
-        GIMMICK_INFO_ARR[5] = new int[] { 27, (int)Gimmicks.Hamster, COLORLESS_NUM };
+        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.B6, (int)Gimmicks.Frame_Color, (int)Colors.Blue, 0 };
+        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.C6, (int)Gimmicks.Frame_Color, (int)Colors.Blue, 0 };
 
-        GIMMICK_INFO_ARR[6] = new int[] { 40, (int)Gimmicks.Balloon_Color, (int)Colors.Blue };
-        GIMMICK_INFO_ARR[7] = new int[] { 41, (int)Gimmicks.Balloon_Color, (int)Colors.Red };
-        GIMMICK_INFO_ARR[8] = new int[] { 42, (int)Gimmicks.Balloon_Color, (int)Colors.Yellow };
-        GIMMICK_INFO_ARR[9] = new int[] { 43, (int)Gimmicks.Balloon_Color, (int)Colors.Green };
-        GIMMICK_INFO_ARR[10] = new int[] { 44, (int)Gimmicks.Balloon_Color, (int)Colors.Violet };
-        GIMMICK_INFO_ARR[11] = new int[] { 45, (int)Gimmicks.Balloon_Color, (int)Colors.Orange };
+        GIMMICKS_INFO_ARR[4] = new int[] { (int)Squares.D2, (int)Gimmicks.Frame_Color, (int)Colors.Yellow, 1 };
+        GIMMICKS_INFO_ARR[5] = new int[] { (int)Squares.D3, (int)Gimmicks.Frame_Color, (int)Colors.Yellow, 1 };
+
+        GIMMICKS_INFO_ARR[6] = new int[] { (int)Squares.F5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red, 2 };
+        GIMMICKS_INFO_ARR[7] = new int[] { (int)Squares.G5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red, 2 };
+
+        List<int> usedGroupNum = new List<int>();
+        foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)
+        {
+            if (gimmickInfo[GROUP] > NOT_GROUP_ID && !usedGroupNum.Contains(gimmickInfo[GROUP]))
+            {
+                usedGroupNum.Add(GIMMICKS_GROUP_COUNT);
+                GIMMICKS_GROUP_COUNT++;
+            }
+        }
     }
 
 
@@ -197,4 +214,7 @@ public class PuzzleDefine : MonoBehaviour
 
     //宝石フェードアウト速度
     public const float JEWELRY_CHANGE_SPEED = 0.1f;
+
+    //マスの色変化速度
+    public const float SQUARE_CHANGE_SPEED = 0.3f;
 }

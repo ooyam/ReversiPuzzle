@@ -9,7 +9,7 @@ public class ScreenTap : MonoBehaviour
 {
     [Header("PieceManagerの取得")]
     [SerializeField]
-    PieceManager pieceMan;
+    PiecesManager piecesMan;
 
     Camera mainCamera;   //メインカメラ
     string[] pieceTags;  //駒のタグ
@@ -41,7 +41,7 @@ public class ScreenTap : MonoBehaviour
                 {
                     //Rayが当たったオブジェクトのtagが駒だったら
                     if (Array.IndexOf(pieceTags, hitCollider.tag) >= 0)
-                        pieceMan.TapObject(hitCollider.gameObject);
+                        piecesMan.TapObject(hitCollider.gameObject);
                 }
             }
         }
@@ -50,10 +50,12 @@ public class ScreenTap : MonoBehaviour
     //タップ可能判定
     bool TappableJudgment()
     {
-        if (NOW_PUTTING_PIECES)    return false;  //駒配置中
-        if (NOW_REVERSING_PIECES)  return false;  //駒反転中
-        if (NOW_DESTROYING_PIECES) return false;  //駒破壊中
-        if (NOW_FALLING_PIECES)    return false;  //駒落下中
+        if (NOW_PUTTING_PIECES)       return false;  //駒配置中
+        if (NOW_REVERSING_PIECES)     return false;  //駒反転中
+        if (NOW_DESTROYING_PIECES)    return false;  //駒破壊中
+        if (NOW_FALLING_PIECES)       return false;  //駒落下中
+        if (NOW_GIMMICK_DAMAGE_WAIT)  return false;  //ギミックダメージ待機中
+        if (NOW_GIMMICK_STATE_CHANGE) return false;  //ギミック状態変化中
 
         return true;
     }
