@@ -181,7 +181,7 @@ namespace PuzzleMain
         /// </summary>
         public IEnumerator ChangeGimmickState()
         {
-            Coroutine coroutine = null;
+            List<Coroutine> coroutineList = new List<Coroutine>();
 
             //通常ギミック
             foreach (GimmickInformation gimmInfo in gimmickInfoArr)
@@ -200,7 +200,7 @@ namespace PuzzleMain
                         gimmInfo.spriRenChild[0].sprite = newSprite;
 
                         //sprit変更
-                        coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
+                        coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
                         break;
 
                     //ハムスター(連続フラグ確認)
@@ -220,7 +220,7 @@ namespace PuzzleMain
                                 //初期状態に戻す
                                 gimmInfo.destructible = false;
                                 gimmInfo.remainingTimes++;
-                                coroutine = StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN_STATE));
+                                coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN_STATE)));
                                 LoopAnimationStart(gimmInfo.ani);
                             }
                         }
@@ -247,12 +247,12 @@ namespace PuzzleMain
                             gimmInfo.spriRenChild[0].sprite = newSprite;
 
                             //sprit変更
-                            coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
+                            coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
 
                             //マスの色変更
                             if (!changedSquare.Contains(gimmInfo.startSquareId))
                             {
-                                StartCoroutine(PiecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
+                                coroutineList.Add(StartCoroutine(PiecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
                                 changedSquare.Add(gimmInfo.startSquareId);
                             }
 
@@ -265,7 +265,8 @@ namespace PuzzleMain
             }
 
             //ギミック変更待機
-            yield return coroutine;
+            foreach (Coroutine coroutine in coroutineList)
+            { yield return coroutine; }
         }
 
         /// <summary>
@@ -398,7 +399,7 @@ namespace PuzzleMain
             //フレームギミックの情報取得
             GimmickInformation gimInfo = frameObj.GetComponent<GimmickInformation>();
             frameInfoListArr[groupId].Add(gimInfo);
-            gimInfo.GroupInformationSetting(groupId);
+            gimInfo.InformationSetting_SquareIndex(squareIndex);
 
             //sprite設定
             if (colorId == COLORLESS_ID) colorId = COLORS_COUNT;

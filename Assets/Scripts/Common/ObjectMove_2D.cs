@@ -488,23 +488,6 @@ namespace ObjectMove_2D
             int nextIndex = 1;                  //次の色
             float judgeRange  = 5.0f / 255.0f;  //判定範囲
 
-            float nowCompCol  = colArray[nowIndex][0];  //比較色指定now
-            float nextCompCol = colArray[nextIndex][0]; //比較色指定next
-            float difference  = 0.0f;                   //変更前色との差分計算用
-            int RGBA = 4;                               //RGBAの4ループ
-
-            //次の比較数値計算
-            for (int i = 0; i < RGBA; i++)
-            {
-                float difference_dummy = Mathf.Abs(colArray[nowIndex][i] - colArray[nextIndex][i]);
-                if (difference < difference_dummy)
-                {
-                    difference  = difference_dummy;
-                    nowCompCol  = colArray[nowIndex][i];
-                    nextCompCol = colArray[nextIndex][i];
-                }
-            }
-
             spri.color = colArray[nowIndex];
             while (infinite || loopTimes < chengeCount)
             {
@@ -514,25 +497,15 @@ namespace ObjectMove_2D
                 spri.color = Color.Lerp(spri.color, colArray[nextIndex], changeSpeed);
 
                 //変更終了
-                if (nowCompCol + judgeRange >= nextCompCol && nextCompCol >= nowCompCol - judgeRange)
+                Color nowColor = spri.color;
+                if (nowColor[0] + judgeRange >= colArray[nextIndex][0] && colArray[nextIndex][0] >= nowColor[0] - judgeRange && //R
+                    nowColor[1] + judgeRange >= colArray[nextIndex][1] && colArray[nextIndex][1] >= nowColor[1] - judgeRange && //G
+                    nowColor[2] + judgeRange >= colArray[nextIndex][2] && colArray[nextIndex][2] >= nowColor[2] - judgeRange && //B
+                    nowColor[3] + judgeRange >= colArray[nextIndex][3] && colArray[nextIndex][3] >= nowColor[3] - judgeRange)   //A
                 {
                     loopTimes++;
-                    if (loopTimes == chengeCount) break;
-                    nowIndex    = nextIndex;
-                    nextIndex   = (nextIndex + 1 >= colCount) ? 0 : nextIndex + 1;
-
-                    //次の比較数値計算
-                    difference = 0.0f;
-                    for (int i = 0; i < RGBA; i++)
-                    {
-                        float difference_dummy = Mathf.Abs(colArray[nowIndex][i] - colArray[nextIndex][i]);
-                        if (difference < difference_dummy)
-                        {
-                            difference  = difference_dummy;
-                            nowCompCol  = colArray[nowIndex][i];
-                            nextCompCol = colArray[nextIndex][i];
-                        }
-                    }
+                    nowIndex = nextIndex;
+                    nextIndex = (nextIndex + 1 >= colCount) ? 0 : nextIndex + 1;
                 }
                 yield return new WaitForSecondsRealtime(ONE_FRAME_TIMES);
             }

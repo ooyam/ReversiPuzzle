@@ -327,11 +327,8 @@ namespace PuzzleMain
             }
             else
             {
-                //特定ギミック破壊判定開始
-                StartCoroutine(GimmickDeleteCheck());
-
-                //ギミック状態変化開始
-                StartCoroutine(StartChangeGimmickState());
+                //ターン終了処理開始
+                StartCoroutine(TurnEnd());
             }
 
             //配置中フラグリセット
@@ -619,7 +616,7 @@ namespace PuzzleMain
             List<int> fallPiecesIndexList = SettingOfFallingPieces();
 
             //落下開始
-            Coroutine coroutine = null;
+            List<Coroutine> coroutineList = new List<Coroutine>();
             foreach (int fallPieceIndex in fallPiecesIndexList)
             {
                 if (pieceTraArr[fallPieceIndex] != null)
@@ -627,16 +624,14 @@ namespace PuzzleMain
                     Vector3 targetPos = PIECE_DEFAULT_POS;
                     int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceTraArr[fallPieceIndex].gameObject);
                     if (gimmickIndex >= 0) targetPos = gimmickInfoArr[gimmickIndex].defaultPos;
-                    coroutine = StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, targetPos, FALL_PIECE_ACCELE_RATE));
+                    coroutineList.Add(StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, targetPos, FALL_PIECE_ACCELE_RATE)));
                 }
             }
-            yield return coroutine;
+            foreach (Coroutine coroutine in coroutineList)
+            { yield return coroutine; }
 
-            //特定ギミック破壊判定開始
-            StartCoroutine(GimmickDeleteCheck());
-
-            //ギミック状態変化開始
-            StartCoroutine(StartChangeGimmickState());
+            //ターン終了処理開始
+            StartCoroutine(TurnEnd());
 
             //駒落下中フラグリセット
             NOW_FALLING_PIECES = false;
@@ -699,7 +694,7 @@ namespace PuzzleMain
 
 
         //==========================================================//
-        //------------------ギミック状態変化動作--------------------//
+        //-------------------ターン終了時の処理---------------------//
         //==========================================================//
 
         /// <summary>
@@ -731,16 +726,22 @@ namespace PuzzleMain
 
             //ギミック状態変化中フラグリセット
             NOW_GIMMICK_STATE_CHANGE = false;
-
-            //ターン終了
-            TurnEnd();
         }
 
         /// <summary>
         /// ターン終了
         /// </summary>
-        void TurnEnd()
+        IEnumerator TurnEnd()
         {
+            //特定ギミック破壊判定開始
+            yield return StartCoroutine(GimmickDeleteCheck());
+
+            //ギミック状態変化開始
+            yield return StartCoroutine(StartChangeGimmickState());
+
+            //特定ギミック破壊判定開始
+            yield return StartCoroutine(GimmickDeleteCheck());
+
             //ギミックのフラグリセット
             foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
             {

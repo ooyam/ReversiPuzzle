@@ -46,7 +46,7 @@ public class GimmickInformation : MonoBehaviour
         ComponentSetting();
         var gimmickData = GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[_index][GIMMICK]];
         startSquareId   = GIMMICKS_INFO_ARR[_index][SQUARE];
-        groupId         = NOT_GROUP_ID;
+        groupId         = GIMMICKS_INFO_ARR[_index][GROUP];
         id              = gimmickData.id;
         colorId         = GIMMICKS_INFO_ARR[_index][COLOR];
         remainingTimes  = gimmickData.damage_times;
@@ -56,19 +56,18 @@ public class GimmickInformation : MonoBehaviour
     }
 
     /// <summary>
-    /// グループギミック情報の設定
+    /// ギミック情報の設定(マス番号から)
     /// </summary>
-    /// <param name="_groupId">グループ番号</param>
-    public void GroupInformationSetting(int _groupId)
+    /// <param name="_squareIndex">グループ番号</param>
+    public void InformationSetting_SquareIndex(int _squareIndex)
     {
         for (int i = 0; i < GIMMICKS_COUNT; i++)
         {
-            if (GIMMICKS_INFO_ARR[i][GROUP] == _groupId)
+            if (GIMMICKS_INFO_ARR[i][SQUARE] == _squareIndex)
             {
                 InformationSetting(i);
                 break;
             }
         }
-        groupId = _groupId;
     }
 }
