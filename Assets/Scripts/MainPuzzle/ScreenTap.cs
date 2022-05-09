@@ -12,19 +12,11 @@ public class ScreenTap : MonoBehaviour
     PiecesManager piecesMan;
 
     Camera mainCamera;   //メインカメラ
-    string[] pieceTags;  //駒のタグ
     float rayDistance = 10.0f;
 
     void Start()
     {
-        //メインカメラ取得
         mainCamera = Camera.main;
-
-        //駒のタグ取得
-        System.Array pieceColors = Enum.GetValues(typeof(Colors));
-        pieceTags = new string[pieceColors.Length];
-        foreach (Colors value in pieceColors)
-        { pieceTags[(int)value] = Enum.GetName(typeof(Colors), value); }
     }
 
     void Update()
@@ -39,8 +31,8 @@ public class ScreenTap : MonoBehaviour
                 var hitCollider = hit.collider;
                 if (hitCollider)
                 {
-                    //Rayが当たったオブジェクトのtagが駒だったら
-                    if (Array.IndexOf(pieceTags, hitCollider.tag) >= 0)
+                    //Rayが当たったオブジェクトが駒の場合
+                    if (PIECE_TAG == hitCollider.tag)
                         piecesMan.TapObject(hitCollider.gameObject);
                 }
             }

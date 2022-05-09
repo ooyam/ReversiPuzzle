@@ -4249,8 +4249,6 @@ MonoBehaviour:
   - {fileID: 8585232807074415779, guid: 498adc98e52fd6642a2908ad2d67630c, type: 3}
   - {fileID: 3759605302350641000, guid: 47a670a31d56d0a438b9b41839567e3d, type: 3}
   - {fileID: 8497386705461255405, guid: cdbb6c29841034044b5a76dfd564d6e9, type: 3}
-  - {fileID: 7349042946320707310, guid: 370f129f4afbd53488882aa880052e2a, type: 3}
-  - {fileID: 2328650429569443360, guid: 9f3a6e0c5ca3b2149b1251e49b00cb64, type: 3}
   gimmickPrefabArr:
   - prefab:
     - {fileID: 7444513193782154046, guid: a5a45252345508f4c84eae91ca0707c1, type: 3}
@@ -4279,6 +4277,9 @@ MonoBehaviour:
   - prefab: []
   - prefab:
     - {fileID: 3217500645130671765, guid: ae04208c51d856c449951d7defc4f12c, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab: []
   reversiBoardTra: {fileID: 787325015}
   nextPieceBoxesTra: {fileID: 736909303}
 --- !u!4 &1298695332

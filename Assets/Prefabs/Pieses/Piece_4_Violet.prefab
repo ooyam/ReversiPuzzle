@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 5535950097319847949}
   - component: {fileID: 8222092472918410065}
   - component: {fileID: -7566995017827768240}
+  - component: {fileID: -8484135034087679196}
   m_Layer: 0
   m_Name: Piece_4_Violet
-  m_TagString: Violet
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,3 +124,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
+--- !u!114 &-8484135034087679196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3759605302350641000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c229f7ece27e994da5105d7b2e95255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 4

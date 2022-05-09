@@ -166,17 +166,22 @@ public class PuzzleDefine : MonoBehaviour
         GIMMICKS_DATA = Resources.Load("gimmicks_data") as GimmicksData;
     }
 
+    //オブジェクトのタグ
+    public const string GIMMICK_TAG = "Gimmick";    //ギミック
+    public const string PIECE_TAG   = "Piece";      //駒
+
     //ギミック情報配列のインデックス番号
-    public const int SQUARE  = 0;
-    public const int GIMMICK = 1;
-    public const int COLOR   = 2;
-    public const int GROUP   = 3;
+    public const int SQUARE   = 0;  //配置マス
+    public const int GIMMICK  = 1;  //ギミックの種類
+    public const int COLOR    = 2;  //指定色
+    public const int GROUP    = 3;  //管理グループ
+    public const int WIDTH    = 4;  //横幅
+    public const int HEIGHT   = 5;  //高さ
+    public const int QUANTITY = 6;  //指定量
 
-    //ギミックオブジェクトのタグ
-    public const string GIMMICK_TAG = "Gimmick";
-
-    //グループ化しないギミックのグループ番号
-    public const int NOT_GROUP_ID = -1;
+    public const int NOT_GROUP_ID = -1; //グループ化しないギミックのグループ番号
+    public const int DEFAULT_SIZE = 1;  //サイズの初期値
+    public const int NOT_QUANTITY = -1; //指定数量無し
 
     //ステージ設定
     public static void StageSetting()
@@ -184,19 +189,12 @@ public class PuzzleDefine : MonoBehaviour
         STAGE_NUMBER         = 1;
         USE_PIECE_COUNT      = 6;
         HIDE_SQUARE_ARR      = new int[0];
-        GIMMICKS_COUNT       = 8;
+        GIMMICKS_COUNT       = 2;
         GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
-        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry, (int)Colors.Blue, NOT_GROUP_ID };
-        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.B2, (int)Gimmicks.Balloon, COLORLESS_ID,     NOT_GROUP_ID };
-
-        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.B6, (int)Gimmicks.Frame_Color, (int)Colors.Blue, 0 };
-        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.C6, (int)Gimmicks.Frame_Color, (int)Colors.Blue, 0 };
-
-        GIMMICKS_INFO_ARR[4] = new int[] { (int)Squares.D2, (int)Gimmicks.Frame_Color, (int)Colors.Yellow, 1 };
-        GIMMICKS_INFO_ARR[5] = new int[] { (int)Squares.D3, (int)Gimmicks.Frame_Color, (int)Colors.Yellow, 1 };
-
-        GIMMICKS_INFO_ARR[6] = new int[] { (int)Squares.F5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red, 2 };
-        GIMMICKS_INFO_ARR[7] = new int[] { (int)Squares.G5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red, 2 };
+        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry,  (int)Colors.Blue,   NOT_GROUP_ID, DEFAULT_SIZE,     DEFAULT_SIZE,       NOT_QUANTITY };
+        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.C2, (int)Gimmicks.Balloon,  COLORLESS_ID,       NOT_GROUP_ID, DEFAULT_SIZE,     DEFAULT_SIZE,       NOT_QUANTITY };
+        //GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.A5, (int)Gimmicks.Cage,     (int)Colors.Red,    NOT_GROUP_ID, DEFAULT_SIZE * 2, DEFAULT_SIZE * 2,   10 };
+        //GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.F5, (int)Gimmicks.Cage,     (int)Colors.Yellow, NOT_GROUP_ID, DEFAULT_SIZE * 3, DEFAULT_SIZE * 4,   5 };
 
         List<int> usedGroupNum = new List<int>();
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)

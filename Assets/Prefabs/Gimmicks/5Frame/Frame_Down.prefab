@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: -5275308278220631228}
   m_Layer: 0
   m_Name: Frame_Down
-  m_TagString: Gimmick
+  m_TagString: Undefined
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

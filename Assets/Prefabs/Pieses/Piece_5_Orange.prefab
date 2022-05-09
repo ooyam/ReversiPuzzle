@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 5575389719039536218}
   - component: {fileID: 476479102469486299}
   - component: {fileID: -7211533403128920332}
+  - component: {fileID: 3744513728410278481}
   m_Layer: 0
   m_Name: Piece_5_Orange
-  m_TagString: Orange
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,3 +123,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
+--- !u!114 &3744513728410278481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497386705461255405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c229f7ece27e994da5105d7b2e95255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: 5

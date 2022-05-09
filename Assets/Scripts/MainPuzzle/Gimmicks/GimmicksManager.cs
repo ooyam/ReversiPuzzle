@@ -102,9 +102,9 @@ namespace PuzzleMain
         /// <summary>
         /// ギミックにダメージがあるかの確認
         /// </summary>
-        /// /// <param name="putPieceTag"> 置いた駒のタグ</param>
-        /// /// <param name="gimmickIndex">ギミック管理番号(ステージ毎の)</param>
-        public bool DamageCheck(ref string putPieceTag, ref int gimmickIndex)
+        /// /// <param name="putPieceColorId">  置いた駒のタグ</param>
+        /// /// <param name="gimmickIndex">     ギミック管理番号(ステージ毎の)</param>
+        public bool DamageCheck(ref int putPieceColorId, ref int gimmickIndex)
         {
             //ダメージの有無フラグ
             bool damage = false;
@@ -121,9 +121,8 @@ namespace PuzzleMain
                 case (int)Gimmicks.Balloon_Color: //風船(色)
                 case (int)Gimmicks.Jewelry:       //宝石
                     //色判定
-                    int colorIndex = gimmickInfoArr[gimmickIndex].colorId;
-                    Colors gimmickColor = (Colors)Enum.ToObject(typeof(Colors), colorIndex);
-                    if (gimmickColor.ToString() == putPieceTag) damage = true;
+                    if (putPieceColorId == gimmickInfoArr[gimmickIndex].colorId)
+                        damage = true;
                     break;
             }
 
@@ -134,10 +133,9 @@ namespace PuzzleMain
         /// <summary>
         /// ギミックにダメージ
         /// </summary>
-        /// /// <param name="putPieceTag"> 置いた駒のタグ</param>
         /// /// <param name="gimmickIndex">ギミック管理番号(ステージ毎の)</param>
         /// /// <param name="squareIndex"> ギミック配置番号</param>
-        public void DamageGimmick(ref string putPieceTag, ref int gimmickIndex, int squareIndex)
+        public void DamageGimmick(ref int gimmickIndex, int squareIndex)
         {
             int damageTimesfixNum = 0; //ステート名算出用
             string stateName = "";     //ステート名
@@ -184,82 +182,88 @@ namespace PuzzleMain
             List<Coroutine> coroutineList = new List<Coroutine>();
 
             //通常ギミック
-            foreach (GimmickInformation gimmInfo in gimmickInfoArr)
+            if (gimmickInfoArr != null)
             {
-                if (gimmInfo == null) continue;
-
-                switch (gimmInfo.id)
+                foreach (GimmickInformation gimmInfo in gimmickInfoArr)
                 {
-                    //宝石(sprite切替)
-                    case (int)Gimmicks.Jewelry:
+                    if (gimmInfo == null) continue;
 
-                        //子オブジェクトのsprit更新
-                        gimmInfo.colorId++;
-                        if (gimmInfo.colorId >= USE_PIECE_COUNT) gimmInfo.colorId = 0;
-                        Sprite newSprite = jewelrySprArr[gimmInfo.colorId];
-                        gimmInfo.spriRenChild[0].sprite = newSprite;
-
-                        //sprit変更
-                        coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
-                        break;
-
-                    //ハムスター(連続フラグ確認)
-                    case (int)Gimmicks.Hamster:
-
-                        //ダメージ1状態
-                        if (gimmInfo.destructible)
-                        {
-                            //このターンにダメージを受けた
-                            if (gimmInfo.nowTurnDamage)
-                            {
-                                //ダメージ1待機状態
-                                LoopAnimationStart(gimmInfo.ani, STATE_NAME_WAIT);
-                            }
-                            else
-                            {
-                                //初期状態に戻す
-                                gimmInfo.destructible = false;
-                                gimmInfo.remainingTimes++;
-                                coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN_STATE)));
-                                LoopAnimationStart(gimmInfo.ani);
-                            }
-                        }
-                        break;
-                }
-            }
-
-            //枠ギミック
-            foreach (List<GimmickInformation> frameInfoList in frameInfoListArr)
-            {
-                if (frameInfoList == null) continue;
-                List<int> changedSquare = new List<int>();
-                foreach (GimmickInformation gimmInfo in frameInfoList)
-                {
                     switch (gimmInfo.id)
                     {
-                        //枠(色変化)
-                        case (int)Gimmicks.Frame_Color_Change:
+                        //宝石(sprite切替)
+                        case (int)Gimmicks.Jewelry:
 
                             //子オブジェクトのsprit更新
                             gimmInfo.colorId++;
                             if (gimmInfo.colorId >= USE_PIECE_COUNT) gimmInfo.colorId = 0;
-                            Sprite newSprite = (gimmInfo.tra.localPosition.x == 0.0f) ? frameWidthSprArr[gimmInfo.colorId] : frameHeightSprArr[gimmInfo.colorId];
+                            Sprite newSprite = jewelrySprArr[gimmInfo.colorId];
                             gimmInfo.spriRenChild[0].sprite = newSprite;
 
                             //sprit変更
                             coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
-
-                            //マスの色変更
-                            if (!changedSquare.Contains(gimmInfo.startSquareId))
-                            {
-                                coroutineList.Add(StartCoroutine(PiecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
-                                changedSquare.Add(gimmInfo.startSquareId);
-                            }
-
-                            //角のSprite設定
-                            gimmInfo.spriRenChild[1].sprite = frameCornerSprArr[gimmInfo.colorId];
-                            gimmInfo.spriRenChild[2].sprite = frameCornerSprArr[gimmInfo.colorId];
                             break;
+
+                        //ハムスター(連続フラグ確認)
+                        case (int)Gimmicks.Hamster:
+
+                            //ダメージ1状態
+                            if (gimmInfo.destructible)
+                            {
+                                //このターンにダメージを受けた
+                                if (gimmInfo.nowTurnDamage)
+                                {
+                                    //ダメージ1待機状態
+                                    LoopAnimationStart(gimmInfo.ani, STATE_NAME_WAIT);
+                                }
+                                else
+                                {
+                                    //初期状態に戻す
+                                    gimmInfo.destructible = false;
+                                    gimmInfo.remainingTimes++;
+                                    coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN_STATE)));
+                                    LoopAnimationStart(gimmInfo.ani);
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+
+            //枠ギミック
+            if (frameInfoListArr != null)
+            {
+                foreach (List<GimmickInformation> frameInfoList in frameInfoListArr)
+                {
+                    if (frameInfoList == null) continue;
+                    List<int> changedSquare = new List<int>();
+                    foreach (GimmickInformation gimmInfo in frameInfoList)
+                    {
+                        switch (gimmInfo.id)
+                        {
+                            //枠(色変化)
+                            case (int)Gimmicks.Frame_Color_Change:
+
+                                //子オブジェクトのsprit更新
+                                gimmInfo.colorId++;
+                                if (gimmInfo.colorId >= USE_PIECE_COUNT) gimmInfo.colorId = 0;
+                                Sprite newSprite = (gimmInfo.tra.localPosition.x == 0.0f) ? frameWidthSprArr[gimmInfo.colorId] : frameHeightSprArr[gimmInfo.colorId];
+                                gimmInfo.spriRenChild[0].sprite = newSprite;
+
+                                //sprit変更
+                                coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
+
+                                //マスの色変更
+                                if (!changedSquare.Contains(gimmInfo.startSquareId))
+                                {
+                                    coroutineList.Add(StartCoroutine(PiecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
+                                    changedSquare.Add(gimmInfo.startSquareId);
+                                }
+
+                                //角のSprite設定
+                                gimmInfo.spriRenChild[1].sprite = frameCornerSprArr[gimmInfo.colorId];
+                                gimmInfo.spriRenChild[2].sprite = frameCornerSprArr[gimmInfo.colorId];
+                                break;
+                        }
                     }
                 }
             }

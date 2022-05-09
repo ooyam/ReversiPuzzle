@@ -21,6 +21,7 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public bool    destructible;   //連続ダメージフラグ(trueの時破壊可能)
     [System.NonSerialized] public bool    nowTurnDamage;  //今のターンにダメージを受けたかのフラグ
     [System.NonSerialized] public Vector3 defaultPos;     //基準座標
+    [System.NonSerialized] public int[]   innerSquaresId; //内側のマス番号
 
     /// <summary>
     /// コンポーネントの設定
@@ -53,6 +54,17 @@ public class GimmickInformation : MonoBehaviour
         freeFall        = gimmickData.free_fall;
         destructible    = !gimmickData.continuous;
         defaultPos      = new Vector3(gimmickData.position_x, gimmickData.position_y, PIECE_DEFAULT_POS.z);
+
+        innerSquaresId  = new int[GIMMICKS_INFO_ARR[_index][WIDTH] * GIMMICKS_INFO_ARR[_index][HEIGHT]];
+        int i = 0;
+        for (int w = 0; w < GIMMICKS_INFO_ARR[_index][WIDTH]; w++)      //幅分ループ
+        {
+            for (int h = 0; h < GIMMICKS_INFO_ARR[_index][HEIGHT]; h++) //高さ分ループ
+            {
+                innerSquaresId[i] = startSquareId + w * BOARD_LINE_COUNT + h;
+                i++;
+            }
+        }
     }
 
     /// <summary>

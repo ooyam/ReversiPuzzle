@@ -4,15 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Blue
-  - Red
-  - Yellow
-  - Green
-  - Violet
-  - Orange
-  - Pink
-  - LightBlue
   - Gimmick
+  - Piece
   layers:
   - Default
   - TransparentFX
