@@ -12,27 +12,27 @@ namespace PuzzleMain
     {
         [Header("PiecesManagerの取得")]
         [SerializeField]
-        PiecesManager PiecesMan;
+        PiecesManager piecesMan;
 
-        [Header("宝石のsprite")]
+        [Header("宝石sprite")]
         [SerializeField]
         Sprite[] jewelrySprArr;
     
-        [Header("枠のPrefab")]
-        [SerializeField]
-        GameObject[] framePrefab; //0:横,1:縦
-    
-        [Header("枠のsprite(縦)")]
+        [Header("枠sprite(縦)")]
         [SerializeField]
         Sprite[] frameHeightSprArr;
     
-        [Header("枠のsprite(横)")]
+        [Header("枠sprite(横)")]
         [SerializeField]
         Sprite[] frameWidthSprArr;
     
-        [Header("枠のsprite(角)")]
+        [Header("枠sprite(角)")]
         [SerializeField]
         Sprite[] frameCornerSprArr;
+
+        [Header("檻sprite(数字)")]
+        [SerializeField]
+        Sprite[] CageNumberSprArr;
 
         //アニメーションステート名
         const string STATE_NAME_EMPTY        = "Empty";       //初期状態
@@ -42,11 +42,16 @@ namespace PuzzleMain
         const string STATE_NAME_COLOR_CHANGE = "ColorChange"; //色の更新
         const string STATE_NAME_RETURN_STATE = "ReturnState"; //状態を戻す
 
-        //範囲指定ギミックのリスト
+        //グループギミックのリスト
         List<GameObject>[] frameObjListArr;             //枠オブジェクトリスト(グループ別)
         List<GimmickInformation>[] frameInfoListArr;    //枠オブジェクト情報リスト(グループ別)
-        List<int>[] frameSquareNumListArr;              //枠配置マスリスト(グループ別)
+        List<int>[] frameSquareIdListArr;               //枠配置マスリスト(グループ別)
         int[] groupColorNumArr;                         //グループ毎の指定色番号
+
+        //サイズ可変ギミックの配列
+        GameObject[] cageObjArr;             //檻オブジェクトリスト
+        GimmickInformation[] cageInfoArr;    //檻オブジェクト情報リスト
+        int[] cageSquareIdArr;               //檻配置マスリスト
 
 
         void Awake()
@@ -55,14 +60,6 @@ namespace PuzzleMain
             GimmickSetting();
             StageSetting();
         }
-
-        IEnumerator Start()
-        {
-            //駒として管理しないギミックの配置
-            yield return null;
-            PlaceGimmickNotInSquare();
-        }
-
 
         //===============================================//
         //===========アニメーション動作関数==============//
@@ -255,7 +252,7 @@ namespace PuzzleMain
                                 //マスの色変更
                                 if (!changedSquare.Contains(gimmInfo.startSquareId))
                                 {
-                                    coroutineList.Add(StartCoroutine(PiecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
+                                    coroutineList.Add(StartCoroutine(piecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
                                     changedSquare.Add(gimmInfo.startSquareId);
                                 }
 
@@ -292,24 +289,33 @@ namespace PuzzleMain
         /// <summary>
         /// マスとして管理しないギミックの配置
         /// </summary>
-        void PlaceGimmickNotInSquare()
+        public void PlaceGimmickNotInSquare()
         {
             //グループ番号に応じた色番号配列
             groupColorNumArr      = new int[GIMMICKS_GROUP_COUNT];
-            frameSquareNumListArr = new List<int>[GIMMICKS_GROUP_COUNT];
+            frameSquareIdListArr = new List<int>[GIMMICKS_GROUP_COUNT];
 
-            //グループごとにリスト作成
+            //檻情報リスト
+            List<int[]> cageInfoArrList = new List<int[]>();
+
+            //オブジェクト管理リスト作成
             foreach (int[] gimInfo in GIMMICKS_INFO_ARR)
             {
                 switch (gimInfo[GIMMICK])
                 {
-                    //グループギミック
+                    //枠
                     case (int)Gimmicks.Frame:               //枠
                     case (int)Gimmicks.Frame_Color:         //枠(色)
                     case (int)Gimmicks.Frame_Color_Change:  //枠(色変更)
-                        if (frameSquareNumListArr[gimInfo[GROUP]] == null)
-                            frameSquareNumListArr[gimInfo[GROUP]] = new List<int>();
-                        frameSquareNumListArr[gimInfo[GROUP]].Add(gimInfo[SQUARE]);
+                        //グループごとにリスト作成
+                        if (frameSquareIdListArr[gimInfo[GROUP]] == null)
+                            frameSquareIdListArr[gimInfo[GROUP]] = new List<int>();
+                        frameSquareIdListArr[gimInfo[GROUP]].Add(gimInfo[SQUARE]);
+                        break;
+
+                    //サイズ可変ギミック
+                    case (int)Gimmicks.Cage:    //檻
+                        cageInfoArrList.Add(gimInfo);
                         break;
                 }
 
@@ -318,7 +324,10 @@ namespace PuzzleMain
             }
 
             //枠配置
-            if (frameSquareNumListArr != null) PlacementLocation_Frame();
+            if (frameSquareIdListArr != null) PlacementLocation_Frame();
+
+            //檻配置
+            if (cageInfoArrList != null) GenerateCage(ref cageInfoArrList);
         }
 
 
@@ -326,6 +335,10 @@ namespace PuzzleMain
         //===============================================//
         //===========枠（Frame）の固有関数===============//
         //===============================================//
+
+        //プレハブの子オブジェクト番号
+        const int FRAME_CORNER_1 = 1; //角1
+        const int FRAME_CORNER_2 = 2; //角2
 
         /// <summary>
         /// マス指定色取得
@@ -361,7 +374,7 @@ namespace PuzzleMain
             frameInfoListArr = new List<GimmickInformation>[GIMMICKS_GROUP_COUNT];
 
             int groupId = 0;
-            foreach (List<int> squareList in frameSquareNumListArr)
+            foreach (List<int> squareList in frameSquareIdListArr)
             {
                 frameObjListArr[groupId]  = new List<GameObject>();
                 frameInfoListArr[groupId] = new List<GimmickInformation>();
@@ -379,7 +392,7 @@ namespace PuzzleMain
 
                     //マスの色指定
                     Color color = GetSquareColor(groupColorNumArr[groupId]);
-                    StartCoroutine(PiecesMan.SquareColorChange(color, squareIndex, false));
+                    StartCoroutine(piecesMan.SquareColorChange(color, squareIndex, false));
                 }
                 groupId++;
             }
@@ -395,21 +408,21 @@ namespace PuzzleMain
         /// <param name="groupId">    グループ番号</param>
         void GenerateFrame(int colorId, int squareIndex, Sprite[] spriArr, Directions direction, int groupId)
         {
-            //フレーム生成・配置
-            GameObject frameObj = Instantiate(framePrefab[(int)direction]);
+            //フレーム生成,配置
+            GameObject frameObj = Instantiate(piecesMan.gimmickPrefabArr[(int)Gimmicks.Frame].prefab[(int)direction]);
             frameObjListArr[groupId].Add(frameObj);
-            PiecesMan.PlaceGimmick(frameObj, squareIndex);
+            piecesMan.PlaceGimmick(frameObj, squareIndex);
 
             //フレームギミックの情報取得
             GimmickInformation gimInfo = frameObj.GetComponent<GimmickInformation>();
             frameInfoListArr[groupId].Add(gimInfo);
-            gimInfo.InformationSetting_SquareIndex(squareIndex);
+            gimInfo.InformationSetting_SquareIndex(squareIndex, INT_NULL, groupId);
 
             //sprite設定
             if (colorId == COLORLESS_ID) colorId = COLORS_COUNT;
             gimInfo.spriRen.sprite = spriArr[colorId];
-            gimInfo.spriRenChild[1].sprite = frameCornerSprArr[colorId]; //角1
-            gimInfo.spriRenChild[2].sprite = frameCornerSprArr[colorId]; //角2
+            gimInfo.spriRenChild[FRAME_CORNER_1].sprite = frameCornerSprArr[colorId]; //角1
+            gimInfo.spriRenChild[FRAME_CORNER_2].sprite = frameCornerSprArr[colorId]; //角2
         }
 
         /// <summary>
@@ -417,12 +430,12 @@ namespace PuzzleMain
         /// </summary>
         public IEnumerator DamageFrame()
         {
-            if (frameSquareNumListArr == null) yield break;
+            if (frameSquareIdListArr == null) yield break;
 
             bool frameListNull = true; //ギミックの存在の有無
             int groupId = 0;           //グループ番号
 
-            foreach (List<int> squareList in frameSquareNumListArr)
+            foreach (List<int> squareList in frameSquareIdListArr)
             {
                 if (squareList == null)
                 {
@@ -487,8 +500,8 @@ namespace PuzzleMain
 
                     //マスの色を戻す
                     foreach (int i in squareList)
-                    { StartCoroutine(PiecesMan.SquareColorChange(SQUARE_WHITE, i, true)); }
-                    frameSquareNumListArr[groupId] = null;
+                    { StartCoroutine(piecesMan.SquareColorChange(SQUARE_WHITE, i, true)); }
+                    frameSquareIdListArr[groupId] = null;
                 }
 
                 //次のグループへ
@@ -500,7 +513,71 @@ namespace PuzzleMain
             {
                 frameInfoListArr      = null;
                 frameObjListArr       = null;
-                frameSquareNumListArr = null;
+                frameSquareIdListArr = null;
+            }
+        }
+
+
+
+        //===============================================//
+        //============檻（Cage）の固有関数===============//
+        //===============================================//
+
+        //プレハブの子オブジェクト番号
+        const int CAGE_NUMBER_RIGHT  = 1; //数字右配置
+        const int CAGE_NUMBER_LEFT   = 2; //数字左配置
+        const int CAGE_NUMBER_CENTER = 3; //数字中央配置(1桁用)
+
+        /// <summary>
+        /// 檻生成
+        /// </summary>
+        /// <param name="cageInfoArrList">檻の情報配列</param>
+        void GenerateCage(ref List<int[]> cageInfoArrList)
+        {
+            int cageCount    = cageInfoArrList.Count;
+            cageObjArr       = new GameObject[cageCount];               //檻オブジェクトリスト
+            cageInfoArr      = new GimmickInformation[cageCount];       //檻オブジェクト情報リスト
+            cageSquareIdArr = new int[cageCount];                       //檻配置マスリスト
+            for (int i = 0; i < cageCount; i++)
+            {
+                int[] cageInfo = cageInfoArrList[i];
+
+                //檻生成,配置
+                cageObjArr[i]  = Instantiate(piecesMan.gimmickPrefabArr[cageInfo[GIMMICK]].prefab[cageInfo[COLOR]]);
+                cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
+                cageSquareIdArr[i] = cageInfo[SQUARE];
+                piecesMan.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
+                cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SQUARE], cageInfo[GIMMICK], NOT_GROUP_ID);
+
+                //座標指定
+                Vector3 _pos = new Vector3(
+                    cageInfoArr[i].defaultPos.x * (cageInfo[WIDTH] - 1),
+                    cageInfoArr[i].defaultPos.y * (cageInfo[HEIGHT] - 1),
+                    cageInfoArr[i].defaultPos.z);
+                cageInfoArr[i].tra.localPosition = _pos;
+
+                //スケール指定
+                Vector3 _scale = new Vector3(
+                    cageInfoArr[i].defaultScale.x * cageInfo[WIDTH],
+                    cageInfoArr[i].defaultScale.y * cageInfo[HEIGHT],
+                    cageInfoArr[i].defaultScale.z);
+                cageInfoArr[i].spriRen.size = _scale;
+
+                //sprite設定(数字)
+                if (cageInfo[QUANTITY] < TEN)
+                {
+                    //1桁(中央表示)
+                    cageInfoArr[i].objChild[CAGE_NUMBER_CENTER].SetActive(true);
+                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_CENTER].sprite = CageNumberSprArr[cageInfo[QUANTITY]];
+                }
+                else
+                {
+                    //2桁
+                    cageInfoArr[i].objChild[CAGE_NUMBER_RIGHT].SetActive(true);     //右
+                    cageInfoArr[i].objChild[CAGE_NUMBER_LEFT].SetActive(true);      //左
+                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_RIGHT].sprite = CageNumberSprArr[cageInfo[QUANTITY] % TEN];   //1の位
+                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_LEFT].sprite  = CageNumberSprArr[cageInfo[QUANTITY] / TEN];   //10の位
+                }
             }
         }
     }

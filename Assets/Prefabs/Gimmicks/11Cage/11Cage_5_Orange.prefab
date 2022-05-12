@@ -177,6 +177,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5959744549437736835}
   - component: {fileID: 2965350308566813651}
+  - component: {fileID: -3525397538841575777}
+  - component: {fileID: -5628471878334463084}
   m_Layer: 0
   m_Name: 11Cage_5_Orange
   m_TagString: Gimmick
@@ -256,6 +258,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-3525397538841575777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5818115184834381058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9439bba0e826c347abfe5a109fc70d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &-5628471878334463084
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5818115184834381058}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6870800401264713346
 GameObject:
   m_ObjectHideFlags: 0

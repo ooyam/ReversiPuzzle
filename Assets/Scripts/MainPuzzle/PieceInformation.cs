@@ -33,6 +33,7 @@ public class PieceInformation : MonoBehaviour
         {
             foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
             {
+                if (gimmickInfo == null) continue;
                 foreach (int innerSquareId in gimmickInfo.innerSquaresId)
                 {
                     //ÉMÉ~ÉbÉNÇÃì‡ë§Ç…ê∂ê¨Ç≥ÇÍÇΩèÍçá

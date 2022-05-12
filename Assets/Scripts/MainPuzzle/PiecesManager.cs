@@ -19,8 +19,7 @@ namespace PuzzleMain
         GameObject[] piecePrefabArr;
 
         [Header("ギミックプレハブの取得")]
-        [SerializeField]
-        gimmickArr[] gimmickPrefabArr;
+        public gimmickArr[] gimmickPrefabArr;
         [System.Serializable]
         public class gimmickArr
         { public GameObject[] prefab; }
@@ -88,19 +87,24 @@ namespace PuzzleMain
             //ギミックを配置
             gimmickObjArr  = new GameObject[GIMMICKS_COUNT];
             gimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
+            List<int> notPlaceIndex = new List<int>();  //駒を配置しないマス番号
             for (int i = 0; i < GIMMICKS_COUNT; i++)
             {
-                //駒として配置しないギミックの場合は処理をスキップ
-                if (!GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square) continue;
-
-                GeneraeGimmick(i);
+                //駒として管理するギミック
+                if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
+                {
+                    GeneraeGimmick(i);
+                    notPlaceIndex.Add(GIMMICKS_INFO_ARR[i][SQUARE]);
+                }
+                //駒として配置しないギミック
+                else gimmicksMan.PlaceGimmickNotInSquare();
             }
 
             //駒のランダム配置
             for (int i = 0; i < squaresCount; i++)
             {
                 if (!squareObjArr[i].activeSelf) continue; //非表示マスは処理を飛ばす
-                if (pieceObjArr[i] != null)      continue; //ギミックマスは処理を飛ばす
+                if (notPlaceIndex.Contains(i))   continue; //ギミックマスは処理を飛ばす
 
                 int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
                 GeneratePiece(pieceGeneIndex, i);
