@@ -30,6 +30,10 @@ namespace PuzzleMain
         [SerializeField]
         Sprite[] frameCornerSprArr;
 
+        [Header("檻sprite(爆弾)")]
+        [SerializeField]
+        Sprite[] CageBobmSprArr;
+
         [Header("檻sprite(数字)")]
         [SerializeField]
         Sprite[] CageNumberSprArr;
@@ -37,8 +41,8 @@ namespace PuzzleMain
         //アニメーションステート名
         const string STATE_NAME_EMPTY        = "Empty";       //初期状態
         const string STATE_NAME_WAIT         = "Wait";        //待機
-        const string STATE_NAME_BURST        = "Burst";       //破壊
         const string STATE_NAME_DAMAGE       = "Damage";      //複数回ダメージ
+        const string STATE_NAME_BURST        = "Burst";       //破壊
         const string STATE_NAME_COLOR_CHANGE = "ColorChange"; //色の更新
         const string STATE_NAME_RETURN_STATE = "ReturnState"; //状態を戻す
 
@@ -77,7 +81,7 @@ namespace PuzzleMain
 
             //アニメーション終了待機
             yield return null;
-            yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f);
+            yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.98f);
         }
 
         /// <summary>
@@ -417,6 +421,7 @@ namespace PuzzleMain
             GimmickInformation gimInfo = frameObj.GetComponent<GimmickInformation>();
             frameInfoListArr[groupId].Add(gimInfo);
             gimInfo.InformationSetting_SquareIndex(squareIndex, INT_NULL, groupId);
+            gimmickInfoArr[gimInfo.settingIndex] = gimInfo;
 
             //sprite設定
             if (colorId == COLORLESS_ID) colorId = COLORS_COUNT;
@@ -524,6 +529,7 @@ namespace PuzzleMain
         //===============================================//
 
         //プレハブの子オブジェクト番号
+        const int CAGE_BOBM          = 0; //爆弾
         const int CAGE_NUMBER_RIGHT  = 1; //数字右配置
         const int CAGE_NUMBER_LEFT   = 2; //数字左配置
         const int CAGE_NUMBER_CENTER = 3; //数字中央配置(1桁用)
@@ -543,11 +549,13 @@ namespace PuzzleMain
                 int[] cageInfo = cageInfoArrList[i];
 
                 //檻生成,配置
-                cageObjArr[i]  = Instantiate(piecesMan.gimmickPrefabArr[cageInfo[GIMMICK]].prefab[cageInfo[COLOR]]);
+                cageObjArr[i]  = Instantiate(piecesMan.gimmickPrefabArr[cageInfo[GIMMICK]].prefab[0]);
                 cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
                 cageSquareIdArr[i] = cageInfo[SQUARE];
                 piecesMan.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
                 cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SQUARE], cageInfo[GIMMICK], NOT_GROUP_ID);
+                gimmickInfoArr[cageInfoArr[i].settingIndex] = cageInfoArr[i];
+                cageInfoArr[i].spriRenChild[CAGE_BOBM].sprite = CageBobmSprArr[cageInfo[COLOR]];
 
                 //座標指定
                 Vector3 _pos = new Vector3(
@@ -563,21 +571,82 @@ namespace PuzzleMain
                     cageInfoArr[i].defaultScale.z);
                 cageInfoArr[i].spriRen.size = _scale;
 
-                //sprite設定(数字)
-                if (cageInfo[QUANTITY] < TEN)
+                //sprite更新(数字)
+                BobmCountSpriteUpdate(cageInfoArr[i]);
+            }
+        }
+
+        /// <summary>
+        /// 爆弾の番号更新
+        /// </summary>
+        /// <param name="_cageInfo"></param>
+        void BobmCountSpriteUpdate(GimmickInformation _cageInfo)
+        {
+            if (_cageInfo.remainingQuantity < TEN)
+            {
+                //1桁(中央表示)
+                _cageInfo.objChild[CAGE_NUMBER_RIGHT].SetActive(false);     //右
+                _cageInfo.objChild[CAGE_NUMBER_LEFT].SetActive(false);      //左
+                _cageInfo.objChild[CAGE_NUMBER_CENTER].SetActive(true);     //中央
+                _cageInfo.spriRenChild[CAGE_NUMBER_CENTER].sprite = CageNumberSprArr[_cageInfo.remainingQuantity];
+            }
+            else
+            {
+                //2桁
+                _cageInfo.objChild[CAGE_NUMBER_RIGHT].SetActive(true);      //右
+                _cageInfo.objChild[CAGE_NUMBER_LEFT].SetActive(true);       //左
+                _cageInfo.objChild[CAGE_NUMBER_CENTER].SetActive(false);    //中央
+                _cageInfo.spriRenChild[CAGE_NUMBER_RIGHT].sprite = CageNumberSprArr[_cageInfo.remainingQuantity % TEN];   //1の位
+                _cageInfo.spriRenChild[CAGE_NUMBER_LEFT].sprite  = CageNumberSprArr[_cageInfo.remainingQuantity / TEN];   //10の位
+            }
+        }
+
+        /// <summary>
+        /// 檻破壊確認・実行
+        /// </summary>
+        /// <param name="_colorId">色番号</param>
+        public IEnumerator DamageCage(int _colorId)
+        {
+            bool gimmickBrake = false;  //ギミック破壊フラグ
+            int index = -1;             //檻ギミックオブジェクト管理番号
+
+            foreach (GimmickInformation cageInfo in cageInfoArr)
+            {
+                index++;
+                if (cageInfo == null) continue;
+                if (cageInfo.remainingQuantity == 0) continue;
+
+                if (cageInfo.colorId == _colorId && cageInfo.remainingQuantity > 0)
                 {
-                    //1桁(中央表示)
-                    cageInfoArr[i].objChild[CAGE_NUMBER_CENTER].SetActive(true);
-                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_CENTER].sprite = CageNumberSprArr[cageInfo[QUANTITY]];
+                    //同色の爆弾カウントを減らす
+                    cageInfo.remainingQuantity--;
+
+                    //sprite更新(数字)
+                    yield return StartCoroutine(AnimationStart(cageInfo.ani, STATE_NAME_DAMAGE + "1"));
+                    BobmCountSpriteUpdate(cageInfo);
+                    yield return StartCoroutine(AnimationStart(cageInfo.ani, STATE_NAME_DAMAGE + "2"));
+
+                    //ギミック破壊
+                    if (cageInfo.remainingQuantity == 0)
+                    {
+                        yield return StartCoroutine(AnimationStart(cageInfo.ani, STATE_NAME_BURST));
+                        gimmickBrake = true;
+
+                        //駒の操作フラグ切替
+                        foreach (int SquareId in cageInfo.innerSquaresId)
+                        { piecesMan.PieceOperationFlagChange(SquareId, true); }
+                    }
+                    break;
                 }
-                else
-                {
-                    //2桁
-                    cageInfoArr[i].objChild[CAGE_NUMBER_RIGHT].SetActive(true);     //右
-                    cageInfoArr[i].objChild[CAGE_NUMBER_LEFT].SetActive(true);      //左
-                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_RIGHT].sprite = CageNumberSprArr[cageInfo[QUANTITY] % TEN];   //1の位
-                    cageInfoArr[i].spriRenChild[CAGE_NUMBER_LEFT].sprite  = CageNumberSprArr[cageInfo[QUANTITY] / TEN];   //10の位
-                }
+            }
+
+            //ギミック破壊
+            if (gimmickBrake)
+            {
+                Destroy(cageObjArr[index]);         //オブジェクト破壊
+                cageObjArr[index] = null;           //檻オブジェクトリスト
+                cageInfoArr[index] = null;          //檻オブジェクト情報リスト
+                cageSquareIdArr[index] = INT_NULL;  //檻配置マスリスト
             }
         }
     }

@@ -41,6 +41,9 @@ TextureImporter:
   - first:
       213: 3623050163283314206
     second: 11Cage_Bomb_Number_Frame
+  - first:
+      213: 2696151247654984634
+    second: 11Cage_Bomb_White
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -165,132 +168,6 @@ TextureImporter:
   spriteSheet:
     serializedVersion: 2
     sprites:
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_1
-      rect:
-        serializedVersion: 2
-        x: 107
-        y: 28
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d28c55ffdcdc9c810800000000000000
-      internalID: 1786185011864913965
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_2
-      rect:
-        serializedVersion: 2
-        x: 333
-        y: 29
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 604ef0de5a5fa43b0800000000000000
-      internalID: -5527335499648211962
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_5
-      rect:
-        serializedVersion: 2
-        x: 546
-        y: 30
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2c4b0a97695142d90800000000000000
-      internalID: -7123544974563429182
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_3
-      rect:
-        serializedVersion: 2
-        x: 759
-        y: 28
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5245913648e353900800000000000000
-      internalID: 663505258426225701
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_0
-      rect:
-        serializedVersion: 2
-        x: 985
-        y: 29
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d0214624f8ed3caa0800000000000000
-      internalID: -6141820759927680499
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 11Cage_Bomb_Lgnition_4
-      rect:
-        serializedVersion: 2
-        x: 1213
-        y: 29
-        width: 168
-        height: 248
-      alignment: 9
-      pivot: {x: 0.5, y: 0.34}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0fe70ca3ac6d08fd0800000000000000
-      internalID: -2341635642175226128
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     - serializedVersion: 2
       name: 11Cage_Bomb_4
       rect:
@@ -434,6 +311,69 @@ TextureImporter:
       bones: []
       spriteID: e164ce18de8a74230800000000000000
       internalID: 3623050163283314206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 11Cage_Bomb_Lgnition
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 592
+        width: 75
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d79227116b5700c0800000000000000
+      internalID: -4609615221032314926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 11Cage_Bomb_Lgnition_White
+      rect:
+        serializedVersion: 2
+        x: 606
+        y: 592
+        width: 75
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3859fd0d4dda0cb0800000000000000
+      internalID: -4896858321795327938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 11Cage_Bomb_White
+      rect:
+        serializedVersion: 2
+        x: 1435
+        y: 306
+        width: 168
+        height: 248
+      alignment: 9
+      pivot: {x: 0.5, y: 0.34}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abb93316647aa6520800000000000000
+      internalID: 2696151247654984634
       vertices: []
       indices: 
       edges: []

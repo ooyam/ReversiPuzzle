@@ -13,18 +13,20 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public GameObject[]     objChild;
 
     //ギミック情報
-    [System.NonSerialized] public int     startSquareId;    //初期マス番号
-    [System.NonSerialized] public int     groupId;          //グループ番号
-    [System.NonSerialized] public int     id;               //ギミック番号
-    [System.NonSerialized] public int     colorId;          //色番号
-    [System.NonSerialized] public int     remainingTimes;   //残りダメージ回数
-    [System.NonSerialized] public bool    freeFall;         //自由落下フラグ
-    [System.NonSerialized] public bool    destructible;     //破壊可能フラグ(true：破壊可能)
-    [System.NonSerialized] public bool    nowTurnDamage;    //今のターンにダメージを受けたかのフラグ
-    [System.NonSerialized] public bool    inSquare;         //駒として配置するかのフラグ(true：駒として配置)
-    [System.NonSerialized] public Vector3 defaultPos;       //基準座標
-    [System.NonSerialized] public Vector3 defaultScale;     //基準スケール
-    [System.NonSerialized] public int[]   innerSquaresId;   //内側のマス番号
+    [System.NonSerialized] public int     settingIndex;         //ステージ毎の設定番号
+    [System.NonSerialized] public int     startSquareId;        //初期マス番号
+    [System.NonSerialized] public int     groupId;              //グループ番号
+    [System.NonSerialized] public int     id;                   //ギミック番号
+    [System.NonSerialized] public int     colorId;              //色番号
+    [System.NonSerialized] public int     remainingTimes;       //残りダメージ回数(ギミックの固定数)
+    [System.NonSerialized] public int     remainingQuantity;    //残りダメージ回数(ステージ毎の指定数)
+    [System.NonSerialized] public bool    freeFall;             //自由落下フラグ
+    [System.NonSerialized] public bool    destructible;         //破壊可能フラグ(true：破壊可能)
+    [System.NonSerialized] public bool    nowTurnDamage;        //今のターンにダメージを受けたかのフラグ
+    [System.NonSerialized] public bool    inSquare;             //駒として配置するかのフラグ(true：駒として配置)
+    [System.NonSerialized] public Vector3 defaultPos;           //基準座標
+    [System.NonSerialized] public Vector3 defaultScale;         //基準スケール
+    [System.NonSerialized] public int[]   innerSquaresId;       //内側のマス番号
 
     /// <summary>
     /// コンポーネントの設定
@@ -52,23 +54,25 @@ public class GimmickInformation : MonoBehaviour
     public void InformationSetting(int _index)
     {
         ComponentSetting();
-        var gimmickData = GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[_index][GIMMICK]];
-        startSquareId   = GIMMICKS_INFO_ARR[_index][SQUARE];
-        groupId         = GIMMICKS_INFO_ARR[_index][GROUP];
-        id              = gimmickData.id;
-        colorId         = GIMMICKS_INFO_ARR[_index][COLOR];
-        remainingTimes  = gimmickData.damage_times;
-        freeFall        = gimmickData.free_fall;
-        destructible    = !gimmickData.continuous;
-        inSquare        = gimmickData.in_square;
-        defaultPos      = new Vector3(gimmickData.position_x, gimmickData.position_y, (inSquare) ? Z_PIECE : Z_GIMMICK);
-        defaultScale    = new Vector3(gimmickData.scale_x, gimmickData.scale_y, 1.0f);
+        var gimmickData     = GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[_index][GIMMICK]];
+        settingIndex        = _index;
+        startSquareId       = GIMMICKS_INFO_ARR[_index][SQUARE];
+        groupId             = GIMMICKS_INFO_ARR[_index][GROUP];
+        id                  = gimmickData.id;
+        colorId             = GIMMICKS_INFO_ARR[_index][COLOR];
+        remainingTimes      = gimmickData.damage_times;
+        remainingQuantity   = GIMMICKS_INFO_ARR[_index][QUANTITY];
+        freeFall            = gimmickData.free_fall;
+        destructible        = !gimmickData.continuous;
+        inSquare            = gimmickData.in_square;
+        defaultPos          = new Vector3(gimmickData.position_x, gimmickData.position_y, (inSquare) ? Z_PIECE : Z_GIMMICK);
+        defaultScale        = new Vector3(gimmickData.scale_x, gimmickData.scale_y, 1.0f);
 
-        innerSquaresId = new int[GIMMICKS_INFO_ARR[_index][WIDTH] * GIMMICKS_INFO_ARR[_index][HEIGHT]];
         switch (id)
         {
             //ギミック内側の駒を操作禁止にするギミック
             case (int)Gimmicks.Cage:    //檻
+                innerSquaresId = new int[GIMMICKS_INFO_ARR[_index][WIDTH] * GIMMICKS_INFO_ARR[_index][HEIGHT]];
                 int i = 0;
                 for (int w = 0; w < GIMMICKS_INFO_ARR[_index][WIDTH]; w++)      //幅分ループ
                 {

@@ -27,23 +27,40 @@ public class PieceInformation : MonoBehaviour
         tra        = this.transform;
         colorId    = (int)color;
         squareId   = _squareIndex;
-        freeFall   = true;
-        invertable = true;
+        OperationFlagON();
         if (_generate)
         {
             foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
             {
                 if (gimmickInfo == null) continue;
+                if (gimmickInfo.innerSquaresId == null) continue;
                 foreach (int innerSquareId in gimmickInfo.innerSquaresId)
                 {
                     //ギミックの内側に生成された場合
                     if (innerSquareId == _squareIndex)
                     {
-                        freeFall   = false;
-                        invertable = false;
+                        OperationFlagOFF();
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 操作フラグをオンにする
+    /// </summary>
+    public void OperationFlagON()
+    {
+        freeFall   = true;
+        invertable = true;
+    }
+
+    /// <summary>
+    /// 操作フラグをオンにする
+    /// </summary>
+    public void OperationFlagOFF()
+    {
+        freeFall   = false;
+        invertable = false;
     }
 }

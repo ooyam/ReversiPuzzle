@@ -88,6 +88,7 @@ namespace PuzzleMain
             gimmickObjArr  = new GameObject[GIMMICKS_COUNT];
             gimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
             List<int> notPlaceIndex = new List<int>();  //駒を配置しないマス番号
+            bool notSquare = false;                     //駒として管理しないギミックがある
             for (int i = 0; i < GIMMICKS_COUNT; i++)
             {
                 //駒として管理するギミック
@@ -96,9 +97,10 @@ namespace PuzzleMain
                     GeneraeGimmick(i);
                     notPlaceIndex.Add(GIMMICKS_INFO_ARR[i][SQUARE]);
                 }
-                //駒として配置しないギミック
-                else gimmicksMan.PlaceGimmickNotInSquare();
+                else notSquare = true;
             }
+            //駒として配置しないギミック
+            if (notSquare) gimmicksMan.PlaceGimmickNotInSquare();
 
             //駒のランダム配置
             for (int i = 0; i < squaresCount; i++)
@@ -107,7 +109,7 @@ namespace PuzzleMain
                 if (notPlaceIndex.Contains(i))   continue; //ギミックマスは処理を飛ばす
 
                 int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
-                GeneratePiece(pieceGeneIndex, i);
+                GeneratePiece(pieceGeneIndex, i, true);
             }
 
             //待機駒の箱取得
@@ -144,13 +146,14 @@ namespace PuzzleMain
         /// <summary>
         /// 駒作成
         /// </summary>
-        /// /// <param name="prefabIndex">生成駒プレハブ番号</param>
-        /// /// <param name="pieceIndex"> 駒管理番号</param>
-        void GeneratePiece(int prefabIndex, int pieceIndex)
+        /// /// <param name="prefabIndex">   生成駒プレハブ番号</param>
+        /// /// <param name="pieceIndex">    駒管理番号</param>
+        /// /// <param name="startGenerate"> 初期生成</param>
+        void GeneratePiece(int prefabIndex, int pieceIndex, bool startGenerate = false)
         {
             pieceObjArr[pieceIndex]  = Instantiate(piecePrefabArr[prefabIndex]);
             pieceInfoArr[pieceIndex] = pieceObjArr[pieceIndex].GetComponent<PieceInformation>();
-            pieceInfoArr[pieceIndex].InformationSetting(pieceIndex, true, gimmickInfoArr);
+            pieceInfoArr[pieceIndex].InformationSetting(pieceIndex, startGenerate, gimmickInfoArr);
             pieceTraArr[pieceIndex]  = pieceInfoArr[pieceIndex].tra;
             pieceTraArr[pieceIndex].SetParent(squareTraArr[pieceIndex], false);
             pieceTraArr[pieceIndex].SetSiblingIndex(0);
@@ -183,15 +186,15 @@ namespace PuzzleMain
         /// <summary>
         /// 待機駒を盤面に置く
         /// </summary>
-        /// <param name="squareIndex"></param>
-        void PutPiece(int squareIndex)
+        /// <param name="squareId">配置マス管理番号</param>
+        void PutPiece(int squareId)
         {
             //盤面の駒削除,管理配列差し替え
-            DeletePiece(squareIndex);
-            pieceObjArr[squareIndex]  = nextPieceObjArr[nextPuPieceIndex];
-            pieceTraArr[squareIndex]  = nextPieceTraArr[nextPuPieceIndex];
-            pieceInfoArr[squareIndex] = pieceObjArr[squareIndex].GetComponent<PieceInformation>();
-            pieceInfoArr[squareIndex].InformationSetting(squareIndex, false);
+            DeletePiece(squareId);
+            pieceObjArr[squareId]  = nextPieceObjArr[nextPuPieceIndex];
+            pieceTraArr[squareId]  = nextPieceTraArr[nextPuPieceIndex];
+            pieceInfoArr[squareId] = pieceObjArr[squareId].GetComponent<PieceInformation>();
+            pieceInfoArr[squareId].InformationSetting(squareId, false);
 
             //待機駒生成
             int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
@@ -223,11 +226,11 @@ namespace PuzzleMain
         /// <summary>
         /// マスとして管理しないギミック配置
         /// </summary>
-        /// <param name="gimmickObj"> 配置オブジェクト</param>
-        /// <param name="squareIndex">配置マス管理番号</param>
-        public void PlaceGimmick(GameObject gimmickObj, int squareIndex)
+        /// <param name="gimmickObj">配置オブジェクト</param>
+        /// <param name="squareId">  配置マス管理番号</param>
+        public void PlaceGimmick(GameObject gimmickObj, int squareId)
         {
-            gimmickObj.transform.SetParent(squareTraArr[squareIndex], false);
+            gimmickObj.transform.SetParent(squareTraArr[squareId], false);
         }
 
         /// <summary>
@@ -265,12 +268,23 @@ namespace PuzzleMain
         /// マスの色変更
         /// </summary>
         /// <param name="afterColor"> 変化後の色</param>
-        /// <param name="squareIndex">マス管理番号</param>
+        /// <param name="squareId">   マス管理番号</param>
         /// <param name="fade">       フェードの有無</param>
-        public IEnumerator SquareColorChange(Color afterColor, int squareIndex, bool fade)
+        public IEnumerator SquareColorChange(Color afterColor, int squareId, bool fade)
         {
-            if (!fade) squareSpriRenArr[squareIndex].color = afterColor;
-            else yield return StartCoroutine(SpriteRendererPaletteChange(squareSpriRenArr[squareIndex], SQUARE_CHANGE_SPEED, new Color[] { squareSpriRenArr[squareIndex].color, afterColor }));
+            if (!fade) squareSpriRenArr[squareId].color = afterColor;
+            else yield return StartCoroutine(SpriteRendererPaletteChange(squareSpriRenArr[squareId], SQUARE_CHANGE_SPEED, new Color[] { squareSpriRenArr[squareId].color, afterColor }));
+        }
+
+        /// <summary>
+        /// 駒の操作可能フラグ切替
+        /// </summary>
+        /// <param name="squareId">マス管理番号</param>
+        /// <param name="on">      true:操作可能にする</param>
+        public void PieceOperationFlagChange(int squareId, bool on)
+        {
+            if (on) pieceInfoArr[squareId].OperationFlagON();
+            else    pieceInfoArr[squareId].OperationFlagOFF();
         }
 
         //==========================================================//
@@ -291,7 +305,13 @@ namespace PuzzleMain
             if (tapObj.tag == GIMMICK_TAG) return;
 
             //盤上の駒の場合
-            if (Array.IndexOf(pieceObjArr, tapObj) >= 0) StartCoroutine(PutPieceToSquare(tapObj));
+            int pieceObjIndex = Array.IndexOf(pieceObjArr, tapObj);
+            if (pieceObjIndex >= 0)
+            {
+                //反転禁止フラグ確認
+                if (!pieceInfoArr[pieceObjIndex].invertable) return;
+                StartCoroutine(PutPieceToSquare(tapObj));
+            }
 
             //待機駒の場合
             if (Array.IndexOf(nextPieceObjArr, tapObj) >= 0) MoveNextPieceFrame(tapObj);
@@ -427,7 +447,7 @@ namespace PuzzleMain
                 //ギミックマスの場合
                 if (pieceObjArr[refIndex].tag == GIMMICK_TAG)
                 {
-                    //はダメージを与えられるかの確認,ダメージが与えられない場合はnullを返す
+                    //ダメージを与えられるかの確認,ダメージが与えられない場合はnullを返す
                     int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[refIndex]);
                     if (!gimmicksMan.DamageCheck(ref putPieceColorId, ref gimmickIndex))
                         return null;
@@ -435,6 +455,9 @@ namespace PuzzleMain
                 }
                 else
                 {
+                    //反転禁止駒の場合はnullを返す
+                    if (!pieceInfoArr[refIndex].invertable) return null;
+
                     //同色駒を検索
                     if (pieceInfoArr[refIndex].colorId == putPieceColorId)
                     {
@@ -596,14 +619,19 @@ namespace PuzzleMain
             NOW_DESTROYING_PIECES = true;
 
             //駒縮小
-            int destroyPiecesCount = destroyPiecesIndexList.Count;
             Coroutine coroutine = null;
-            for (int i = 0; i < destroyPiecesCount; i++)
+            List<Coroutine> gimCorList = new List<Coroutine>();
+            foreach (int index in destroyPiecesIndexList)
             {
-                if (pieceTraArr[destroyPiecesIndexList[i]].gameObject.tag == GIMMICK_TAG) continue;
-                coroutine = StartCoroutine(AllScaleChange(pieceTraArr[destroyPiecesIndexList[i]], DESTROY_PIECE_SCALING_SPEED, DESTROY_PIECE_CHANGE_SCALE));
+                if (pieceTraArr[index].gameObject.tag == GIMMICK_TAG) continue;
+                coroutine = StartCoroutine(AllScaleChange(pieceTraArr[index], DESTROY_PIECE_SCALING_SPEED, DESTROY_PIECE_CHANGE_SCALE));
+
+                //駒カウントギミックにダメージ
+                gimCorList.Add(StartCoroutine(gimmicksMan.DamageCage(pieceInfoArr[index].colorId)));    //檻
             }
             yield return coroutine;
+            foreach (Coroutine cor in gimCorList)
+            { yield return cor; }
 
             //駒削除
             foreach (int pieceIndex in destroyPiecesIndexList)
@@ -679,8 +707,8 @@ namespace PuzzleMain
                     int refIndex = i - n;
                     if (pieceObjArr[refIndex] != null)
                     {
-                        //自由落下無しギミックではない場合、管理番号更新
-                        if (pieceObjArr[refIndex].tag != GIMMICK_TAG || GimmickFreeFallFlag(ref pieceObjArr[refIndex]))
+                        //自由らか可能オブジェクトの場合,管理番号更新
+                        if (FreeFallJudgement(ref pieceObjArr[refIndex]))
                             UpdateManagementIndex(i - n, i);
                         break;
                     }
@@ -701,14 +729,26 @@ namespace PuzzleMain
         }
 
         /// <summary>
-        /// ギミックの自由落下フラグ取得
+        /// 自由落下判定
         /// </summary>
         /// <param name="pieceObj"></param>
         /// <returns>true:自由落下</returns>
-        bool GimmickFreeFallFlag(ref GameObject pieceObj)
+        bool FreeFallJudgement(ref GameObject pieceObj)
         {
-            int gimObjIndex = Array.IndexOf(gimmickObjArr, pieceObj);
-            return gimmickInfoArr[gimObjIndex].freeFall;
+            if (pieceObj.tag == PIECE_TAG)
+            {
+                //駒の場合
+                int pieceObjIndex = Array.IndexOf(pieceObjArr, pieceObj);
+                return pieceInfoArr[pieceObjIndex].freeFall;
+            }
+            else if (pieceObj.tag == GIMMICK_TAG)
+            {
+                //ギミックの場合
+                int gimmickObjIndex = Array.IndexOf(gimmickObjArr, pieceObj);
+                return gimmickInfoArr[gimmickObjIndex].freeFall;
+            }
+
+            return false;
         }
 
 

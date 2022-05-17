@@ -357,7 +357,7 @@ namespace ObjectMove_2D
                 axis = 2;
 
             //回転
-            float tolerance = 5.0f;
+            float tolerance = 10.0f;
             while (true)
             {
                 yield return FIXED_UPDATE;
