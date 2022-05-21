@@ -76,8 +76,8 @@ public class PuzzleDefine : MonoBehaviour
 
     //Z座標
     public const float Z_ZERO    = 0.0f;    //0
-    public const float Z_PIECE   = -0.1f;   //駒
-    public const float Z_GIMMICK = -0.2f;   //ギミック(駒として管理しない)
+    public const float Z_PIECE   = -1.0f;   //駒
+    public const float Z_GIMMICK = -2.0f;   //ギミック(駒として管理しない)
 
     //桁数判定用
     public const int TEN     = 10;
@@ -143,6 +143,7 @@ public class PuzzleDefine : MonoBehaviour
     public static bool NOW_FALLING_PIECES       = false;  //駒落下中？
     public static bool NOW_GIMMICK_DAMAGE_WAIT  = false;  //ギミックダメージ待機中？
     public static bool NOW_GIMMICK_STATE_CHANGE = false;  //ギミック状態変化中？
+    public static bool NOW_TURN_END_PROCESSING  = false;  //ターン終了処理中？
 
     //フラグリセット
     public static void FlagReset()
@@ -156,6 +157,7 @@ public class PuzzleDefine : MonoBehaviour
         NOW_FALLING_PIECES       = false;
         NOW_GIMMICK_DAMAGE_WAIT  = false;
         NOW_GIMMICK_STATE_CHANGE = false;
+        NOW_TURN_END_PROCESSING  = false;
     }
 
     //ステージ別定数
@@ -187,10 +189,10 @@ public class PuzzleDefine : MonoBehaviour
     public const int WIDTH    = 4;  //横幅
     public const int HEIGHT   = 5;  //高さ
     public const int QUANTITY = 6;  //指定量
+    public const int ORDER    = 7;  //指定順番
 
-    public const int NOT_GROUP_ID = -1; //グループ化しないギミックのグループ番号
-    public const int DEFAULT_SIZE = 1;  //サイズの初期値
-    public const int NOT_QUANTITY = -1; //指定数量無し
+    public const int DEF_SIZE = 1;  //サイズの初期値
+    public const int NOT_NUM  = -1; //各項目番号指示なし
 
     //ステージ設定
     public static void StageSetting()
@@ -198,17 +200,21 @@ public class PuzzleDefine : MonoBehaviour
         STAGE_NUMBER         = 1;
         USE_PIECE_COUNT      = 6;
         HIDE_SQUARE_ARR      = new int[0];
-        GIMMICKS_COUNT       = 4;
+        GIMMICKS_COUNT       = 8;
         GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
-        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry,  (int)Colors.Blue,   NOT_GROUP_ID, DEFAULT_SIZE,     DEFAULT_SIZE,       NOT_QUANTITY };
-        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.C2, (int)Gimmicks.Balloon,  COLORLESS_ID,       NOT_GROUP_ID, DEFAULT_SIZE,     DEFAULT_SIZE,       NOT_QUANTITY };
-        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.A5, (int)Gimmicks.Cage,     (int)Colors.Red,    NOT_GROUP_ID, DEFAULT_SIZE * 2, DEFAULT_SIZE * 2,   18 };
-        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.F5, (int)Gimmicks.Cage,     (int)Colors.Yellow, NOT_GROUP_ID, DEFAULT_SIZE * 3, DEFAULT_SIZE * 4,   5 };
+        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry,   (int)Colors.Blue, NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.D1, (int)Gimmicks.Hamster,   COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.B6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 0 };
+        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.C6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 1 };
+        GIMMICKS_INFO_ARR[4] = new int[] { (int)Squares.D6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 2 };
+        GIMMICKS_INFO_ARR[5] = new int[] { (int)Squares.E6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 3 };
+        GIMMICKS_INFO_ARR[6] = new int[] { (int)Squares.F6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 4 };
+        GIMMICKS_INFO_ARR[7] = new int[] { (int)Squares.G6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 5 };
 
         List<int> usedGroupNum = new List<int>();
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)
         {
-            if (gimmickInfo[GROUP] > NOT_GROUP_ID && !usedGroupNum.Contains(gimmickInfo[GROUP]))
+            if (gimmickInfo[GROUP] > NOT_NUM && !usedGroupNum.Contains(gimmickInfo[GROUP]))
             {
                 usedGroupNum.Add(GIMMICKS_GROUP_COUNT);
                 GIMMICKS_GROUP_COUNT++;

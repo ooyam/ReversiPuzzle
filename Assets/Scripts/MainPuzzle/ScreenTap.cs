@@ -48,6 +48,7 @@ public class ScreenTap : MonoBehaviour
         if (NOW_FALLING_PIECES)       return false;  //駒落下中
         if (NOW_GIMMICK_DAMAGE_WAIT)  return false;  //ギミックダメージ待機中
         if (NOW_GIMMICK_STATE_CHANGE) return false;  //ギミック状態変化中
+        if (NOW_TURN_END_PROCESSING)  return false;  //ターン終了処理中
 
         return true;
     }

@@ -15,11 +15,13 @@ public class GimmickInformation : MonoBehaviour
     //ギミック情報
     [System.NonSerialized] public int     settingIndex;         //ステージ毎の設定番号
     [System.NonSerialized] public int     startSquareId;        //初期マス番号
+    [System.NonSerialized] public int     nowSquareId;          //現在のマス番号
     [System.NonSerialized] public int     groupId;              //グループ番号
     [System.NonSerialized] public int     id;                   //ギミック番号
     [System.NonSerialized] public int     colorId;              //色番号
     [System.NonSerialized] public int     remainingTimes;       //残りダメージ回数(ギミックの固定数)
     [System.NonSerialized] public int     remainingQuantity;    //残りダメージ回数(ステージ毎の指定数)
+    [System.NonSerialized] public int     order;                //指定番号
     [System.NonSerialized] public bool    freeFall;             //自由落下フラグ
     [System.NonSerialized] public bool    destructible;         //破壊可能フラグ(true：破壊可能)
     [System.NonSerialized] public bool    nowTurnDamage;        //今のターンにダメージを受けたかのフラグ
@@ -27,6 +29,11 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public Vector3 defaultPos;           //基準座標
     [System.NonSerialized] public Vector3 defaultScale;         //基準スケール
     [System.NonSerialized] public int[]   innerSquaresId;       //内側のマス番号
+
+    //駒として管理する場合の情報
+    [System.NonSerialized] public bool freeFall_Piece;          //自由落下フラグ(駒として)
+    [System.NonSerialized] public bool destructible_Piece;      //破壊可能フラグ(true：破壊可能)
+
 
     /// <summary>
     /// コンポーネントの設定
@@ -57,11 +64,13 @@ public class GimmickInformation : MonoBehaviour
         var gimmickData     = GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[_index][GIMMICK]];
         settingIndex        = _index;
         startSquareId       = GIMMICKS_INFO_ARR[_index][SQUARE];
+        nowSquareId         = startSquareId;
         groupId             = GIMMICKS_INFO_ARR[_index][GROUP];
         id                  = gimmickData.id;
         colorId             = GIMMICKS_INFO_ARR[_index][COLOR];
         remainingTimes      = gimmickData.damage_times;
         remainingQuantity   = GIMMICKS_INFO_ARR[_index][QUANTITY];
+        order               = GIMMICKS_INFO_ARR[_index][ORDER];
         freeFall            = gimmickData.free_fall;
         destructible        = !gimmickData.continuous;
         inSquare            = gimmickData.in_square;
@@ -103,5 +112,50 @@ public class GimmickInformation : MonoBehaviour
                 break;
             }
         }
+    }
+
+
+    /// <summary>
+    /// 駒としてフラグ設定
+    /// </summary>
+    /// <param name="_squareIndex">     配置マス管理番号</param>
+    /// <param name="_generate">        生成？</param>
+    /// <param name="gimmickInfoArr">   ギミック情報配列</param>
+    public void OperationFlagSetting(int _squareIndex, bool _generate, GimmickInformation[] gimmickInfoArr = null)
+    {
+        OperationFlagON();
+        if (!_generate || !inSquare) return;
+
+        foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
+        {
+            if (gimmickInfo == null) continue;
+            if (gimmickInfo.innerSquaresId == null) continue;
+            foreach (int squareId in gimmickInfo.innerSquaresId)
+            {
+                //ギミックの内側に生成された場合
+                if (squareId == _squareIndex)
+                {
+                    OperationFlagOFF();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 操作フラグをオンにする
+    /// </summary>
+    public void OperationFlagON()
+    {
+        freeFall_Piece = true;
+        destructible_Piece = true;
+    }
+
+    /// <summary>
+    /// 操作フラグをオンにする
+    /// </summary>
+    public void OperationFlagOFF()
+    {
+        freeFall_Piece = false;
+        destructible_Piece = false;
     }
 }
