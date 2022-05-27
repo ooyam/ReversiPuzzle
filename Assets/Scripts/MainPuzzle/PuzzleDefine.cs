@@ -84,11 +84,12 @@ public class PuzzleDefine : MonoBehaviour
     public const int HUNDRED = 100;
 
     //汎用定数
-    public const int BOARD_COLUMN_COUNT = 8;            //ボード列数
-    public const int BOARD_LINE_COUNT = 8;              //ボード行数
-    public const int INT_NULL = -99;                    //nullの代用定数(int型でnullを代入したい場合に使用)
-    public const float SQUARE_DISTANCE_HALF = 0.73f;    //半マスの距離
-    public const float PIECE_DEFAULT_SCALE = 0.6f;      //駒のスケール
+    public const int BOARD_COLUMN_COUNT = 8;                            //ボード列数
+    public const int BOARD_LINE_COUNT = 8;                              //ボード行数
+    public const int INT_NULL = -99;                                    //nullの代用定数(int型でnullを代入したい場合に使用)
+    public const float SQUARE_DISTANCE = 1.46f;                         //マスの距離
+    public const float SQUARE_DISTANCE_HALF = SQUARE_DISTANCE / 2.0f;   //半マスの距離
+    public const float PIECE_DEFAULT_SCALE = 0.6f;                      //駒のスケール
     public static readonly Vector3 PIECE_DEFAULT_POS = new Vector3(0.0f, 0.0f, Z_PIECE);          //駒の基本座標
     public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
 
@@ -123,12 +124,11 @@ public class PuzzleDefine : MonoBehaviour
     //駒配置
     public const float PUT_PIECE_SCALING_SPEED = 0.02f;  //拡縮速度
     public const float PUT_PIECE_CHANGE_SCALE  = 0.8f;   //拡大時のスケール
-    public const float PUT_PIECE_MOVE_START_Z  = -0.3f;  //移動開始z座標(localPosition)
+    public const float PUT_PIECE_MOVE_START_Z  = Z_GIMMICK - 0.1f;  //移動開始z座標(localPosition)
     public const float PUT_PIECE_MOVE_SPEED    = 0.2f;   //移動速度
     public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;   //待機駒のスライド速度
 
     //駒落下
-    public static readonly Vector3 FALL_PIECE_GENERATE_POS = new Vector3(PIECE_DEFAULT_POS.x, SQUARE_DISTANCE_HALF * BOARD_LINE_COUNT, PIECE_DEFAULT_POS.z);  //駒反転速度
     public const float FALL_PIECE_MOVE_SPEED  = 0.07f;  //落下速度
     public const float FALL_PIECE_ACCELE_RATE = 0.02f;  //落下加速
 
@@ -141,7 +141,7 @@ public class PuzzleDefine : MonoBehaviour
     public static bool NOW_REVERSING_PIECES     = false;  //駒反転中？
     public static bool NOW_DESTROYING_PIECES    = false;  //駒破壊中？
     public static bool NOW_FALLING_PIECES       = false;  //駒落下中？
-    public static bool NOW_GIMMICK_DAMAGE_WAIT  = false;  //ギミックダメージ待機中？
+    public static bool NOW_GIMMICK_DESTROY_WAIT = false;  //ギミック破壊待機中？
     public static bool NOW_GIMMICK_STATE_CHANGE = false;  //ギミック状態変化中？
     public static bool NOW_TURN_END_PROCESSING  = false;  //ターン終了処理中？
 
@@ -155,7 +155,7 @@ public class PuzzleDefine : MonoBehaviour
         NOW_REVERSING_PIECES     = false;
         NOW_DESTROYING_PIECES    = false;
         NOW_FALLING_PIECES       = false;
-        NOW_GIMMICK_DAMAGE_WAIT  = false;
+        NOW_GIMMICK_DESTROY_WAIT = false;
         NOW_GIMMICK_STATE_CHANGE = false;
         NOW_TURN_END_PROCESSING  = false;
     }

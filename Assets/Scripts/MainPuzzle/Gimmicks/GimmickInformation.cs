@@ -10,6 +10,7 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public Transform tra;
     [System.NonSerialized] public SpriteRenderer   spriRen;
     [System.NonSerialized] public SpriteRenderer[] spriRenChild;
+    [System.NonSerialized] public GameObject       obj;
     [System.NonSerialized] public GameObject[]     objChild;
 
     //ÉMÉ~ÉbÉNèÓïÒ
@@ -43,6 +44,7 @@ public class GimmickInformation : MonoBehaviour
         ani     = this.GetComponent<Animator>();
         tra     = this.transform;
         spriRen = this.GetComponent<SpriteRenderer>();
+        obj     = this.gameObject;
 
         int childCount = tra.childCount;
         objChild     = new GameObject[childCount];

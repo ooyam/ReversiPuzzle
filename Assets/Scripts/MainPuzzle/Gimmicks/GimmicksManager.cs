@@ -57,13 +57,12 @@ namespace PuzzleMain
         int[] groupColorNumArr;                         //グループ毎の指定色番号
 
         //サイズ可変ギミックの配列
-        GameObject[] cageObjArr;             //檻オブジェクトリスト
-        GimmickInformation[] cageInfoArr;    //檻オブジェクト情報リスト
-        int[] cageSquareIdArr;               //檻配置マスリスト
+        GameObject[] cageObjArr;            //檻オブジェクトリスト
+        GimmickInformation[] cageInfoArr;   //檻オブジェクト情報リスト
+        int[] cageSquareIdArr;              //檻配置マスリスト
 
         //番号札ギミック用変数
-        int numberTagNextOrder = 0;     //次に破壊する番号
-        bool numberTagNowTurnDamage;    //このターンにダメージを受けた物があったか
+        public static int nextOrder = 0;  //次に破壊する番号
 
         void Awake()
         {
@@ -88,7 +87,6 @@ namespace PuzzleMain
 
             //アニメーション終了待機
             yield return null;
-            //yield return new WaitUntil(() => ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
             yield return new WaitWhile(() => ani.GetCurrentAnimatorStateInfo(0).IsName(stateName));
         }
 
@@ -121,10 +119,10 @@ namespace PuzzleMain
             switch (gimmickInfoArr[gimmickIndex].id)
             {
                 //無条件
-                case (int)Gimmicks.Balloon:  //風船
-                case (int)Gimmicks.Wall:     //壁
-                case (int)Gimmicks.Flower:   //花
-                case (int)Gimmicks.Hamster:  //ハムスター
+                case (int)Gimmicks.Balloon:     //風船
+                case (int)Gimmicks.Wall:        //壁
+                case (int)Gimmicks.Flower:      //花
+                case (int)Gimmicks.Hamster:     //ハムスター
                     damage = true;
                     break;
 
@@ -136,12 +134,11 @@ namespace PuzzleMain
                     break;
 
                 //順番
-                case (int)Gimmicks.NumberTag: //番号札
-                    if (gimmickInfoArr[gimmickIndex].order == numberTagNextOrder)
+                case (int)Gimmicks.NumberTag:
+                    if (nextOrder == gimmickInfoArr[gimmickIndex].order)
                     {
-                        numberTagNextOrder++;
-                        numberTagNowTurnDamage = true;
                         damage = true;
+                        nextOrder++;
                     }
                     break;
             }
@@ -166,12 +163,8 @@ namespace PuzzleMain
                 case (int)Gimmicks.Balloon:         //風船
                 case (int)Gimmicks.Balloon_Color:   //風船(色)
                 case (int)Gimmicks.Jewelry:         //宝石
+                case (int)Gimmicks.NumberTag:       //番号札
                     stateName = STATE_NAME_BURST;
-                    break;
-
-                //ダメージのみ
-                case (int)Gimmicks.NumberTag: //番号札
-                    stateName = STATE_NAME_DAMAGE;
                     break;
 
                 //複数回ダメージ
@@ -242,25 +235,6 @@ namespace PuzzleMain
                                 }
                             }
                             break;
-
-                        //番号札
-                        case (int)Gimmicks.NumberTag:
-
-                            //このターンにダメージを受けていない場合
-                            if (!numberTagNowTurnDamage)
-                            {
-                                numberTagNextOrder = 0;
-
-                                //破壊可能状態(ダメージを受けているとき)
-                                if (gimmInfo.destructible)
-                                {
-                                    //初期状態に戻す
-                                    gimmInfo.destructible = false;
-                                    gimmInfo.remainingTimes++;
-                                    coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN)));
-                                }
-                            }
-                            break;
                     }
                 }
             }
@@ -318,6 +292,22 @@ namespace PuzzleMain
         {
             yield return StartCoroutine(AnimationStart(ani, STATE_NAME_COLOR_CHANGE));
             spriRen.sprite = newSprite;
+        }
+
+        /// <summary>
+        /// ターン終了時のギミック破壊
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator DestroyGimmicks_TurnEnd()
+        {
+            //ギミック破壊
+            Coroutine[] coroutines = new Coroutine[]
+            {
+                StartCoroutine(DestroyFrame()),     //枠
+                StartCoroutine(DestroyCage())       //檻
+            };
+            foreach (Coroutine c in coroutines)
+            { yield return c; }
         }
 
 
@@ -468,7 +458,7 @@ namespace PuzzleMain
         /// <summary>
         /// 枠破壊確認・実行
         /// </summary>
-        public IEnumerator DamageFrame()
+        IEnumerator DestroyFrame()
         {
             if (frameSquareIdListArr == null) yield break;
 
@@ -663,7 +653,7 @@ namespace PuzzleMain
         /// <summary>
         /// 檻破壊
         /// </summary>
-        public IEnumerator DestroyCage()
+        IEnumerator DestroyCage()
         {
             List<int> desIndexList = new List<int>();
             Coroutine coroutine = null;

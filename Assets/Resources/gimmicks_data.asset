@@ -136,7 +136,7 @@ MonoBehaviour:
   - id: 12
     name: NumberTag
     free_fall: 1
-    damage_times: 2
+    damage_times: 1
     continuous: 1
     in_square: 1
     position_x: 0
