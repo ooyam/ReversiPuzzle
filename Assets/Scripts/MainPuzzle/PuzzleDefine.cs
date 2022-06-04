@@ -48,7 +48,7 @@ public class PuzzleDefine : MonoBehaviour
         Rocket         //ロケット箱
     }
 
-    //方向
+    //8方向
     public enum Directions
     {
         Up,         //上
@@ -59,6 +59,15 @@ public class PuzzleDefine : MonoBehaviour
         UpRight,    //右上
         DownLeft,   //左下
         DownRight   //右下
+    }
+    
+    //4方向
+    public enum FourDirections
+    {
+        Up,         //上
+        Down,       //下
+        Left,       //左
+        Right       //右
     }
 
     //マス
@@ -71,7 +80,7 @@ public class PuzzleDefine : MonoBehaviour
         E1, E2, E3, E4, E5, E6, E7, E8,
         F1, F2, F3, F4, F5, F6, F7, F8,
         G1, G2, G3, G4, G5, G6, G7, G8,
-        H1, H2, H3, H4, H5, H6, H7, H8,
+        H1, H2, H3, H4, H5, H6, H7, H8
     }
 
     //Z座標
@@ -84,12 +93,13 @@ public class PuzzleDefine : MonoBehaviour
     public const int HUNDRED = 100;
 
     //汎用定数
-    public const int BOARD_COLUMN_COUNT = 8;                            //ボード列数
-    public const int BOARD_LINE_COUNT = 8;                              //ボード行数
-    public const int INT_NULL = -99;                                    //nullの代用定数(int型でnullを代入したい場合に使用)
-    public const float SQUARE_DISTANCE = 1.46f;                         //マスの距離
-    public const float SQUARE_DISTANCE_HALF = SQUARE_DISTANCE / 2.0f;   //半マスの距離
-    public const float PIECE_DEFAULT_SCALE = 0.6f;                      //駒のスケール
+    public const int BOARD_COLUMN_COUNT = 8;                                //ボード列数
+    public const int BOARD_LINE_COUNT = 8;                                  //ボード行数
+    public const int SQUARES_COUNT = BOARD_LINE_COUNT * BOARD_COLUMN_COUNT; //ボード総数
+    public const int INT_NULL = -99;                                        //nullの代用定数(int型でnullを代入したい場合に使用)
+    public const float SQUARE_DISTANCE = 1.46f;                             //マスの距離
+    public const float SQUARE_DISTANCE_HALF = SQUARE_DISTANCE / 2.0f;       //半マスの距離
+    public const float PIECE_DEFAULT_SCALE = 0.6f;                          //駒のスケール
     public static readonly Vector3 PIECE_DEFAULT_POS = new Vector3(0.0f, 0.0f, Z_PIECE);          //駒の基本座標
     public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
 
@@ -161,8 +171,9 @@ public class PuzzleDefine : MonoBehaviour
     }
 
     //ステージ別定数
+    public static int[]   USE_COLOR_TYPE_ARR;   //使用色の種類
+    public static int     USE_COLOR_COUNT;      //使用色の数
     public static int     STAGE_NUMBER;         //ステージ番号
-    public static int     USE_PIECE_COUNT;      //使用駒の種類数
     public static int[]   HIDE_SQUARE_ARR;      //非表示マスの管理番号
     public static int     GIMMICKS_COUNT;       //ギミックの設定数
     public static int     GIMMICKS_GROUP_COUNT; //ギミックのグループの設定数
@@ -197,19 +208,24 @@ public class PuzzleDefine : MonoBehaviour
     //ステージ設定
     public static void StageSetting()
     {
+        USE_COLOR_TYPE_ARR = new int[]
+        {
+            (int)Colors.Blue,   //青
+            //(int)Colors.Red,    //赤
+            //(int)Colors.Yellow, //黄
+            //(int)Colors.Green,  //緑
+            //(int)Colors.Violet, //紫
+            (int)Colors.Orange  //橙
+        };
+        USE_COLOR_COUNT      = USE_COLOR_TYPE_ARR.Length;
         STAGE_NUMBER         = 1;
-        USE_PIECE_COUNT      = 6;
         HIDE_SQUARE_ARR      = new int[0];
-        GIMMICKS_COUNT       = 8;
+        GIMMICKS_COUNT       = 4;
         GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
-        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry,   (int)Colors.Blue, NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.D1, (int)Gimmicks.Hamster,   COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.B6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 0 };
-        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.C6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 1 };
-        GIMMICKS_INFO_ARR[4] = new int[] { (int)Squares.D6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 2 };
-        GIMMICKS_INFO_ARR[5] = new int[] { (int)Squares.E6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 3 };
-        GIMMICKS_INFO_ARR[6] = new int[] { (int)Squares.F6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 4 };
-        GIMMICKS_INFO_ARR[7] = new int[] { (int)Squares.G6, (int)Gimmicks.NumberTag, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 5 };
+        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry, (int)Colors.Blue, NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.D1, (int)Gimmicks.Hamster, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.H1, (int)Gimmicks.Tornado, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.D3, (int)Gimmicks.Tornado, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
 
         List<int> usedGroupNum = new List<int>();
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)

@@ -49,6 +49,7 @@ namespace PuzzleMain
         const string STATE_NAME_BURST        = "Burst";         //破壊
         const string STATE_NAME_COLOR_CHANGE = "ColorChange";   //色の更新
         const string STATE_NAME_RETURN       = "Return";        //状態を戻す
+        const string STATE_NAME_ATTACK       = "Attack";        //攻撃
 
         //グループギミックのリスト
         List<GameObject>[] frameObjListArr;             //枠オブジェクトリスト(グループ別)
@@ -123,6 +124,7 @@ namespace PuzzleMain
                 case (int)Gimmicks.Wall:        //壁
                 case (int)Gimmicks.Flower:      //花
                 case (int)Gimmicks.Hamster:     //ハムスター
+                case (int)Gimmicks.Tornado:     //竜巻
                     damage = true;
                     break;
 
@@ -164,6 +166,7 @@ namespace PuzzleMain
                 case (int)Gimmicks.Balloon_Color:   //風船(色)
                 case (int)Gimmicks.Jewelry:         //宝石
                 case (int)Gimmicks.NumberTag:       //番号札
+                case (int)Gimmicks.Tornado:         //竜巻
                     stateName = STATE_NAME_BURST;
                     break;
 
@@ -195,7 +198,12 @@ namespace PuzzleMain
         /// </summary>
         public IEnumerator ChangeGimmickState()
         {
+            //コルーチンリスト
             List<Coroutine> coroutineList = new List<Coroutine>();
+            Coroutine coroutine = null;
+
+            //竜巻オブジェクト情報リスト
+            tornadoInfoList = new List<GimmickInformation>();
 
             //通常ギミック
             if (gimmickInfoArr != null)
@@ -210,13 +218,15 @@ namespace PuzzleMain
                         case (int)Gimmicks.Jewelry:
 
                             //子オブジェクトのsprit更新
-                            gimmInfo.colorId++;
-                            if (gimmInfo.colorId >= USE_PIECE_COUNT) gimmInfo.colorId = 0;
+                            int oldColorType = Array.IndexOf(USE_COLOR_TYPE_ARR, gimmInfo.colorId);
+                            int newColorType = (oldColorType == USE_COLOR_COUNT - 1) ? 0 : oldColorType + 1;
+                            gimmInfo.colorId = USE_COLOR_TYPE_ARR[newColorType];
                             Sprite newSprite = jewelrySprArr[gimmInfo.colorId];
                             gimmInfo.spriRenChild[0].sprite = newSprite;
 
                             //sprit変更
-                            coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
+                            coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
+                            coroutineList.Add(coroutine);
                             break;
 
                         //ハムスター(連続フラグ確認)
@@ -231,12 +241,25 @@ namespace PuzzleMain
                                     //初期状態に戻す
                                     gimmInfo.destructible = false;
                                     gimmInfo.remainingTimes++;
-                                    coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN)));
+                                    coroutine = StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN));
+                                    coroutineList.Add(coroutine);
                                 }
                             }
                             break;
+
+                        //竜巻
+                        case (int)Gimmicks.Tornado:
+                            tornadoInfoList.Add(gimmInfo);
+                            break;
                     }
                 }
+            }
+
+            //竜巻ギミック動作開始
+            if (tornadoInfoList.Count > 0)
+            {
+                coroutine = StartCoroutine(StartTornadoAttack());
+                coroutineList.Add(coroutine);
             }
 
             //枠ギミック
@@ -254,18 +277,21 @@ namespace PuzzleMain
                             case (int)Gimmicks.Frame_Color_Change:
 
                                 //子オブジェクトのsprit更新
-                                gimmInfo.colorId++;
-                                if (gimmInfo.colorId >= USE_PIECE_COUNT) gimmInfo.colorId = 0;
+                                int oldColorType = Array.IndexOf(USE_COLOR_TYPE_ARR, gimmInfo.colorId);
+                                int newColorType = (oldColorType == USE_COLOR_COUNT - 1) ? 0 : oldColorType + 1;
+                                gimmInfo.colorId = USE_COLOR_TYPE_ARR[newColorType];
                                 Sprite newSprite = (gimmInfo.tra.localPosition.x == 0.0f) ? frameWidthSprArr[gimmInfo.colorId] : frameHeightSprArr[gimmInfo.colorId];
                                 gimmInfo.spriRenChild[0].sprite = newSprite;
 
                                 //sprit変更
-                                coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
+                                coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
+                                coroutineList.Add(coroutine);
 
                                 //マスの色変更
                                 if (!changedSquare.Contains(gimmInfo.startSquareId))
                                 {
-                                    coroutineList.Add(StartCoroutine(piecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true)));
+                                    coroutine = StartCoroutine(piecesMan.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
+                                    coroutineList.Add(coroutine);
                                     changedSquare.Add(gimmInfo.startSquareId);
                                 }
 
@@ -279,8 +305,8 @@ namespace PuzzleMain
             }
 
             //ギミック変更待機
-            foreach (Coroutine coroutine in coroutineList)
-            { yield return coroutine; }
+            foreach (Coroutine c in coroutineList)
+            { yield return c; }
         }
 
         /// <summary>
@@ -708,6 +734,236 @@ namespace PuzzleMain
         public void NumberTagOrderSetting(ref GimmickInformation gimInfo)
         {
             gimInfo.spriRenChild[NUMBERTAG_FRONT].sprite = NumberTagSprArr[gimInfo.order];
+        }
+
+
+        //===============================================//
+        //============竜巻（Tornado）の固有関数==========//
+        //===============================================//
+
+        //竜巻が攻撃するマス番号配列のインデックス番号
+        enum TornadoAttackInfoIndex
+        {
+            AttackFirst = 0,    //最初に攻撃するマス番号
+            AttackSecond,       //最初に攻撃するマス番号
+            AttackThird,        //最初に攻撃するマス番号
+            AttackDirection,    //攻撃方向
+
+            ArrayCount          //配列サイズ
+        }
+
+        //竜巻が攻撃する情報配列
+        static List<GimmickInformation> tornadoInfoList;
+        static int[][] tornadoAttackInfoArr;
+
+        /// <summary>
+        /// 竜巻が攻撃する情報の設定
+        /// </summary>
+        void SetTornadoAttackInfo()
+        {
+            //攻撃マス番号の設定
+            int tornadoCount = tornadoInfoList.Count;
+            tornadoAttackInfoArr = new int[tornadoCount][];
+            for (int i = 0; i < tornadoCount; i++)
+            {
+                tornadoAttackInfoArr[i] = new int[(int)TornadoAttackInfoIndex.ArrayCount];
+
+                //周囲8マスが攻撃可能か確認
+                int directionCounts          = Enum.GetValues(typeof(Directions)).Length;
+                int[] piecesIndexArr         = new int[directionCounts];    //周辺駒の管理番号
+                bool[] attackPossibleSquares = new bool[directionCounts];   //攻撃可能
+                int[] nullSquareCount        = new int[directionCounts];    //空マスの数
+                foreach (Directions dir in Enum.GetValues(typeof(Directions)))
+                {
+                    nullSquareCount[(int)dir] = 0;
+                    attackPossibleSquares[(int)dir] = false;
+
+                    //竜巻盤の端にある場合
+                    switch (dir)
+                    {
+                        //上
+                        case Directions.Up:
+                        case Directions.UpLeft:
+                        case Directions.UpRight:
+                            if (tornadoInfoList[i].nowSquareId % BOARD_LINE_COUNT == 0) continue;
+                            break;
+                        //下
+                        case Directions.Down:
+                        case Directions.DownLeft:
+                        case Directions.DownRight:
+                            if (tornadoInfoList[i].nowSquareId % (BOARD_LINE_COUNT + 1) == 0) continue;
+                            break;
+                    }
+                    switch (dir)
+                    {
+                        //左
+                        case Directions.Left:
+                        case Directions.UpLeft:
+                        case Directions.DownLeft:
+                            if (tornadoInfoList[i].nowSquareId < BOARD_LINE_COUNT) continue;
+                            break;
+                        //右
+                        case Directions.Right:
+                        case Directions.UpRight:
+                        case Directions.DownRight:
+                            if (tornadoInfoList[i].nowSquareId >= SQUARES_COUNT - BOARD_LINE_COUNT) continue;
+                            break;
+                    }
+
+                    //各方向のマス管理番号取得
+                    piecesIndexArr[(int)dir] = piecesMan.GetDesignatedDirectionIndex((int)dir, tornadoInfoList[i].nowSquareId);
+                    if (0 <= piecesIndexArr[(int)dir] && piecesIndexArr[(int)dir] < SQUARES_COUNT)
+                    {
+                        if (pieceObjArr[piecesIndexArr[(int)dir]] == null)
+                        {
+                            //空マス
+                            nullSquareCount[(int)dir]++;
+                            attackPossibleSquares[(int)dir] = true;
+                        }
+                        else if (pieceInfoArr[piecesIndexArr[(int)dir]] != null && pieceInfoArr[piecesIndexArr[(int)dir]].invertable)
+                        {
+                            //反転可能駒
+                            attackPossibleSquares[(int)dir] = true;
+                        }
+                    }
+                }
+                
+                //攻撃可能方向の取得
+                int attackPatternCount = Enum.GetValues(typeof(FourDirections)).Length;
+                bool[] attackPossibleDirections = new bool[attackPatternCount];
+
+                //上方向
+                if (attackPossibleSquares[(int)Directions.Up] &&        //上
+                    attackPossibleSquares[(int)Directions.UpRight] &&   //右上
+                    attackPossibleSquares[(int)Directions.Right])       //右
+                {
+                    attackPossibleDirections[(int)FourDirections.Up] = true;
+                }
+                //下方向
+                if (attackPossibleSquares[(int)Directions.Down] &&      //下
+                    attackPossibleSquares[(int)Directions.DownLeft] &&  //左下
+                    attackPossibleSquares[(int)Directions.Left])        //左
+                {
+                    attackPossibleDirections[(int)FourDirections.Down] = true;
+                }
+                //左方向
+                if (attackPossibleSquares[(int)Directions.Left] &&      //左
+                    attackPossibleSquares[(int)Directions.UpLeft] &&    //左上
+                    attackPossibleSquares[(int)Directions.Up])          //上
+                {
+                    attackPossibleDirections[(int)FourDirections.Left] = true;
+                }
+                //右方向
+                if (attackPossibleSquares[(int)Directions.Right] &&     //右
+                    attackPossibleSquares[(int)Directions.DownRight] && //右下
+                    attackPossibleSquares[(int)Directions.Down])        //下
+                {
+                    attackPossibleDirections[(int)FourDirections.Right] = true;
+                }
+
+                //空マス最小値取得
+                int nullMinCount = (int)TornadoAttackInfoIndex.ArrayCount - 1;  //方向設定の分を-1
+                foreach (int nullCount in nullSquareCount)
+                { if (nullCount < nullMinCount) nullMinCount = nullCount; }
+
+                //使用するパターン番号取得
+                List<int> usePatternList = new List<int>();
+                for (int a = 0; a < attackPatternCount; a++)
+                {
+                    if (attackPossibleDirections[a])
+                    {
+                        if (nullMinCount == nullSquareCount[a]) usePatternList.Add(a);
+                    }
+                }
+                int usePossibleCount = usePatternList.Count;
+                if (usePossibleCount == 0)
+                {
+                    tornadoAttackInfoArr[i] = null;
+                    continue;
+                }
+                int usePatternIndex = usePatternList[UnityEngine.Random.Range(0, usePossibleCount)];
+
+                //攻撃方向の設定
+                tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackDirection] = usePatternIndex;
+                switch (usePatternIndex)
+                {
+                    //上方向
+                    case (int)FourDirections.Up:
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackFirst]  = piecesIndexArr[(int)Directions.Up];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackSecond] = piecesIndexArr[(int)Directions.UpRight];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackThird]  = piecesIndexArr[(int)Directions.Right];
+                        break;
+                    //下方向
+                    case (int)FourDirections.Down:
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackFirst]  = piecesIndexArr[(int)Directions.Down];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackSecond] = piecesIndexArr[(int)Directions.DownLeft];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackThird]  = piecesIndexArr[(int)Directions.Left];
+                        break;
+                    //左方向
+                    case (int)FourDirections.Left:
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackFirst]  = piecesIndexArr[(int)Directions.Left];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackSecond] = piecesIndexArr[(int)Directions.UpLeft];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackThird]  = piecesIndexArr[(int)Directions.Up];
+                        break;
+                    //右方向
+                    case (int)FourDirections.Right:
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackFirst]  = piecesIndexArr[(int)Directions.Right];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackSecond] = piecesIndexArr[(int)Directions.DownRight];
+                        tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackThird]  = piecesIndexArr[(int)Directions.Down];
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 竜巻の攻撃開始
+        /// </summary>
+        IEnumerator StartTornadoAttack()
+        {
+            //攻撃設定
+            SetTornadoAttackInfo();
+
+            //コルーチンリスト
+            List<Coroutine> coroutineList = new List<Coroutine>();
+            Coroutine coroutine = null;
+
+            //攻撃開始
+            int tornadoCount = tornadoInfoList.Count;
+            for (int i = 0; i < tornadoCount; i++)
+            {
+                if (tornadoAttackInfoArr[i] == null) continue;
+                string directionName = Enum.GetNames(typeof(FourDirections))[tornadoAttackInfoArr[i][(int)TornadoAttackInfoIndex.AttackDirection]];
+                coroutine = StartCoroutine(AnimationStart(tornadoInfoList[i].ani, STATE_NAME_ATTACK + directionName));
+                coroutineList.Add(coroutine);
+            }
+
+            //終了待機
+            if (coroutineList.Count == 0) yield break;
+            foreach (Coroutine c in coroutineList)
+            { yield return c; }
+
+            //メモリ開放
+            tornadoInfoList = null;
+            tornadoAttackInfoArr = null;
+        }
+
+        /// <summary>
+        /// 竜巻の攻撃
+        /// </summary>
+        /// <param name="attackNum">攻撃番号</param>
+        public void TornadoAttackPieceChange(GimmickInformation gimInfo, int attackNum)
+        {
+            int gimIndex = tornadoInfoList.IndexOf(gimInfo);
+            int nowPieceColor = piecesMan.GetSquarePieceColorId(tornadoAttackInfoArr[gimIndex][attackNum]);
+
+            //今の駒と同色だった場合は10回まで再試行する
+            int generateColorId = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                generateColorId = piecesMan.GetRandomPieceColor();
+                if (nowPieceColor != generateColorId) break;
+            }
+            StartCoroutine(piecesMan.ReversingPieces(tornadoAttackInfoArr[gimIndex][attackNum], generateColorId));
         }
     }
 }

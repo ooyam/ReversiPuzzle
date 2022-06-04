@@ -33,7 +33,7 @@ namespace PuzzleMain
         [SerializeField]
         Transform nextPieceBoxesTra;
 
-        GameObject[] pieceObjArr;               //駒オブジェクト配列
+        public static GameObject[] pieceObjArr; //駒オブジェクト配列
         Transform[]  pieceTraArr;               //駒Transform配列
         GameObject[] squareObjArr;              //マスオブジェクト配列
         public static Transform[] squareTraArr; //マスTransform配列
@@ -45,9 +45,7 @@ namespace PuzzleMain
         Transform    nextPieceFrameTra;         //次に置くコマの指定フレーム
         GameObject[] gimmickObjArr;             //ギミックオブジェクト配列
         int nextPuPieceIndex = 0;               //次に置く駒の管理番号
-        int squaresCount;                       //マスの個数
         int nextPiecesCount;                    //待機駒の個数
-        int[] directionsIntArr;                 //8方向の管理番号配列
 
         public static PieceInformation[] pieceInfoArr;                          //駒の情報配列
         public static GimmickInformation[] gimmickInfoArr;                      //ギミックの情報配列
@@ -60,21 +58,14 @@ namespace PuzzleMain
 
         void Start()
         {
-            //8方向の管理番号取得
-            System.Array directions = Enum.GetValues(typeof(Directions));
-            directionsIntArr = new int[directions.Length];
-            foreach (Directions direction in directions)
-            { directionsIntArr[(int)direction] = (int)direction; }
-
             //マス取得
-            squaresCount = BOARD_COLUMN_COUNT * BOARD_LINE_COUNT;
-            pieceTraArr  = new Transform[squaresCount];
-            pieceObjArr  = new GameObject[squaresCount];
-            pieceInfoArr = new PieceInformation[squaresCount];
-            squareObjArr = new GameObject[squaresCount];
-            squareTraArr = new Transform[squaresCount];
-            squareSpriRenArr = new SpriteRenderer[squaresCount];
-            for (int i = 0; i < squaresCount; i++)
+            pieceTraArr  = new Transform[SQUARES_COUNT];
+            pieceObjArr  = new GameObject[SQUARES_COUNT];
+            pieceInfoArr = new PieceInformation[SQUARES_COUNT];
+            squareObjArr = new GameObject[SQUARES_COUNT];
+            squareTraArr = new Transform[SQUARES_COUNT];
+            squareSpriRenArr = new SpriteRenderer[SQUARES_COUNT];
+            for (int i = 0; i < SQUARES_COUNT; i++)
             {
                 squareObjArr[i] = reversiBoardTra.GetChild(i).gameObject;
                 squareTraArr[i] = squareObjArr[i].transform;
@@ -101,12 +92,12 @@ namespace PuzzleMain
             }
 
             //駒のランダム配置
-            for (int i = 0; i < squaresCount; i++)
+            for (int i = 0; i < SQUARES_COUNT; i++)
             {
                 if (!squareObjArr[i].activeSelf) continue; //非表示マスは処理を飛ばす
                 if (notPlaceIndex.Contains(i))   continue; //ギミックマスは処理を飛ばす
 
-                int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
+                int pieceGeneIndex = GetRandomPieceColor();
                 GeneratePiece(pieceGeneIndex, i, true);
             }
 
@@ -129,7 +120,7 @@ namespace PuzzleMain
             nextPieceTraArr = new Transform[nextPiecesCount];
             for (int i = 0; i < nextPiecesCount; i++)
             {
-                int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
+                int pieceGeneIndex = GetRandomPieceColor();
                 GenerateNextPiece(pieceGeneIndex, i);
             }
         }
@@ -195,7 +186,7 @@ namespace PuzzleMain
             pieceInfoArr[squareId].InformationSetting(squareId, false);
 
             //待機駒生成
-            int pieceGeneIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
+            int pieceGeneIndex = GetRandomPieceColor();
             GenerateNextPiece(pieceGeneIndex, nextPuPieceIndex);
         }
 
@@ -248,7 +239,6 @@ namespace PuzzleMain
 
             DeletePiece(Array.IndexOf(pieceObjArr, gimmickObj));
         }
-
 
         /// <summary>
         /// 管理番号の更新
@@ -308,6 +298,25 @@ namespace PuzzleMain
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 駒のランダム色取得
+        /// </summary>
+        /// <returns>駒のランダムなプレハブのインデックス</returns>
+        public int GetRandomPieceColor()
+        {
+            return USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, USE_COLOR_COUNT)];
+        }
+
+        /// <summary>
+        /// マスにある駒の色ID取得
+        /// </summary>
+        /// <returns>色ID</returns>
+        public int GetSquarePieceColorId(int squareIndex)
+        {
+            if (pieceInfoArr[squareIndex] == null) return INT_NULL;
+            return pieceInfoArr[squareIndex].colorId;
         }
 
         //==========================================================//
@@ -405,22 +414,22 @@ namespace PuzzleMain
         bool GetReversIndex(int putPieceIndex, ref int putPieceColorId, ref List<int[]> reversIndexList)
         {
             //同タグ番号取得
-            int squaresCount_Up    = putPieceIndex % BOARD_LINE_COUNT;            //置いた駒の上にあるマスの数
-            int squaresCount_Left  = putPieceIndex / BOARD_LINE_COUNT;            //置いた駒の左にあるマスの数
-            int squaresCount_Down  = BOARD_LINE_COUNT - squaresCount_Up - 1;      //置いた駒の下にあるマスの数
-            int squaresCount_Right = BOARD_COLUMN_COUNT - squaresCount_Left - 1;  //置いた駒の右にあるマスの数
+            int SQUARES_COUNT_Up    = putPieceIndex % BOARD_LINE_COUNT;            //置いた駒の上にあるマスの数
+            int SQUARES_COUNT_Left  = putPieceIndex / BOARD_LINE_COUNT;            //置いた駒の左にあるマスの数
+            int SQUARES_COUNT_Down  = BOARD_LINE_COUNT - SQUARES_COUNT_Up - 1;      //置いた駒の下にあるマスの数
+            int SQUARES_COUNT_Right = BOARD_COLUMN_COUNT - SQUARES_COUNT_Left - 1;  //置いた駒の右にあるマスの数
 
             //反転判定方向順番の設定
-            int directionCounts = directionsIntArr.Length;
+            int directionCounts = Enum.GetValues(typeof(Directions)).Length;
             int[] loopCounts = new int[directionCounts];
             int[][] dummyArr = new int[directionCounts][];
-            foreach (int directionsInt in directionsIntArr)
+            foreach (Directions directions in Enum.GetValues(typeof(Directions)))
             {
                 //各方向毎の処理回数設定
-                loopCounts[directionsInt] = SetLoopCount(directionsInt, ref squaresCount_Up, ref squaresCount_Right, ref squaresCount_Down, ref squaresCount_Left);
+                loopCounts[(int)directions] = SetLoopCount(directions, ref SQUARES_COUNT_Up, ref SQUARES_COUNT_Right, ref SQUARES_COUNT_Down, ref SQUARES_COUNT_Left);
 
                 //順番判定ギミックが存在するか？
-                dummyArr[directionsInt] = new int[] { directionsInt, GetOrderIndex(ref putPieceIndex, ref loopCounts[directionsInt], directionsInt) };
+                dummyArr[(int)directions] = new int[] { (int)directions, GetOrderIndex(ref putPieceIndex, ref loopCounts[(int)directions], (int)directions) };
             }
 
             //順番ギミックを昇順にソート
@@ -472,18 +481,18 @@ namespace PuzzleMain
         /// <param name="down">      下にあるマスの数</param>
         /// <param name="left">      左にあるマスの数</param>
         /// <returns>処理回数</returns>
-        int SetLoopCount(int directions, ref int up, ref int right, ref int down, ref int left)
+        int SetLoopCount(Directions directions, ref int up, ref int right, ref int down, ref int left)
         {
             switch (directions)
             {
-                case (int)Directions.Up:        return up;                              //上
-                case (int)Directions.UpRight:   return (up <= right) ? up : right;      //右上
-                case (int)Directions.Right:     return right;                           //右
-                case (int)Directions.DownRight: return (down <= right) ? down : right;  //右下
-                case (int)Directions.Down:      return down;                            //下
-                case (int)Directions.DownLeft:  return (down <= left) ? down : left;    //左下
-                case (int)Directions.Left:      return left;                            //左
-                case (int)Directions.UpLeft:    return (up <= left) ? up : left;        //左上
+                case Directions.Up:        return up;                              //上
+                case Directions.UpRight:   return (up <= right) ? up : right;      //右上
+                case Directions.Right:     return right;                           //右
+                case Directions.DownRight: return (down <= right) ? down : right;  //右下
+                case Directions.Down:      return down;                            //下
+                case Directions.DownLeft:  return (down <= left) ? down : left;    //左下
+                case Directions.Left:      return left;                            //左
+                case Directions.UpLeft:    return (up <= left) ? up : left;        //左上
                 default: return 0;
             }
         }
@@ -501,7 +510,7 @@ namespace PuzzleMain
             for (int i = 1; i <= loopCount; i++)
             {
                 //指定方向のインデックス番号取得
-                int refIndex = GetPlaceIndex(ref direction, ref putPieceIndex, ref i);
+                int refIndex = GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
                 if (pieceObjArr[refIndex] == null) return NOT_NUM;
@@ -533,7 +542,7 @@ namespace PuzzleMain
             for (int i = 1; i <= loopCount; i++)
             {
                 //指定方向のインデックス番号取得
-                int refIndex = GetPlaceIndex(ref direction, ref putPieceIndex, ref i);
+                int refIndex = GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
                 if (pieceObjArr[refIndex] == null) break;
@@ -583,7 +592,7 @@ namespace PuzzleMain
         /// <param name="baseIndex">基準オブジェクトの管理番号</param>
         /// <param name="distance"> 距離</param>
         /// <returns>指定場所の管理番号</returns>
-        int GetPlaceIndex(ref int direction, ref int baseIndex, ref int distance)
+        public int GetDesignatedDirectionIndex(int direction, int baseIndex, int distance = 1)
         {
             switch (direction)
             {
@@ -595,8 +604,8 @@ namespace PuzzleMain
                 case (int)Directions.DownLeft:  return baseIndex - BOARD_LINE_COUNT * distance + distance;  //左下
                 case (int)Directions.Left:      return baseIndex - BOARD_LINE_COUNT * distance;             //左
                 case (int)Directions.UpLeft:    return baseIndex - BOARD_LINE_COUNT * distance - distance;  //左上
-                default: return 0;
             }
+            return INT_NULL;
         }
 
         //==========================================================//
@@ -694,8 +703,10 @@ namespace PuzzleMain
         /// </summary>
         /// <param name="reversPieceIndex">裏返す駒の管理番号</param>
         /// <param name="generateColorId"> 生成駒の色番号</param>
-        IEnumerator ReversingPieces(int reversPieceIndex, int generateColorId)
+        public IEnumerator ReversingPieces(int reversPieceIndex, int generateColorId)
         {
+            if (pieceTraArr[reversPieceIndex] == null) yield break;
+
             //駒90°回転,拡大
             StartCoroutine(AllScaleChange(pieceTraArr[reversPieceIndex], REVERSE_PIECE_SCALING_SPEED, REVERSE_PIECE_CHANGE_SCALE));
             yield return StartCoroutine(RotateMovement(pieceTraArr[reversPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_SWITCH_ROT));
@@ -794,7 +805,7 @@ namespace PuzzleMain
         List<int> SettingOfFallingPieces()
         {
             List<int> fallPiecesIndexList = new List<int>();
-            for (int i = squaresCount - 1; i >= 0; i--)
+            for (int i = SQUARES_COUNT - 1; i >= 0; i--)
             {
                 //空マスでなえれば処理をスキップ
                 if (pieceObjArr[i] != null) continue;
@@ -820,7 +831,7 @@ namespace PuzzleMain
                     if (n == loopCount)
                     {
                         //新規ランダム生成
-                        int prefabIndex = UnityEngine.Random.Range(0, USE_PIECE_COUNT);
+                        int prefabIndex = GetRandomPieceColor();
                         GeneratePiece(prefabIndex, i);
                         pieceTraArr[i].localPosition = new Vector3(PIECE_DEFAULT_POS.x, i % BOARD_LINE_COUNT * SQUARE_DISTANCE, Z_PIECE);
                     }

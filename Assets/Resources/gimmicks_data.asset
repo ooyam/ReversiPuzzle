@@ -186,13 +186,13 @@ MonoBehaviour:
   - id: 17
     name: Tornado
     free_fall: 1
-    damage_times: 0
+    damage_times: 1
     continuous: 0
     in_square: 1
     position_x: 0
     position_y: 0
-    scale_x: 1
-    scale_y: 1
+    scale_x: 0.23
+    scale_y: 0.25
   - id: 18
     name: TrafficLight
     free_fall: 0
