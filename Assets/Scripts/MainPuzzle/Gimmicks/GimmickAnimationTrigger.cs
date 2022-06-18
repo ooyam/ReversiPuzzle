@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PuzzleMain.PuzzleMain;
 
 namespace PuzzleMain
 {
     public class GimmickAnimationTrigger : MonoBehaviour
     {
         //自身のギミック情報
-        GimmickInformation gimmickInfo;
-        GimmicksManager gimmicksMan;
+        GimmickInformation mGimmickInfo;
+        GimmicksManager mGimmicksMan;
         void Start()
         {
-            gimmickInfo = this.GetComponent<GimmickInformation>();
-            gimmicksMan = GameObject.FindWithTag("GimmicksManager").GetComponent<GimmicksManager>();
+            mGimmickInfo = this.GetComponent<GimmickInformation>();
+            mGimmicksMan = sPuzzleMain.GetGimmicksManager();
         }
 
         /// <summary>
@@ -21,7 +22,7 @@ namespace PuzzleMain
         /// <param name="attackNum">攻撃番号</param>
         void TornadoAttackTrigger(int attackNum)
         {
-            gimmicksMan.TornadoAttackPieceChange(gimmickInfo, attackNum);
+            mGimmicksMan.TornadoAttackPieceChange(mGimmickInfo, attackNum);
         }
     }
 }

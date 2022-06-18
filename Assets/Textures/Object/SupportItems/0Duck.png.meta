@@ -1,34 +1,31 @@
 fileFormatVersion: 2
-guid: fb4c7937c07574144adffff8e717d07a
+guid: ed80ae571c80a514e8ed4930d740278e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7512434501291994743
-    second: piece_0
+      213: -2628670488690563419
+    second: 0Duck_0
   - first:
-      213: -5469544147542759613
-    second: piece_1
+      213: 6783191413656052676
+    second: 0Duck_1
   - first:
-      213: -6930793143504519088
-    second: piece_2
+      213: -1153283484539063095
+    second: 0Duckling_0
   - first:
-      213: 6515653079975349017
-    second: piece_3
+      213: -5811468239608601292
+    second: 0Duckling_1
   - first:
-      213: 4028317098171462460
-    second: piece_4
+      213: -1988246725748876311
+    second: 0Duckling_2
   - first:
-      213: 519972126799242080
-    second: piece_5
+      213: 1413693414822450682
+    second: 0Duckling_3
   - first:
-      213: 1458753998446041006
-    second: piece_6
+      213: 3507274000859032886
+    second: 0Duckling_4
   - first:
-      213: -1754332269779473219
-    second: piece_7
-  - first:
-      213: 1647667866788335223
-    second: piece_8
+      213: -994519172167638556
+    second: 0Duck_White
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -154,13 +151,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: piece_0
+      name: 0Duck_0
       rect:
         serializedVersion: 2
-        x: 412
-        y: 318
-        width: 226
-        height: 226
+        x: 29
+        y: 654
+        width: 687
+        height: 555
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,20 +165,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9811a18af987eb790800000000000000
-      internalID: -7512434501291994743
+      spriteID: 5a6eb0a2e16158bd0800000000000000
+      internalID: -2628670488690563419
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_1
+      name: 0Duck_1
       rect:
         serializedVersion: 2
-        x: 1237
-        y: 46
-        width: 226
-        height: 226
+        x: 29
+        y: 40
+        width: 687
+        height: 555
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,20 +186,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 347a562a3964814b0800000000000000
-      internalID: -5469544147542759613
+      spriteID: 4c3e27ed6acb22e50800000000000000
+      internalID: 6783191413656052676
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_2
+      name: 0Duckling_0
       rect:
         serializedVersion: 2
-        x: 412
-        y: 863
-        width: 226
-        height: 226
+        x: 797
+        y: 656
+        width: 200
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -210,20 +207,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05043bd5b50e0df90800000000000000
-      internalID: -6930793143504519088
+      spriteID: 9c479baf7c6beffe0800000000000000
+      internalID: -1153283484539063095
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_3
+      name: 0Duckling_1
       rect:
         serializedVersion: 2
-        x: 137
-        y: 590
-        width: 226
-        height: 226
+        x: 1009
+        y: 656
+        width: 200
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -231,20 +228,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91b4c9f64ff3c6a50800000000000000
-      internalID: 6515653079975349017
+      spriteID: 4352aa23d64895fa0800000000000000
+      internalID: -5811468239608601292
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_4
+      name: 0Duckling_2
       rect:
         serializedVersion: 2
-        x: 962
-        y: 318
-        width: 226
-        height: 226
+        x: 1215
+        y: 656
+        width: 200
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -252,20 +249,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c33742fce0577e730800000000000000
-      internalID: 4028317098171462460
+      spriteID: 9eb97e913245864e0800000000000000
+      internalID: -1988246725748876311
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_5
+      name: 0Duckling_3
       rect:
         serializedVersion: 2
-        x: 687
-        y: 863
-        width: 226
-        height: 226
+        x: 1476
+        y: 656
+        width: 200
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -273,20 +270,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 06329f6f4ef473700800000000000000
-      internalID: 519972126799242080
+      spriteID: af51dc3bba27e9310800000000000000
+      internalID: 1413693414822450682
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_6
+      name: 0Duckling_4
       rect:
         serializedVersion: 2
-        x: 412
-        y: 46
-        width: 226
-        height: 226
+        x: 1738
+        y: 656
+        width: 200
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,41 +291,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea79e0468098e3410800000000000000
-      internalID: 1458753998446041006
+      spriteID: 63d6a271f175ca030800000000000000
+      internalID: 3507274000859032886
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: piece_7
+      name: 0Duck_White
       rect:
         serializedVersion: 2
-        x: 962
-        y: 590
-        width: 226
-        height: 226
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dbc2ac1781c57a7e0800000000000000
-      internalID: -1754332269779473219
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: piece_8
-      rect:
-        serializedVersion: 2
-        x: 125
-        y: 859
-        width: 226
-        height: 226
+        x: 817
+        y: 50
+        width: 687
+        height: 555
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -336,8 +312,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77e8eb3f131bdd610800000000000000
-      internalID: 1647667866788335223
+      spriteID: 4e1e1a40512c232f0800000000000000
+      internalID: -994519172167638556
       vertices: []
       indices: 
       edges: []

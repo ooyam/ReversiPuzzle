@@ -11,6 +11,7 @@ public class PieceInformation : MonoBehaviour
     //駒情報
     [Header("駒の色選択")]
     public Colors color;                            //色
+    public bool colorRless;                         //色なしフラグ
     [System.NonSerialized] public int  colorId;     //色番号
     [System.NonSerialized] public int  squareId;    //マス管理番号
     [System.NonSerialized] public bool freeFall;    //自由落下フラグ
@@ -25,7 +26,7 @@ public class PieceInformation : MonoBehaviour
     public void InformationSetting(int _squareIndex, bool _generate, GimmickInformation[] gimmickInfoArr = null)
     {
         tra        = this.transform;
-        colorId    = (int)color;
+        colorId    = (colorRless) ? COLORLESS_ID : (int)color;
         squareId   = _squareIndex;
         OperationFlagON();
         if (_generate)

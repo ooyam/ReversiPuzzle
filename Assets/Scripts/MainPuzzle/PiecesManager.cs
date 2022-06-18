@@ -2,22 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using static GameManager;
 using static PuzzleDefine;
-using static PuzzleMain.GimmicksManager;
+using static PuzzleMain.PuzzleMain;
 using static ObjectMove_2D.ObjectMove_2D;
 
 namespace PuzzleMain
 {
     public class PiecesManager : MonoBehaviour
     {
-        [Header("GimmicksManagerの取得")]
-        [SerializeField]
-        GimmicksManager gimmicksMan;
+        GimmicksManager     gimmicksMgr;    //GimmicksManager
+        SupportItemsManager stItemsMgr;     //SupportItemsManager
 
         [Header("駒プレハブの取得")]
         [SerializeField]
         GameObject[] piecePrefabArr;
+
+        [Header("黒駒プレハブの取得")]
+        [SerializeField]
+        GameObject blackPiecePrefab;
 
         [Header("ギミックプレハブの取得")]
         public gimmickArr[] gimmickPrefabArr;
@@ -33,42 +35,41 @@ namespace PuzzleMain
         [SerializeField]
         Transform nextPieceBoxesTra;
 
-        public static GameObject[] pieceObjArr; //駒オブジェクト配列
         Transform[]  pieceTraArr;               //駒Transform配列
         GameObject[] squareObjArr;              //マスオブジェクト配列
-        public static Transform[] squareTraArr; //マスTransform配列
         SpriteRenderer[] squareSpriRenArr;      //マスSpriteRenderer配列
         GameObject[] nextPieceObjArr;           //待機駒オブジェクト配列
         Transform[]  nextPieceTraArr;           //待機駒Transform配列
-        GameObject[] nextPieceBoxObjArr;        //待機駒箱オブジェクト配列
         Transform[]  nextPieceBoxTraArr;        //待機駒箱Transform配列
         Transform    nextPieceFrameTra;         //次に置くコマの指定フレーム
         GameObject[] gimmickObjArr;             //ギミックオブジェクト配列
         int nextPuPieceIndex = 0;               //次に置く駒の管理番号
         int nextPiecesCount;                    //待機駒の個数
 
-        public static PieceInformation[] pieceInfoArr;                          //駒の情報配列
-        public static GimmickInformation[] gimmickInfoArr;                      //ギミックの情報配列
-        public static List<int> destroyPiecesIndexList = new List<int>();       //削除駒の管理番号リスト
-        public static List<Coroutine> gimmickCorList = new List<Coroutine>();   //動作中ギミックリスト
-
         //==========================================================//
         //----------------------初期設定,取得-----------------------//
         //==========================================================//
 
-        void Start()
+        /// <summary>
+        /// PiecesManagerの初期化
+        /// </summary>
+        public void Initialize()
         {
+            //他クラス取得
+            gimmicksMgr = sPuzzleMain.GetGimmicksManager();
+            stItemsMgr = sPuzzleMain.GetSupportItemsManager();
+
             //マス取得
-            pieceTraArr  = new Transform[SQUARES_COUNT];
-            pieceObjArr  = new GameObject[SQUARES_COUNT];
-            pieceInfoArr = new PieceInformation[SQUARES_COUNT];
-            squareObjArr = new GameObject[SQUARES_COUNT];
-            squareTraArr = new Transform[SQUARES_COUNT];
-            squareSpriRenArr = new SpriteRenderer[SQUARES_COUNT];
+            pieceTraArr         = new Transform[SQUARES_COUNT];
+            sPieceObjArr        = new GameObject[SQUARES_COUNT];
+            sPieceInfoArr       = new PieceInformation[SQUARES_COUNT];
+            squareObjArr        = new GameObject[SQUARES_COUNT];
+            sSquareTraArr       = new Transform[SQUARES_COUNT];
+            squareSpriRenArr    = new SpriteRenderer[SQUARES_COUNT];
             for (int i = 0; i < SQUARES_COUNT; i++)
             {
                 squareObjArr[i] = reversiBoardTra.GetChild(i).gameObject;
-                squareTraArr[i] = squareObjArr[i].transform;
+                sSquareTraArr[i] = squareObjArr[i].transform;
                 squareSpriRenArr[i] = squareObjArr[i].GetComponent<SpriteRenderer>();
             }
 
@@ -78,8 +79,8 @@ namespace PuzzleMain
 
             //ギミックを配置
             gimmickObjArr  = new GameObject[GIMMICKS_COUNT];
-            gimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
-            gimmicksMan.PlaceGimmickNotInSquare();      //駒として配置しないギミックの生成
+            sGimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
+            gimmicksMgr.PlaceGimmickNotInSquare();      //駒として配置しないギミックの生成
             List<int> notPlaceIndex = new List<int>();  //駒を配置しないマス番号
             for (int i = 0; i < GIMMICKS_COUNT; i++)
             {
@@ -103,13 +104,10 @@ namespace PuzzleMain
 
             //待機駒の箱取得
             nextPiecesCount    = nextPieceBoxesTra.childCount;
-            nextPieceBoxObjArr = new GameObject[nextPiecesCount];
             nextPieceBoxTraArr = new Transform[nextPiecesCount];
             for (int i = 0; i < nextPiecesCount; i++)
             {
-                nextPieceBoxObjArr[i] = nextPieceBoxesTra.GetChild(i).gameObject;
-                nextPieceBoxTraArr[i] = nextPieceBoxObjArr[i].transform;
-
+                nextPieceBoxTraArr[i] = nextPieceBoxesTra.GetChild(i).transform;
             }
 
             //次に置くコマの指定フレーム取得
@@ -140,11 +138,12 @@ namespace PuzzleMain
         /// /// <param name="startGenerate"> 初期生成</param>
         void GeneratePiece(int prefabIndex, int pieceIndex, bool startGenerate = false)
         {
-            pieceObjArr[pieceIndex]  = Instantiate(piecePrefabArr[prefabIndex]);
-            pieceInfoArr[pieceIndex] = pieceObjArr[pieceIndex].GetComponent<PieceInformation>();
-            pieceInfoArr[pieceIndex].InformationSetting(pieceIndex, startGenerate, gimmickInfoArr);
-            pieceTraArr[pieceIndex]  = pieceInfoArr[pieceIndex].tra;
-            pieceTraArr[pieceIndex].SetParent(squareTraArr[pieceIndex], false);
+            if(prefabIndex == COLORLESS_ID) sPieceObjArr[pieceIndex] = Instantiate(blackPiecePrefab);
+            else sPieceObjArr[pieceIndex] = Instantiate(piecePrefabArr[prefabIndex]);
+            sPieceInfoArr[pieceIndex] = sPieceObjArr[pieceIndex].GetComponent<PieceInformation>();
+            sPieceInfoArr[pieceIndex].InformationSetting(pieceIndex, startGenerate, sGimmickInfoArr);
+            pieceTraArr[pieceIndex] = sPieceInfoArr[pieceIndex].tra;
+            pieceTraArr[pieceIndex].SetParent(sSquareTraArr[pieceIndex], false);
             pieceTraArr[pieceIndex].SetSiblingIndex(0);
         }
 
@@ -166,10 +165,10 @@ namespace PuzzleMain
         /// /// <param name="pieceIndex">削除駒の管理番号</param>
         void DeletePiece(int pieceIndex)
         {
-            Destroy(pieceObjArr[pieceIndex]);
-            pieceObjArr[pieceIndex]  = null;
-            pieceTraArr[pieceIndex]  = null;
-            pieceInfoArr[pieceIndex] = null;
+            Destroy(sPieceObjArr[pieceIndex]);
+            sPieceObjArr[pieceIndex]  = null;
+            pieceTraArr[pieceIndex]   = null;
+            sPieceInfoArr[pieceIndex] = null;
         }
 
         /// <summary>
@@ -180,10 +179,10 @@ namespace PuzzleMain
         {
             //盤面の駒削除,管理配列差し替え
             DeletePiece(squareId);
-            pieceObjArr[squareId]  = nextPieceObjArr[nextPuPieceIndex];
+            sPieceObjArr[squareId]  = nextPieceObjArr[nextPuPieceIndex];
             pieceTraArr[squareId]  = nextPieceTraArr[nextPuPieceIndex];
-            pieceInfoArr[squareId] = pieceObjArr[squareId].GetComponent<PieceInformation>();
-            pieceInfoArr[squareId].InformationSetting(squareId, false);
+            sPieceInfoArr[squareId] = sPieceObjArr[squareId].GetComponent<PieceInformation>();
+            sPieceInfoArr[squareId].InformationSetting(squareId, false);
 
             //待機駒生成
             int pieceGeneIndex = GetRandomPieceColor();
@@ -201,21 +200,21 @@ namespace PuzzleMain
             gimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICKS_INFO_ARR[gimmickIndex][GIMMICK]].prefab[colorId]);
 
             //Component取得
-            gimmickInfoArr[gimmickIndex] = gimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
-            gimmickInfoArr[gimmickIndex].InformationSetting(gimmickIndex);
+            sGimmickInfoArr[gimmickIndex] = gimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
+            sGimmickInfoArr[gimmickIndex].InformationSetting(gimmickIndex);
 
             //番号札の場合
-            if (gimmickInfoArr[gimmickIndex].id == (int)Gimmicks.NumberTag)
-                gimmicksMan.NumberTagOrderSetting(ref gimmickInfoArr[gimmickIndex]);
+            if (sGimmickInfoArr[gimmickIndex].id == (int)Gimmicks.NumberTag)
+                gimmicksMgr.NumberTagOrderSetting(ref sGimmickInfoArr[gimmickIndex]);
 
             //駒としても管理する
             int pieceIndex = GIMMICKS_INFO_ARR[gimmickIndex][SQUARE];
-            pieceObjArr[pieceIndex] = gimmickObjArr[gimmickIndex];
-            pieceTraArr[pieceIndex] = gimmickInfoArr[gimmickIndex].tra;
-            pieceTraArr[pieceIndex].SetParent(squareTraArr[GIMMICKS_INFO_ARR[gimmickIndex][SQUARE]], false);
+            sPieceObjArr[pieceIndex] = gimmickObjArr[gimmickIndex];
+            pieceTraArr[pieceIndex] = sGimmickInfoArr[gimmickIndex].tra;
+            pieceTraArr[pieceIndex].SetParent(sSquareTraArr[GIMMICKS_INFO_ARR[gimmickIndex][SQUARE]], false);
             pieceTraArr[pieceIndex].SetSiblingIndex(0);
-            pieceTraArr[pieceIndex].localPosition = gimmickInfoArr[gimmickIndex].defaultPos;
-            gimmickInfoArr[gimmickIndex].OperationFlagSetting(pieceIndex, startGenerate, gimmickInfoArr);
+            pieceTraArr[pieceIndex].localPosition = sGimmickInfoArr[gimmickIndex].defaultPos;
+            sGimmickInfoArr[gimmickIndex].OperationFlagSetting(pieceIndex, startGenerate, sGimmickInfoArr);
         }
 
         /// <summary>
@@ -225,7 +224,7 @@ namespace PuzzleMain
         /// <param name="squareId">  配置マス管理番号</param>
         public void PlaceGimmick(GameObject gimmickObj, int squareId)
         {
-            gimmickObj.transform.SetParent(squareTraArr[squareId], false);
+            gimmickObj.transform.SetParent(sSquareTraArr[squareId], false);
         }
 
         /// <summary>
@@ -237,7 +236,7 @@ namespace PuzzleMain
             int gimmickIndex = Array.IndexOf(gimmickObjArr, gimmickObj);
             gimmickObjArr[gimmickIndex] = null;
 
-            DeletePiece(Array.IndexOf(pieceObjArr, gimmickObj));
+            DeletePiece(Array.IndexOf(sPieceObjArr, gimmickObj));
         }
 
         /// <summary>
@@ -247,18 +246,18 @@ namespace PuzzleMain
         /// <param name="newIndex">更新後の管理番号</param>
         void UpdateManagementIndex(int oldIndex, int newIndex)
         {
-            pieceObjArr[newIndex]  = pieceObjArr[oldIndex];
-            pieceTraArr[newIndex]  = pieceTraArr[oldIndex];
-            pieceInfoArr[newIndex] = pieceInfoArr[oldIndex];
-            pieceTraArr[newIndex].SetParent(squareTraArr[newIndex], true);
+            sPieceObjArr[newIndex]  = sPieceObjArr[oldIndex];
+            pieceTraArr[newIndex]   = pieceTraArr[oldIndex];
+            sPieceInfoArr[newIndex] = sPieceInfoArr[oldIndex];
+            pieceTraArr[newIndex].SetParent(sSquareTraArr[newIndex], true);
             pieceTraArr[newIndex].SetSiblingIndex(0);
-            pieceObjArr[oldIndex]  = null;
-            pieceTraArr[oldIndex]  = null;
-            pieceInfoArr[oldIndex] = null;
-            if (pieceInfoArr[newIndex] != null) pieceInfoArr[newIndex].squareId = newIndex;
+            sPieceObjArr[oldIndex]  = null;
+            pieceTraArr[oldIndex]   = null;
+            sPieceInfoArr[oldIndex] = null;
+            if (sPieceInfoArr[newIndex] != null) sPieceInfoArr[newIndex].squareId = newIndex;
 
-            int gimIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[newIndex]);
-            if (gimIndex >= 0) gimmickInfoArr[gimIndex].nowSquareId = newIndex;
+            int gimIndex = Array.IndexOf(gimmickObjArr, sPieceObjArr[newIndex]);
+            if (gimIndex >= 0) sGimmickInfoArr[gimIndex].nowSquareId = newIndex;
         }
 
         /// <summary>
@@ -281,15 +280,15 @@ namespace PuzzleMain
         public void PieceOperationFlagChange(int squareId, bool on)
         {
             //駒
-            if (pieceObjArr[squareId].tag == PIECE_TAG)
+            if (sPieceObjArr[squareId].tag == PIECE_TAG)
             {
-                if (on) pieceInfoArr[squareId].OperationFlagON();
-                else pieceInfoArr[squareId].OperationFlagOFF();
+                if (on) sPieceInfoArr[squareId].OperationFlagON();
+                else sPieceInfoArr[squareId].OperationFlagOFF();
             }
             //ギミック
             else
             {
-                foreach (GimmickInformation gimInfo in gimmickInfoArr)
+                foreach (GimmickInformation gimInfo in sGimmickInfoArr)
                 {
                     if (gimInfo.startSquareId == squareId && gimInfo.inSquare)
                     {
@@ -315,8 +314,19 @@ namespace PuzzleMain
         /// <returns>色ID</returns>
         public int GetSquarePieceColorId(int squareIndex)
         {
-            if (pieceInfoArr[squareIndex] == null) return INT_NULL;
-            return pieceInfoArr[squareIndex].colorId;
+            if (sPieceInfoArr[squareIndex] == null) return INT_NULL;
+            return sPieceInfoArr[squareIndex].colorId;
+        }
+
+        /// <summary>
+        /// マスにあるギミックオブジェクト番号取得
+        /// </summary>
+        /// <returns>色ID</returns>
+        int GetSquareGimmickIndex(int squareIndex)
+        {
+            GameObject pieceObj = sPieceObjArr[squareIndex];
+            if (pieceObj == null) return INT_NULL;
+            return Array.IndexOf(gimmickObjArr, pieceObj);
         }
 
         //==========================================================//
@@ -337,16 +347,68 @@ namespace PuzzleMain
             if (tapObj.tag == GIMMICK_TAG) return;
 
             //盤上の駒の場合
-            int pieceObjIndex = Array.IndexOf(pieceObjArr, tapObj);
+            int pieceObjIndex = Array.IndexOf(sPieceObjArr, tapObj);
             if (pieceObjIndex >= 0)
             {
-                //反転禁止フラグ確認
-                if (!pieceInfoArr[pieceObjIndex].invertable) return;
-                StartCoroutine(PutPieceToSquare(tapObj));
+                //援護アイテム準備中の場合
+                if (NOW_SUPPORT_ITEM_READY)
+                {
+                    StartCoroutine(stItemsMgr.UseItems(pieceObjIndex));
+                }
+                //駒反転(反転フラグ確認)
+                else if (sPieceInfoArr[pieceObjIndex].invertable)
+                {
+                    StartCoroutine(PutPieceToSquare(tapObj));
+                }
             }
-
             //待機駒の場合
-            if (Array.IndexOf(nextPieceObjArr, tapObj) >= 0) MoveNextPieceFrame(tapObj);
+            else if (Array.IndexOf(nextPieceObjArr, tapObj) >= 0)
+            {
+                //援護アイテム準備中の場合は解除
+                if (NOW_SUPPORT_ITEM_READY)
+                {
+                    stItemsMgr.ResetWaitItemReady();
+                }
+                MoveNextPieceFrame(tapObj);
+            }
+            //援護アイテムの判定
+            else
+            {
+                stItemsMgr.TapJudgmentWaitItem(tapObj);
+            }
+        }
+
+        /// <summary>
+        /// 指定マスのダメージ
+        /// </summary>
+        /// <param name="squareIndex">マス番号</param>
+        /// <param name="reversiColorId">反転後の色ID</param>
+        public void DamageSpecifiedSquare(int squareIndex, int reversiColorId)
+        {
+            if (sPieceObjArr[squareIndex] == null) return;   //空マス
+
+            //ギミック
+            if (sPieceObjArr[squareIndex].tag == GIMMICK_TAG)
+            {
+                //ダメージ判定
+                int gimmickIndex = GetSquareGimmickIndex(squareIndex);
+                bool damage = gimmicksMgr.DamageCheck(ref sGimmickInfoArr[gimmickIndex].colorId, ref gimmickIndex);
+
+                //ダメージ有の場合
+                if (damage) gimmicksMgr.DamageGimmick(ref gimmickIndex, squareIndex);
+            }
+            //駒
+            else
+            {
+                //反転可能判定
+                if (sPieceInfoArr[squareIndex].invertable)
+                {
+                    //反転開始
+                    StartCoroutine(ReversingPieces(squareIndex, reversiColorId));
+                    sDestroyPiecesIndexList.Add(squareIndex);
+                }
+            }
+            
         }
 
         /// <summary>
@@ -359,8 +421,8 @@ namespace PuzzleMain
             NOW_PUTTING_PIECES = true;
 
             //削除する駒のマスに指定中の待機駒をセットする
-            int putIndex = Array.IndexOf(pieceObjArr, deletePiece);
-            nextPieceTraArr[nextPuPieceIndex].SetParent(squareTraArr[putIndex], true);
+            int putIndex = Array.IndexOf(sPieceObjArr, deletePiece);
+            nextPieceTraArr[nextPuPieceIndex].SetParent(sSquareTraArr[putIndex], true);
             nextPieceTraArr[nextPuPieceIndex].SetSiblingIndex(0);
 
             //駒拡大
@@ -384,12 +446,12 @@ namespace PuzzleMain
             pieceTraArr[putIndex].localScale = new Vector2(PIECE_DEFAULT_SCALE, PIECE_DEFAULT_SCALE);
 
             //反転駒リスト取得
-            int colorId = pieceInfoArr[putIndex].colorId;       //置いた駒の色番号取得
+            int colorId = sPieceInfoArr[putIndex].colorId;      //置いた駒の色番号取得
             List<int[]> reversIndexList = new List<int[]>();    //反転駒の管理番号格納リスト
             if (GetReversIndex(putIndex, ref colorId, ref reversIndexList))
             {
                 //削除対象に置いた駒の管理番号追加
-                destroyPiecesIndexList.Add(putIndex);
+                sDestroyPiecesIndexList.Add(putIndex);
 
                 //反転開始
                 StartCoroutine(StratReversingPieces(colorId, reversIndexList));
@@ -414,10 +476,10 @@ namespace PuzzleMain
         bool GetReversIndex(int putPieceIndex, ref int putPieceColorId, ref List<int[]> reversIndexList)
         {
             //同タグ番号取得
-            int SQUARES_COUNT_Up    = putPieceIndex % BOARD_LINE_COUNT;            //置いた駒の上にあるマスの数
-            int SQUARES_COUNT_Left  = putPieceIndex / BOARD_LINE_COUNT;            //置いた駒の左にあるマスの数
-            int SQUARES_COUNT_Down  = BOARD_LINE_COUNT - SQUARES_COUNT_Up - 1;      //置いた駒の下にあるマスの数
-            int SQUARES_COUNT_Right = BOARD_COLUMN_COUNT - SQUARES_COUNT_Left - 1;  //置いた駒の右にあるマスの数
+            int sqrCountUp    = putPieceIndex % BOARD_LINE_COUNT;       //置いた駒の上にあるマスの数
+            int sqrCountLeft  = putPieceIndex / BOARD_LINE_COUNT;       //置いた駒の左にあるマスの数
+            int sqrCountDown  = BOARD_LINE_COUNT - sqrCountUp - 1;      //置いた駒の下にあるマスの数
+            int sqrCountRight = BOARD_COLUMN_COUNT - sqrCountLeft - 1;  //置いた駒の右にあるマスの数
 
             //反転判定方向順番の設定
             int directionCounts = Enum.GetValues(typeof(Directions)).Length;
@@ -426,7 +488,7 @@ namespace PuzzleMain
             foreach (Directions directions in Enum.GetValues(typeof(Directions)))
             {
                 //各方向毎の処理回数設定
-                loopCounts[(int)directions] = SetLoopCount(directions, ref SQUARES_COUNT_Up, ref SQUARES_COUNT_Right, ref SQUARES_COUNT_Down, ref SQUARES_COUNT_Left);
+                loopCounts[(int)directions] = SetLoopCount(directions, ref sqrCountUp, ref sqrCountRight, ref sqrCountDown, ref sqrCountLeft);
 
                 //順番判定ギミックが存在するか？
                 dummyArr[(int)directions] = new int[] { (int)directions, GetOrderIndex(ref putPieceIndex, ref loopCounts[(int)directions], (int)directions) };
@@ -513,15 +575,15 @@ namespace PuzzleMain
                 int refIndex = GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
-                if (pieceObjArr[refIndex] == null) return NOT_NUM;
+                if (sPieceObjArr[refIndex] == null) return NOT_NUM;
 
                 //ギミックマスの場合
-                if (pieceObjArr[refIndex].tag == GIMMICK_TAG)
+                if (sPieceObjArr[refIndex].tag == GIMMICK_TAG)
                 {
                     //順番指定がある場合
-                    int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[refIndex]);
-                    if (gimmickInfoArr[gimmickIndex].order != NOT_NUM)
-                        return gimmickInfoArr[gimmickIndex].order;
+                    int gimmickIndex = Array.IndexOf(gimmickObjArr, sPieceObjArr[refIndex]);
+                    if (sGimmickInfoArr[gimmickIndex].order != NOT_NUM)
+                        return sGimmickInfoArr[gimmickIndex].order;
                 }
             }
             return NOT_NUM;
@@ -545,31 +607,31 @@ namespace PuzzleMain
                 int refIndex = GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
-                if (pieceObjArr[refIndex] == null) break;
+                if (sPieceObjArr[refIndex] == null) break;
 
                 //ギミックマスの場合
-                if (pieceObjArr[refIndex].tag == GIMMICK_TAG)
+                if (sPieceObjArr[refIndex].tag == GIMMICK_TAG)
                 {
                     //ダメージを与えられるかの確認,ダメージが与えられない場合はnullを返す
-                    int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[refIndex]);
-                    if (!gimmickInfoArr[gimmickIndex].destructible_Piece) break;
-                    if (!gimmicksMan.DamageCheck(ref putPieceColorId, ref gimmickIndex)) break;
-                    if (gimmickInfoArr[gimmickIndex].order != NOT_NUM) orderCount++;    //順番判定を通過した場合はカウント
+                    int gimmickIndex = GetSquareGimmickIndex(refIndex);
+                    if (!sGimmickInfoArr[gimmickIndex].destructible_Piece) break;
+                    if (!gimmicksMgr.DamageCheck(ref putPieceColorId, ref gimmickIndex)) break;
+                    if (sGimmickInfoArr[gimmickIndex].order != NOT_NUM) orderCount++;    //順番判定を通過した場合はカウント
                     reversIndexList.Add(refIndex);
                 }
                 else
                 {
                     //反転禁止駒の場合はnullを返す
-                    if (!pieceInfoArr[refIndex].invertable) break;
+                    if (!sPieceInfoArr[refIndex].invertable) break;
 
                     //同色駒を検索
-                    if (pieceInfoArr[refIndex].colorId == putPieceColorId)
+                    if (sPieceInfoArr[refIndex].colorId == putPieceColorId)
                     {
                         //隣が同タグの場合はnullを返す
                         if (i == 1) break;
 
                         //削除対象に同タグ駒の管理番号追加
-                        destroyPiecesIndexList.Add(refIndex);
+                        sDestroyPiecesIndexList.Add(refIndex);
 
                         //反転リストを返す(成功)
                         return reversIndexList.ToArray();
@@ -579,7 +641,7 @@ namespace PuzzleMain
             }
 
             //順番ギミックのカウントを戻す
-            nextOrder -= orderCount;
+            sNumberTagNextOrder -= orderCount;
 
             //nullを返す(失敗)
             return null;
@@ -648,7 +710,7 @@ namespace PuzzleMain
             NOW_REVERSING_PIECES = true;
 
             //駒カウントギミックにダメージ(置いた駒)
-            StartCoroutine(gimmicksMan.DamageCage(putPieceColorId));    //檻
+            StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
 
             //反転開始
             Coroutine coroutine = null;
@@ -658,22 +720,22 @@ namespace PuzzleMain
                 foreach (int reversIndex in reversIndexArr)
                 {
                     //ギミックであればギミック破壊動作に移る
-                    int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceObjArr[reversIndex]);
+                    int gimmickIndex = GetSquareGimmickIndex(reversIndex);
                     if (gimmickIndex >= 0)
                     {
-                        gimmicksMan.DamageGimmick(ref gimmickIndex, reversIndex);
+                        gimmicksMgr.DamageGimmick(ref gimmickIndex, reversIndex);
                         yield return PIECE_REVERSAL_INTERVAL;
                         continue;
                     }
 
                     //削除対象に反転駒の管理番号追加
-                    destroyPiecesIndexList.Add(reversIndex);
+                    sDestroyPiecesIndexList.Add(reversIndex);
 
                     //反転
                     coroutine = StartCoroutine(ReversingPieces(reversIndex, putPieceColorId));
 
                     //駒カウントギミックにダメージ(反転駒)
-                    StartCoroutine(gimmicksMan.DamageCage(putPieceColorId));    //檻
+                    StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
 
                     yield return PIECE_REVERSAL_INTERVAL;
                 }
@@ -681,12 +743,12 @@ namespace PuzzleMain
             }
 
             //駒カウントギミックにダメージ(最後の駒)
-            StartCoroutine(gimmicksMan.DamageCage(putPieceColorId));    //檻
+            StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
 
             //ギミック終了待機
-            foreach (Coroutine gimmickCor in gimmickCorList)
+            foreach (Coroutine gimmickCor in sGimmickCorList)
             { yield return gimmickCor; }
-            gimmickCorList = new List<Coroutine>();
+            sGimmickCorList = new List<Coroutine>();
 
             //反転終了待機
             yield return coroutine;
@@ -733,30 +795,35 @@ namespace PuzzleMain
         /// <summary>
         /// 駒破壊開始
         /// </summary>
-        IEnumerator StartDestroyingPieces()
+        /// <param name="support">援護アイテムでの破壊？</param>
+        public IEnumerator StartDestroyingPieces(bool support = false)
         {
             //破壊中フラグセット
             NOW_DESTROYING_PIECES = true;
 
             //駒縮小
             Coroutine coroutine = null;
-            foreach (int index in destroyPiecesIndexList)
+            foreach (int index in sDestroyPiecesIndexList)
             {
                 if (pieceTraArr[index].gameObject.tag == GIMMICK_TAG) continue;
                 coroutine = StartCoroutine(AllScaleChange(pieceTraArr[index], DESTROY_PIECE_SCALING_SPEED, DESTROY_PIECE_CHANGE_SCALE));
             }
             yield return coroutine;
+            
+            //駒破壊情報リセット or 援護アイテム生成
+            if (support) stItemsMgr.ResetPieceDeleteInfomation();
+            else stItemsMgr.SetItems();
 
             //駒削除
-            foreach (int pieceIndex in destroyPiecesIndexList)
+            foreach (int pieceIndex in sDestroyPiecesIndexList)
             {
-                GameObject obj = pieceObjArr[pieceIndex];
+                GameObject obj = sPieceObjArr[pieceIndex];
                 if (obj.tag == GIMMICK_TAG) DeleteGimmick(obj);
                 else DeletePiece(pieceIndex);
             }
 
             //削除駒リストの初期化
-            destroyPiecesIndexList = new List<int>();
+            sDestroyPiecesIndexList = new List<int>();
 
             //駒の落下開始
             StartCoroutine(StratFallingPieces());
@@ -783,8 +850,8 @@ namespace PuzzleMain
                 if (pieceTraArr[fallPieceIndex] != null)
                 {
                     Vector3 targetPos = PIECE_DEFAULT_POS;
-                    int gimmickIndex = Array.IndexOf(gimmickObjArr, pieceTraArr[fallPieceIndex].gameObject);
-                    if (gimmickIndex >= 0) targetPos = gimmickInfoArr[gimmickIndex].defaultPos;
+                    int gimmickIndex = GetSquareGimmickIndex(fallPieceIndex);
+                    if (gimmickIndex >= 0) targetPos = sGimmickInfoArr[gimmickIndex].defaultPos;
                     coroutineList.Add(StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, targetPos, FALL_PIECE_ACCELE_RATE)));
                 }
             }
@@ -807,8 +874,11 @@ namespace PuzzleMain
             List<int> fallPiecesIndexList = new List<int>();
             for (int i = SQUARES_COUNT - 1; i >= 0; i--)
             {
-                //空マスでなえれば処理をスキップ
-                if (pieceObjArr[i] != null) continue;
+                //非表示マスの場合は処理をスキップ
+                if (!squareObjArr[i].activeSelf) continue;
+
+                //空マスでなければ処理をスキップ
+                if (sPieceObjArr[i] != null) continue;
 
                 //落下する駒リストに追加
                 fallPiecesIndexList.Add(i);
@@ -819,10 +889,10 @@ namespace PuzzleMain
                 {
                     //自身よりn個上の番号が空でない場合
                     int refIndex = i - n;
-                    if (pieceObjArr[refIndex] != null)
+                    if (sPieceObjArr[refIndex] != null)
                     {
                         //自由らか可能オブジェクトの場合,管理番号更新
-                        if (FreeFallJudgement(ref pieceObjArr[refIndex]))
+                        if (FreeFallJudgement(ref sPieceObjArr[refIndex]))
                             UpdateManagementIndex(i - n, i);
                         break;
                     }
@@ -852,18 +922,18 @@ namespace PuzzleMain
             if (pieceObj.tag == PIECE_TAG)
             {
                 //駒の場合
-                int pieceObjIndex = Array.IndexOf(pieceObjArr, pieceObj);
-                return pieceInfoArr[pieceObjIndex].freeFall;
+                int pieceObjIndex = Array.IndexOf(sPieceObjArr, pieceObj);
+                return sPieceInfoArr[pieceObjIndex].freeFall;
             }
             else if (pieceObj.tag == GIMMICK_TAG)
             {
                 //ギミックの場合
                 int gimmickObjIndex = Array.IndexOf(gimmickObjArr, pieceObj);
-                if (gimmickInfoArr[gimmickObjIndex].inSquare && !gimmickInfoArr[gimmickObjIndex].freeFall_Piece)
+                if (sGimmickInfoArr[gimmickObjIndex].inSquare && !sGimmickInfoArr[gimmickObjIndex].freeFall_Piece)
                 {
                     return false;
                 }
-                return gimmickInfoArr[gimmickObjIndex].freeFall;
+                return sGimmickInfoArr[gimmickObjIndex].freeFall;
             }
 
             return false;
@@ -883,7 +953,7 @@ namespace PuzzleMain
             NOW_GIMMICK_DESTROY_WAIT = true;
 
             //破壊開始
-            yield return StartCoroutine(gimmicksMan.DestroyGimmicks_TurnEnd());
+            yield return StartCoroutine(gimmicksMgr.DestroyGimmicks_TurnEnd());
 
             //ギミック破壊待機中フラグリセット
             NOW_GIMMICK_DESTROY_WAIT = false;
@@ -899,7 +969,7 @@ namespace PuzzleMain
             NOW_GIMMICK_STATE_CHANGE = true;
 
             //状態変化待機
-            yield return StartCoroutine(gimmicksMan.ChangeGimmickState());
+            yield return StartCoroutine(gimmicksMgr.ChangeGimmickState());
 
             //ギミック状態変化中フラグリセット
             NOW_GIMMICK_STATE_CHANGE = false;
@@ -926,7 +996,7 @@ namespace PuzzleMain
             yield return StartCoroutine(GimmickDestroyCheck());
 
             //ギミックのフラグリセット
-            foreach (GimmickInformation gimmickInfo in gimmickInfoArr)
+            foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
             {
                 if (gimmickInfo == null) continue;
                 gimmickInfo.nowTurnDamage = false;

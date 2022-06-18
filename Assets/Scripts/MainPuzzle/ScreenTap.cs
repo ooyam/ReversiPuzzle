@@ -4,19 +4,18 @@ using UnityEngine;
 using System;
 using PuzzleMain;
 using static PuzzleDefine;
+using static PuzzleMain.PuzzleMain;
 
 public class ScreenTap : MonoBehaviour
 {
-    [Header("PieceManagerの取得")]
-    [SerializeField]
-    PiecesManager piecesMan;
-
-    Camera mainCamera;   //メインカメラ
+    PiecesManager piecesMgr;    //PiecesManager
+    Camera        mainCamera;   //メインカメラ
     float rayDistance = 10.0f;
 
-    void Start()
+    public void Initialize()
     {
         mainCamera = Camera.main;
+        piecesMgr = sPuzzleMain.GetPiecesManager();
     }
 
     void Update()
@@ -33,7 +32,7 @@ public class ScreenTap : MonoBehaviour
                 {
                     //Rayが当たったオブジェクトが駒の場合
                     if (PIECE_TAG == hitCollider.tag)
-                        piecesMan.TapObject(hitCollider.gameObject);
+                        piecesMgr.TapObject(hitCollider.gameObject);
                 }
             }
         }
@@ -48,6 +47,7 @@ public class ScreenTap : MonoBehaviour
         if (NOW_FALLING_PIECES)       return false;  //駒落下中
         if (NOW_GIMMICK_DESTROY_WAIT) return false;  //ギミック破壊待機中
         if (NOW_GIMMICK_STATE_CHANGE) return false;  //ギミック状態変化中
+        if (NOW_SUPPORT_ITEM_USE)     return false;  //援護アイテム使用中
         if (NOW_TURN_END_PROCESSING)  return false;  //ターン終了処理中
 
         return true;

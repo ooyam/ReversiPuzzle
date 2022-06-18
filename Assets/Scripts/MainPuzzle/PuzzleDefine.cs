@@ -44,9 +44,13 @@ public class PuzzleDefine : MonoBehaviour
     //援護アイテム
     public enum SupportItems
     {
-        Firework,      //花火箱
-        Rocket         //ロケット箱
+        Duck,           //アヒル
+        Firework,       //花火
+        RocketLine,     //ロケット(横)
+        RocketColumn,   //ロケット(縦)
+        All             //全消し
     }
+    public static readonly int SUPPORT_ITEMS_COUNT = Enum.GetValues(typeof(SupportItems)).Length;
 
     //8方向
     public enum Directions
@@ -60,7 +64,8 @@ public class PuzzleDefine : MonoBehaviour
         DownLeft,   //左下
         DownRight   //右下
     }
-    
+    public static readonly int DIRECTIONS_COUNT = Enum.GetValues(typeof(Directions)).Length;
+
     //4方向
     public enum FourDirections
     {
@@ -69,6 +74,7 @@ public class PuzzleDefine : MonoBehaviour
         Left,       //左
         Right       //右
     }
+    public static readonly int FOUR_DIRECTIONS_COUNT = Enum.GetValues(typeof(FourDirections)).Length;
 
     //マス
     public enum Squares
@@ -93,15 +99,16 @@ public class PuzzleDefine : MonoBehaviour
     public const int HUNDRED = 100;
 
     //汎用定数
-    public const int BOARD_COLUMN_COUNT = 8;                                //ボード列数
-    public const int BOARD_LINE_COUNT = 8;                                  //ボード行数
-    public const int SQUARES_COUNT = BOARD_LINE_COUNT * BOARD_COLUMN_COUNT; //ボード総数
-    public const int INT_NULL = -99;                                        //nullの代用定数(int型でnullを代入したい場合に使用)
-    public const float SQUARE_DISTANCE = 1.46f;                             //マスの距離
-    public const float SQUARE_DISTANCE_HALF = SQUARE_DISTANCE / 2.0f;       //半マスの距離
-    public const float PIECE_DEFAULT_SCALE = 0.6f;                          //駒のスケール
-    public static readonly Vector3 PIECE_DEFAULT_POS = new Vector3(0.0f, 0.0f, Z_PIECE);          //駒の基本座標
-    public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);  //駒の生成時の角度
+    public const int    BOARD_COLUMN_COUNT      = 8;                                        //ボード列数
+    public const int    BOARD_LINE_COUNT        = 8;                                        //ボード行数
+    public const int    SQUARES_COUNT           = BOARD_LINE_COUNT * BOARD_COLUMN_COUNT;    //ボード総数
+    public const int    INT_NULL                = -99;                                      //nullの代用定数(int型でnullを代入したい場合に使用)
+    public const float  SQUARE_DISTANCE         = 1.46f;                                    //マスの距離
+    public const float  SQUARE_DISTANCE_HALF    = SQUARE_DISTANCE / 2.0f;                   //半マスの距離
+    public const float  PIECE_DEFAULT_SCALE     = 0.6f;                                     //駒のスケール
+
+    public static readonly Vector3 PIECE_DEFAULT_POS     = new Vector3(0.0f, 0.0f, Z_PIECE);        //駒の基本座標
+    public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);    //駒の生成時の角度
 
     public static readonly Color COLOR_PRIMARY    = new Color(1.0f, 1.0f, 1.0f, 1.0f);               //原色
     public static readonly Color COLOR_ALPHA_ZERO = new Color(1.0f, 1.0f, 1.0f, 0.0f);               //透明
@@ -117,6 +124,9 @@ public class PuzzleDefine : MonoBehaviour
     public static readonly Color SQUARE_ORANGE = new Color(1.0f, 0.6f, 0.3f, 1.0f);   //橙
     public static readonly Color SQUARE_BLACK  = new Color(0.6f, 0.6f, 0.6f, 1.0f);   //黒
     public static readonly Color SQUARE_WHITE  = new Color(1.0f, 1.0f, 1.0f, 1.0f);   //白
+
+    //マスの色変化速度
+    public const float SQUARE_CHANGE_SPEED = 0.3f;
 
     //駒反転
     public static readonly Vector3 REVERSE_PIECE_ROT_SPEED              = new Vector3(0.0f, 10.0f, 0.0f);  //駒反転速度
@@ -144,30 +154,34 @@ public class PuzzleDefine : MonoBehaviour
 
 
     //フラグ
-    public static bool GAME_START               = false;  //ゲーム開始？
-    public static bool GAME_OVER                = false;  //ゲームオーバー？
-    public static bool GAME_CLEAR               = false;  //ゲームクリア？
-    public static bool NOW_PUTTING_PIECES       = false;  //駒配置中？
-    public static bool NOW_REVERSING_PIECES     = false;  //駒反転中？
-    public static bool NOW_DESTROYING_PIECES    = false;  //駒破壊中？
-    public static bool NOW_FALLING_PIECES       = false;  //駒落下中？
-    public static bool NOW_GIMMICK_DESTROY_WAIT = false;  //ギミック破壊待機中？
-    public static bool NOW_GIMMICK_STATE_CHANGE = false;  //ギミック状態変化中？
-    public static bool NOW_TURN_END_PROCESSING  = false;  //ターン終了処理中？
+    public static bool GAME_START                   = false;  //ゲーム開始？
+    public static bool GAME_OVER                    = false;  //ゲームオーバー？
+    public static bool GAME_CLEAR                   = false;  //ゲームクリア？
+    public static bool NOW_PUTTING_PIECES           = false;  //駒配置中？
+    public static bool NOW_REVERSING_PIECES         = false;  //駒反転中？
+    public static bool NOW_DESTROYING_PIECES        = false;  //駒破壊中？
+    public static bool NOW_FALLING_PIECES           = false;  //駒落下中？
+    public static bool NOW_GIMMICK_DESTROY_WAIT     = false;  //ギミック破壊待機中？
+    public static bool NOW_GIMMICK_STATE_CHANGE     = false;  //ギミック状態変化中？
+    public static bool NOW_SUPPORT_ITEM_USE         = false;  //援護アイテム使用中?
+    public static bool NOW_SUPPORT_ITEM_READY       = false;  //援護アイテム準備中?
+    public static bool NOW_TURN_END_PROCESSING      = false;  //ターン終了処理中？
 
     //フラグリセット
     public static void FlagReset()
     {
-        GAME_START               = false;
-        GAME_OVER                = false;
-        GAME_CLEAR               = false;
-        NOW_PUTTING_PIECES       = false;
-        NOW_REVERSING_PIECES     = false;
-        NOW_DESTROYING_PIECES    = false;
-        NOW_FALLING_PIECES       = false;
-        NOW_GIMMICK_DESTROY_WAIT = false;
-        NOW_GIMMICK_STATE_CHANGE = false;
-        NOW_TURN_END_PROCESSING  = false;
+        GAME_START                  = false;
+        GAME_OVER                   = false;
+        GAME_CLEAR                  = false;
+        NOW_PUTTING_PIECES          = false;
+        NOW_REVERSING_PIECES        = false;
+        NOW_DESTROYING_PIECES       = false;
+        NOW_FALLING_PIECES          = false;
+        NOW_GIMMICK_DESTROY_WAIT    = false;
+        NOW_GIMMICK_STATE_CHANGE    = false;
+        NOW_SUPPORT_ITEM_USE        = false;
+        NOW_SUPPORT_ITEM_READY      = false;
+        NOW_TURN_END_PROCESSING     = false;
     }
 
     //ステージ別定数
@@ -183,7 +197,7 @@ public class PuzzleDefine : MonoBehaviour
     public static GimmicksData GIMMICKS_DATA;
 
     //ギミックデータ取得
-    public static void GimmickSetting()
+    public static void GetGimmicksData()
     {
         GIMMICKS_DATA = Resources.Load("gimmicks_data") as GimmicksData;
     }
@@ -208,8 +222,7 @@ public class PuzzleDefine : MonoBehaviour
     //ステージ設定
     public static void StageSetting()
     {
-        USE_COLOR_TYPE_ARR = new int[]
-        {
+        USE_COLOR_TYPE_ARR = new int[] {
             (int)Colors.Blue,   //青
             //(int)Colors.Red,    //赤
             //(int)Colors.Yellow, //黄
@@ -217,9 +230,18 @@ public class PuzzleDefine : MonoBehaviour
             //(int)Colors.Violet, //紫
             (int)Colors.Orange  //橙
         };
-        USE_COLOR_COUNT      = USE_COLOR_TYPE_ARR.Length;
-        STAGE_NUMBER         = 1;
-        HIDE_SQUARE_ARR      = new int[0];
+        USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
+        STAGE_NUMBER    = 1;
+        HIDE_SQUARE_ARR = new int[] {
+            (int)Squares.A2,
+            (int)Squares.B2,
+            (int)Squares.C2,
+            (int)Squares.D2,
+            (int)Squares.E2,
+            (int)Squares.F2,
+            (int)Squares.G2,
+            (int)Squares.H2
+        };
         GIMMICKS_COUNT       = 4;
         GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
         GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry, (int)Colors.Blue, NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
@@ -237,13 +259,4 @@ public class PuzzleDefine : MonoBehaviour
             }
         }
     }
-
-
-    //=============ギミック動作=============//
-
-    //宝石フェードアウト速度
-    public const float JEWELRY_CHANGE_SPEED = 0.1f;
-
-    //マスの色変化速度
-    public const float SQUARE_CHANGE_SPEED = 0.3f;
 }
