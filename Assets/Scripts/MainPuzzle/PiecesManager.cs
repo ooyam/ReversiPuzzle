@@ -45,6 +45,7 @@ namespace PuzzleMain
         GameObject[] gimmickObjArr;             //ギミックオブジェクト配列
         int nextPuPieceIndex = 0;               //次に置く駒の管理番号
         int nextPiecesCount;                    //待機駒の個数
+        bool useSupportItem;                    //援護アイテムを使用したか？
 
         //==========================================================//
         //----------------------初期設定,取得-----------------------//
@@ -343,8 +344,8 @@ namespace PuzzleMain
         /// <param name="tapObj"></param>
         public void TapObject(GameObject tapObj)
         {
-            //ギミックには直置きできない
-            if (tapObj.tag == GIMMICK_TAG) return;
+            //援護アイテム準備中以外はギミックをタップできない
+            if (tapObj.tag == GIMMICK_TAG && !NOW_SUPPORT_ITEM_READY) return;
 
             //盤上の駒の場合
             int pieceObjIndex = Array.IndexOf(sPieceObjArr, tapObj);
@@ -370,11 +371,6 @@ namespace PuzzleMain
                     stItemsMgr.ResetWaitItemReady();
                 }
                 MoveNextPieceFrame(tapObj);
-            }
-            //援護アイテムの判定
-            else
-            {
-                stItemsMgr.TapJudgmentWaitItem(tapObj);
             }
         }
 
@@ -408,7 +404,6 @@ namespace PuzzleMain
                     sDestroyPiecesIndexList.Add(squareIndex);
                 }
             }
-            
         }
 
         /// <summary>
@@ -451,7 +446,7 @@ namespace PuzzleMain
             if (GetReversIndex(putIndex, ref colorId, ref reversIndexList))
             {
                 //削除対象に置いた駒の管理番号追加
-                sDestroyPiecesIndexList.Add(putIndex);
+                sDestroyPiecesIndexList.Insert(sDestroyBasePieceIndex, putIndex);
 
                 //反転開始
                 StartCoroutine(StratReversingPieces(colorId, reversIndexList));
@@ -482,9 +477,8 @@ namespace PuzzleMain
             int sqrCountRight = BOARD_COLUMN_COUNT - sqrCountLeft - 1;  //置いた駒の右にあるマスの数
 
             //反転判定方向順番の設定
-            int directionCounts = Enum.GetValues(typeof(Directions)).Length;
-            int[] loopCounts = new int[directionCounts];
-            int[][] dummyArr = new int[directionCounts][];
+            int[] loopCounts = new int[DIRECTIONS_COUNT];
+            int[][] dummyArr = new int[DIRECTIONS_COUNT][];
             foreach (Directions directions in Enum.GetValues(typeof(Directions)))
             {
                 //各方向毎の処理回数設定
@@ -497,8 +491,8 @@ namespace PuzzleMain
             //順番ギミックを昇順にソート
             const int ARRAY_INDEX = 0;    //配列番号格納index
             const int ORDER_INDEX = 1;    //順番番号格納index
-            int[] dirOrder = new int[directionCounts];
-            for (int i = 0; i < directionCounts; i++)
+            int[] dirOrder = new int[DIRECTIONS_COUNT];
+            for (int i = 0; i < DIRECTIONS_COUNT; i++)
             {
                 int[] minOrder = null;
                 int useIndex = -1;
@@ -630,7 +624,7 @@ namespace PuzzleMain
                         //隣が同タグの場合はnullを返す
                         if (i == 1) break;
 
-                        //削除対象に同タグ駒の管理番号追加
+                        //削除対象に同色駒の管理番号追加
                         sDestroyPiecesIndexList.Add(refIndex);
 
                         //反転リストを返す(成功)
@@ -645,6 +639,49 @@ namespace PuzzleMain
 
             //nullを返す(失敗)
             return null;
+        }
+
+        /// <summary>
+        /// 指定方向にマスがあるか？
+        /// </summary>
+        /// <param name="direction">方向</param>
+        /// <param name="baseIndex">基準のマス管理番号</param>
+        /// <returns>指定場所の管理番号</returns>
+        public bool IsSquareSpecifiedDirection(Directions direction, int baseIndex)
+        {
+            switch (direction)
+            {
+                //上
+                case Directions.Up:
+                case Directions.UpLeft:
+                case Directions.UpRight:
+                    if (baseIndex % BOARD_LINE_COUNT == 0) return false;
+                    break;
+                //下
+                case Directions.Down:
+                case Directions.DownLeft:
+                case Directions.DownRight:
+                    if ((baseIndex + 1) % BOARD_LINE_COUNT == 0) return false;
+                    break;
+            }
+            switch (direction)
+            {
+                //左
+                case Directions.Left:
+                case Directions.UpLeft:
+                case Directions.DownLeft:
+                    if (baseIndex < BOARD_LINE_COUNT) return false;
+                    break;
+                //右
+                case Directions.Right:
+                case Directions.UpRight:
+                case Directions.DownRight:
+                    if (baseIndex >= SQUARES_COUNT - BOARD_LINE_COUNT) return false;
+                    break;
+            }
+
+            //マスがある
+            return true;
         }
 
         /// <summary>
@@ -669,7 +706,6 @@ namespace PuzzleMain
             }
             return INT_NULL;
         }
-
         //==========================================================//
 
 
@@ -742,9 +778,6 @@ namespace PuzzleMain
                 yield return PIECE_GROUP_REVERSAL_INTERVAL;
             }
 
-            //駒カウントギミックにダメージ(最後の駒)
-            StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
-
             //ギミック終了待機
             foreach (Coroutine gimmickCor in sGimmickCorList)
             { yield return gimmickCor; }
@@ -810,9 +843,9 @@ namespace PuzzleMain
             }
             yield return coroutine;
             
-            //駒破壊情報リセット or 援護アイテム生成
-            if (support) stItemsMgr.ResetPieceDeleteInfomation();
-            else stItemsMgr.SetItems();
+            //援護アイテム生成
+            if (!support) stItemsMgr.GenerateItems();
+            useSupportItem = support;
 
             //駒削除
             foreach (int pieceIndex in sDestroyPiecesIndexList)
@@ -983,23 +1016,42 @@ namespace PuzzleMain
             //ターン終了処理中フラグセット
             NOW_TURN_END_PROCESSING = true;
 
-            //特定ギミック破壊判定開始
-            yield return StartCoroutine(GimmickDestroyCheck());
-
-            //自由落下
-            yield return StartCoroutine(StratFallingPieces());
-
-            //ギミック状態変化開始
-            yield return StartCoroutine(StartChangeGimmickState());
-
-            //特定ギミック破壊判定開始
-            yield return StartCoroutine(GimmickDestroyCheck());
-
-            //ギミックのフラグリセット
-            foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
+            //援護アイテム使用時
+            if (useSupportItem)
             {
-                if (gimmickInfo == null) continue;
-                gimmickInfo.nowTurnDamage = false;
+                //特定ギミック破壊判定開始
+                yield return StartCoroutine(GimmickDestroyCheck());
+
+                //自由落下
+                yield return StartCoroutine(StratFallingPieces());
+
+                //特定ギミック破壊判定開始
+                yield return StartCoroutine(GimmickDestroyCheck());
+
+                //援護アイテム使用フラグリセット
+                useSupportItem = false;
+            }
+            //援護アイテム未使用時
+            else
+            {
+                //特定ギミック破壊判定開始
+                yield return StartCoroutine(GimmickDestroyCheck());
+
+                //自由落下
+                yield return StartCoroutine(StratFallingPieces());
+
+                //ギミック状態変化開始
+                yield return StartCoroutine(StartChangeGimmickState());
+
+                //特定ギミック破壊判定開始
+                yield return StartCoroutine(GimmickDestroyCheck());
+
+                //ギミックのフラグリセット
+                foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
+                {
+                    if (gimmickInfo == null) continue;
+                    gimmickInfo.nowTurnDamage = false;
+                }
             }
 
             //ターン終了処理中フラグリセット

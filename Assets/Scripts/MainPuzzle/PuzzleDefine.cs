@@ -203,8 +203,9 @@ public class PuzzleDefine : MonoBehaviour
     }
 
     //オブジェクトのタグ
-    public const string GIMMICK_TAG = "Gimmick";    //ギミック
-    public const string PIECE_TAG   = "Piece";      //駒
+    public const string GIMMICK_TAG      = "Gimmick";       //ギミック
+    public const string PIECE_TAG        = "Piece";         //駒
+    public const string SUPPORT_ITEM_TAG = "SupportItem";   //援護アイテム
 
     //ギミック情報配列のインデックス番号
     public const int SQUARE   = 0;  //配置マス
@@ -224,15 +225,16 @@ public class PuzzleDefine : MonoBehaviour
     {
         USE_COLOR_TYPE_ARR = new int[] {
             (int)Colors.Blue,   //青
-            //(int)Colors.Red,    //赤
-            //(int)Colors.Yellow, //黄
-            //(int)Colors.Green,  //緑
-            //(int)Colors.Violet, //紫
+            (int)Colors.Red,    //赤
+            (int)Colors.Yellow, //黄
+            (int)Colors.Green,  //緑
+            (int)Colors.Violet, //紫
             (int)Colors.Orange  //橙
         };
         USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
         STAGE_NUMBER    = 1;
         HIDE_SQUARE_ARR = new int[] {
+            /*
             (int)Squares.A2,
             (int)Squares.B2,
             (int)Squares.C2,
@@ -241,6 +243,7 @@ public class PuzzleDefine : MonoBehaviour
             (int)Squares.F2,
             (int)Squares.G2,
             (int)Squares.H2
+            */
         };
         GIMMICKS_COUNT       = 4;
         GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];

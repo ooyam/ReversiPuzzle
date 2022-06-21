@@ -31,12 +31,6 @@ namespace PuzzleMain
         int mReadyItemNumber;           //準備中のアイテム番号
         int mDuckSupportLineNum;        //アヒルの援護行番号
 
-        //1ターンの破壊情報
-        int  mDelPieceCount = 0;        //破壊した駒の数
-        int  mDelDirCount   = 0;        //破壊した方向の数
-        bool mDelLine       = false;    //1行破壊？
-        bool mDelColumn     = false;    //1列破壊？
-
         const int DUCK_USE_DEL_PIECE_COUNT = 6;     //アヒル生成条件
         const int FIREWORK_USE_DIR_PIECE_COUNT = 4; //花火生成条件
 
@@ -55,20 +49,20 @@ namespace PuzzleMain
             mItemsInfoArr       = new SupportItemInformation[SUPPORT_ITEMS_COUNT];
             for (int i = 0; i < SUPPORT_ITEMS_COUNT; i++)
             {
-                mWaitItemBoxsTraArr[i]  = mWaitItemBoxesTra.GetChild(i).transform;
-                mWaitItemObjArr[i]      = mWaitItemBoxsTraArr[i].GetChild(0).gameObject;
-                mWaitItemAniArr[i]      = mWaitItemObjArr[i].GetComponent<Animator>();
-                mWaitItemReadyUse[i]    = false;
-                mItemsInfoArr[i]        = mItemsArr[i].GetComponent<SupportItemInformation>();
+                mWaitItemBoxsTraArr[i] = mWaitItemBoxesTra.GetChild(i).transform;
+                mWaitItemObjArr[i]     = mWaitItemBoxsTraArr[i].GetChild(0).gameObject;
+                mWaitItemAniArr[i]     = mWaitItemObjArr[i].GetComponent<Animator>();
+                mWaitItemReadyUse[i]   = false;
+                mItemsInfoArr[i]       = mItemsArr[i].GetComponent<SupportItemInformation>();
                 mItemsInfoArr[i].InformationSetting();
             }
         }
 
         /// <summary>
-        /// 待機アイテムのタップ判定
+        /// 待機アイテムのタップ
         /// </summary>
         /// <param name="_tapObj">タップオブジェクト</param>
-        public void TapJudgmentWaitItem(GameObject _tapObj)
+        public void TapItem(GameObject _tapObj)
         {
             int waitItemIndex = Array.IndexOf(mWaitItemObjArr, _tapObj);
             if (waitItemIndex < 0) return;
@@ -127,68 +121,106 @@ namespace PuzzleMain
         /// </summary>
         /// <param name="_itemNum">援護アイテム番号</param>
         /// <param name="_active"> 表示状態</param>
-        void SetWaitItemsActive(int _itemNum, bool _active)
+        IEnumerator SetWaitItemsActive(int _itemNum, bool _active)
         {
-            mWaitItemObjArr[_itemNum].SetActive(_active);
-
-            if (_active) StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_ACTIVE));
-            else         StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_INACTIVE));
+            if (_active)
+            {
+                //表示
+                mWaitItemObjArr[_itemNum].SetActive(true);
+                StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_ACTIVE));
+            }
+            else
+            {
+                //非表示
+                yield return StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_INACTIVE));
+                mWaitItemObjArr[_itemNum].SetActive(false);
+            }
         }
 
         /// <summary>
-        /// 駒破壊情報設定
+        /// アイテム生成
         /// </summary>
-        /// <param name="_delPieceCount">駒反転数</param>
-        /// <param name="_dirCount">     反転方向数</param>
-        /// <param name="_line">         1行反転</param>
-        /// <param name="_column">       1列反転</param>
-        public void SetPieceDeleteInfomation(int _delPieceCount, int _dirCount, bool _line, bool _column)
+        public void GenerateItems()
         {
-            mDelPieceCount = _delPieceCount;    
-            mDelDirCount   = _dirCount;    
-            mDelLine       = _line;
-            mDelColumn     = _column;
-        }
+            //破壊オブジェクトが空の場合
+            if (sDestroyPiecesIndexList.Count == 0) return;
 
-        /// <summary>
-        /// 駒破壊情報リセット
-        /// </summary>
-        public void ResetPieceDeleteInfomation()
-        {
-            SetPieceDeleteInfomation(0, 0, false, false);
-        }
+            //基準駒番号
+            int criteriaSquareId = sDestroyPiecesIndexList[sDestroyBasePieceIndex];
 
-        /// <summary>
-        /// アイテム使用可能判定
-        /// </summary>
-        public void SetItems()
-        {
-            if (mDelLine && mDelColumn)
+            //基準行の端(左右)を取得
+            int minLine = criteriaSquareId % BOARD_LINE_COUNT;
+            int maxLine = SQUARES_COUNT - BOARD_LINE_COUNT + minLine;
+
+            //基準列の端(上下)を取得
+            int minColumn = criteriaSquareId - criteriaSquareId % BOARD_LINE_COUNT;
+            int maxColumn = minColumn + BOARD_LINE_COUNT - 1;
+
+            //破壊方向数の取得
+            int dirCount = 0;
+
+            //周辺8マス取得
+            int[] perSquares = new int[DIRECTIONS_COUNT];
+            foreach (Directions dir in Enum.GetValues(typeof(Directions)))
+            {
+                if (!piecesMgr.IsSquareSpecifiedDirection(dir, criteriaSquareId)) perSquares[(int)dir] = INT_NULL;  //端マスの場合
+                else  perSquares[(int)dir] = piecesMgr.GetDesignatedDirectionIndex((int)dir, criteriaSquareId);     //その他
+            }
+
+            //各存在フラグ
+            bool minLineFlag   = false;
+            bool maxLineFlag   = false;
+            bool minColumnFlag = false;
+            bool maxColumnFlag = false;
+
+            //駒の数,存在フラグを取得
+            int delPieceCount = 0;
+            foreach (int i in sDestroyPiecesIndexList)
+            {
+                //破壊方向数カウント
+                if (Array.IndexOf(perSquares, i) >= 0) dirCount++;
+
+                //駒以外は処理をスキップ
+                if (sPieceObjArr[i].tag != PIECE_TAG) continue;
+
+                //行,列判定
+                if (minLine == i)   minLineFlag   = true;
+                if (maxLine == i)   maxLineFlag   = true;
+                if (minColumn == i) minColumnFlag = true;
+                if (maxColumn == i) maxColumnFlag = true;
+
+                //破壊駒の数カウント
+                delPieceCount++;
+            }
+
+            //1行,列の破壊フラグ設定
+            bool delLine   = minLineFlag && maxLineFlag;
+            bool delcolumn = minColumnFlag && maxColumnFlag;
+
+            //生成アイテム決定
+            if (delLine && delcolumn)
             {
                 //全消し
             }
-            else if (mDelColumn)
+            else if (delcolumn)
             {
                 //ロケット(縦)
             }
-            else if (mDelLine)
+            else if (delLine)
             {
                 //ロケット(横)
             }
-            else if (mDelDirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
+            else if (dirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
             {
                 //花火
             }
 
             //※ほんとはelse if
-            if (mDelPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
+            if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
             {
                 //アヒル生成
-                SetWaitItemsActive((int)SupportItems.Duck, true);
+                StartCoroutine(SetWaitItemsActive((int)SupportItems.Duck, true));
             }
-
-            //駒破壊情報リセット
-            ResetPieceDeleteInfomation();
         }
 
         /// <summary>
@@ -216,6 +248,9 @@ namespace PuzzleMain
             //準備状態解除
             ResetWaitItemReady();
 
+            //待機アイテム非表示
+            StartCoroutine(SetWaitItemsActive(itemNum, false));
+
             switch (itemNum)
             {
                 //アヒル
@@ -229,11 +264,8 @@ namespace PuzzleMain
             { yield return gimmickCor; }
             sGimmickCorList = new List<Coroutine>();
 
-            //待機アイテム非表示
-            SetWaitItemsActive(itemNum, false);
-
             //駒破壊開始
-            StartCoroutine(piecesMgr.StartDestroyingPieces());
+            StartCoroutine(piecesMgr.StartDestroyingPieces(true));
 
             //アイテム使用フラグリセット
             NOW_SUPPORT_ITEM_USE = false;
@@ -250,15 +282,13 @@ namespace PuzzleMain
             int duckNum = (int)SupportItems.Duck;
 
             //配置座標指定
+            SetItemsActive(duckNum, true);
             Vector2 setPos = new Vector2(0.0f, -SQUARE_DISTANCE * _lineNum);
-            mItemsInfoArr[duckNum].tra.position = setPos;
+            mItemsInfoArr[duckNum].tra.localPosition = setPos;
 
             //アニメ再生
             yield return StartCoroutine(AnimationStart(mItemsInfoArr[duckNum].ani, STATE_NAME_SUPPORT));
             SetItemsActive(duckNum, false);
-
-            //駒破壊開始
-            yield return StartCoroutine(piecesMgr.StartDestroyingPieces());
         }
 
         /// <summary>

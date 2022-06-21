@@ -29,8 +29,9 @@ namespace PuzzleMain
         public static Transform[]           sSquareTraArr;                               //マスTransform配列
         public static PieceInformation[]    sPieceInfoArr;                               //駒の情報配列
         public static GimmickInformation[]  sGimmickInfoArr;                             //ギミックの情報配列
-        public static List<int>             sDestroyPiecesIndexList = new List<int>();   //削除駒の管理番号リスト
         public static List<Coroutine>       sGimmickCorList = new List<Coroutine>();     //動作中ギミックリスト
+        public static List<int>             sDestroyPiecesIndexList = new List<int>();   //削除駒の管理番号リスト
+        public static int                   sDestroyBasePieceIndex = 0;                  //削除駒内の基準駒(置いた駒)の格納インデックス
 
         public static int                   sNumberTagNextOrder = 0;                     //次に破壊する番号(番号札ギミック用)
 

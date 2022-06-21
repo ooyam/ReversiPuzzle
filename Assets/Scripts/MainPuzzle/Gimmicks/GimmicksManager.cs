@@ -746,37 +746,8 @@ namespace PuzzleMain
                     squareNull[(int)dir] = false;
                     atkPossibleSquares[(int)dir] = false;
 
-                    //竜巻盤の端にある場合
-                    switch (dir)
-                    {
-                        //上
-                        case Directions.Up:
-                        case Directions.UpLeft:
-                        case Directions.UpRight:
-                            if (nowSquareId % BOARD_LINE_COUNT == 0) continue;
-                            break;
-                        //下
-                        case Directions.Down:
-                        case Directions.DownLeft:
-                        case Directions.DownRight:
-                            if ((nowSquareId + 1) % BOARD_LINE_COUNT == 0) continue;
-                            break;
-                    }
-                    switch (dir)
-                    {
-                        //左
-                        case Directions.Left:
-                        case Directions.UpLeft:
-                        case Directions.DownLeft:
-                            if (nowSquareId < BOARD_LINE_COUNT) continue;
-                            break;
-                        //右
-                        case Directions.Right:
-                        case Directions.UpRight:
-                        case Directions.DownRight:
-                            if (nowSquareId >= SQUARES_COUNT - BOARD_LINE_COUNT) continue;
-                            break;
-                    }
+                    //竜巻が盤の端にある場合は処理スキップ
+                    if (!piecesMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
 
                     //各方向のマス管理番号取得
                     piecesIndexArr[(int)dir] = piecesMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);

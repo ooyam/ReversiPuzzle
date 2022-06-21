@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Gimmick
   - Piece
-  - Undefined
+  - SupportItem
   layers:
   - Default
   - TransparentFX

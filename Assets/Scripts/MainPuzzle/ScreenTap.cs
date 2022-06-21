@@ -8,14 +8,16 @@ using static PuzzleMain.PuzzleMain;
 
 public class ScreenTap : MonoBehaviour
 {
-    PiecesManager piecesMgr;    //PiecesManager
-    Camera        mainCamera;   //メインカメラ
+    PiecesManager piecesMgr;        //PiecesManager
+    SupportItemsManager stItemsMgr; //SupportItemsManager
+    Camera mainCamera;              //メインカメラ
     float rayDistance = 10.0f;
 
     public void Initialize()
     {
         mainCamera = Camera.main;
-        piecesMgr = sPuzzleMain.GetPiecesManager();
+        piecesMgr  = sPuzzleMain.GetPiecesManager();
+        stItemsMgr = sPuzzleMain.GetSupportItemsManager();
     }
 
     void Update()
@@ -30,9 +32,20 @@ public class ScreenTap : MonoBehaviour
                 var hitCollider = hit.collider;
                 if (hitCollider)
                 {
-                    //Rayが当たったオブジェクトが駒の場合
-                    if (PIECE_TAG == hitCollider.tag)
-                        piecesMgr.TapObject(hitCollider.gameObject);
+                    //Rayが当たったオブジェクト
+                    switch (hitCollider.tag)
+                    {
+                        //駒,ギミック
+                        case PIECE_TAG:
+                        case GIMMICK_TAG:
+                            piecesMgr.TapObject(hitCollider.gameObject);
+                            break;
+
+                        //援護アイテム
+                        case SUPPORT_ITEM_TAG:
+                            stItemsMgr.TapItem(hitCollider.gameObject);
+                            break;
+                    }
                 }
             }
         }
