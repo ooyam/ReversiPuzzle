@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
-using static ObjectMove_2D.ObjectMove_2D;
 using static animation.AnimationManager;
 
 namespace PuzzleMain
@@ -465,35 +464,26 @@ namespace PuzzleMain
                 frameListNull = false;
 
                 //指定色の取得
-                string specifiedColor = "";
                 int colorId = frameInfoListArr[groupId][0].colorId;
-                if (colorId != COLORLESS_ID)
-                {
-                    Colors color = (Colors)Enum.ToObject(typeof(Colors), colorId);
-                    specifiedColor = color.ToString();
-                }
-
-                bool first = true; //初回ループフラグ
                 bool burst = true; //ギミック破壊フラグ
 
                 foreach (int i in squareList)
                 {
-                    //指定色無しで初回ループの場合
-                    if (first && colorId == COLORLESS_ID)
+                    //駒でない場合は処理終了
+                    if (sPieceInfoArr[i] == null)
                     {
-                        //最初の駒のタグを指定色に設定
-                        specifiedColor = sSquareTraArr[i].GetChild(0).tag;
-                        if (specifiedColor == GIMMICK_TAG)
-                        {
-                            //ギミックの場合は処理終了
-                            burst = false;
-                            break;
-                        }
-                        first = false;
+                        burst = false;
+                        break;
                     }
 
-                    //タグ名が指定色でない場合
-                    if (specifiedColor != sSquareTraArr[i].GetChild(0).tag)
+                    //最初の駒のタグを指定色に設定
+                    if (colorId == COLORLESS_ID && squareList[0] == i)
+                    {
+                        colorId = sPieceInfoArr[i].colorId;
+                    }
+
+                    //指定色でない場合
+                    if (colorId != sPieceInfoArr[i].colorId)
                     {
                         burst = false;
                         break;
@@ -530,8 +520,8 @@ namespace PuzzleMain
             //処理が一度も入らなかった(リストが空)場合
             if (frameListNull)
             {
-                frameInfoListArr      = null;
-                frameObjListArr       = null;
+                frameInfoListArr     = null;
+                frameObjListArr      = null;
                 frameSquareIdListArr = null;
             }
         }

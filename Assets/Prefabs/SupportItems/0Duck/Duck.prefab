@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3393944677228953979}
   - component: {fileID: 1809827615496001323}
+  - component: {fileID: 347973901498765012}
   m_Layer: 0
   m_Name: Duckling_3
   m_TagString: Untagged
@@ -84,6 +85,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &347973901498765012
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104771100683613934}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
 --- !u!1 &278446274093882040
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6638232858040081136}
   - component: {fileID: 7282980398684352085}
+  - component: {fileID: 8761185263162769273}
   m_Layer: 0
   m_Name: Duck
   m_TagString: Untagged
@@ -168,6 +181,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &8761185263162769273
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278446274093882040}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
 --- !u!1 &3622574757981572178
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,6 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5691189386742100824}
   - component: {fileID: 1126014306866994929}
+  - component: {fileID: 6889970951955299182}
   m_Layer: 0
   m_Name: Duckling_1
   m_TagString: Untagged
@@ -252,6 +277,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &6889970951955299182
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3622574757981572178}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
 --- !u!1 &4857344512080465055
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4526991614553631966}
   - component: {fileID: 7728537712719182553}
+  - component: {fileID: 3151018440515750796}
   m_Layer: 0
   m_Name: Duckling_2
   m_TagString: Untagged
@@ -336,6 +373,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &3151018440515750796
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4857344512080465055}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
 --- !u!1 &5792779947336699853
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,6 +394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6388277768201134479}
   - component: {fileID: 7784170616034261828}
+  - component: {fileID: 5723105780345938899}
   m_Layer: 0
   m_Name: Duckling_0
   m_TagString: Untagged
@@ -420,6 +469,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &5723105780345938899
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792779947336699853}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
 --- !u!1 &7181783829888799424
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5211499963653524532}
   - component: {fileID: 6773446816519706527}
+  - component: {fileID: 855715587616022480}
   m_Layer: 0
   m_Name: Duckling_4
   m_TagString: Untagged
@@ -639,3 +700,14 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!210 &855715587616022480
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8942537511697994781}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5

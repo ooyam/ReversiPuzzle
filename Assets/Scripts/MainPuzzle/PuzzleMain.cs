@@ -64,11 +64,11 @@ namespace PuzzleMain
             //ScreenTap‚Ì‰Šú‰»
             mScreenTap.Initialize();
 
-            //PiecesManager‚Ì‰Šú‰»
-            mPiecesManager.Initialize();
-
             //GimmicksManager‚Ì‰Šú‰»
             mGimmicksManager.Initialize();
+
+            //PiecesManager‚Ì‰Šú‰»
+            mPiecesManager.Initialize();
 
             //SupportItemsManager‚Ì‰Šú‰»
             mSupportItemsManager.Initialize();

@@ -142,11 +142,11 @@ public class PuzzleDefine : MonoBehaviour
     public const float DESTROY_PIECE_CHANGE_SCALE  = 0.0f;   //破壊時のスケール
 
     //駒配置
-    public const float PUT_PIECE_SCALING_SPEED = 0.02f;  //拡縮速度
-    public const float PUT_PIECE_CHANGE_SCALE  = 0.8f;   //拡大時のスケール
+    public const float PUT_PIECE_SCALING_SPEED = 0.02f;             //拡縮速度
+    public const float PUT_PIECE_CHANGE_SCALE  = 0.8f;              //拡大時のスケール
     public const float PUT_PIECE_MOVE_START_Z  = Z_GIMMICK - 0.1f;  //移動開始z座標(localPosition)
-    public const float PUT_PIECE_MOVE_SPEED    = 0.2f;   //移動速度
-    public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;   //待機駒のスライド速度
+    public const float PUT_PIECE_MOVE_SPEED    = 0.2f;              //移動速度
+    public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;              //待機駒のスライド速度
 
     //駒落下
     public const float FALL_PIECE_MOVE_SPEED  = 0.07f;  //落下速度
@@ -208,14 +208,25 @@ public class PuzzleDefine : MonoBehaviour
     public const string SUPPORT_ITEM_TAG = "SupportItem";   //援護アイテム
 
     //ギミック情報配列のインデックス番号
-    public const int SQUARE   = 0;  //配置マス
-    public const int GIMMICK  = 1;  //ギミックの種類
-    public const int COLOR    = 2;  //指定色
-    public const int GROUP    = 3;  //管理グループ
-    public const int WIDTH    = 4;  //横幅
-    public const int HEIGHT   = 5;  //高さ
-    public const int QUANTITY = 6;  //指定量
-    public const int ORDER    = 7;  //指定順番
+    public enum GimmickInfoIndex
+    {
+        Square,     //配置マス
+        Gimmick,    //ギミックの種類
+        Color,      //指定色
+        Group,      //管理グループ
+        Width,      //横幅
+        Height,     //高さ
+        Quantity,   //指定量
+        Order       //指定順番
+    }
+    public static readonly int SQUARE   = (int)GimmickInfoIndex.Square;     //配置マス
+    public static readonly int GIMMICK  = (int)GimmickInfoIndex.Gimmick;    //ギミックの種類
+    public static readonly int COLOR    = (int)GimmickInfoIndex.Color;      //指定色
+    public static readonly int GROUP    = (int)GimmickInfoIndex.Group;      //管理グループ
+    public static readonly int WIDTH    = (int)GimmickInfoIndex.Width;      //横幅
+    public static readonly int HEIGHT   = (int)GimmickInfoIndex.Height;     //高さ
+    public static readonly int QUANTITY = (int)GimmickInfoIndex.Quantity;   //指定量
+    public static readonly int ORDER    = (int)GimmickInfoIndex.Order;      //指定順番
 
     public const int DEF_SIZE = 1;  //サイズの初期値
     public const int NOT_NUM  = -1; //各項目番号指示なし
@@ -227,9 +238,9 @@ public class PuzzleDefine : MonoBehaviour
             (int)Colors.Blue,   //青
             (int)Colors.Red,    //赤
             (int)Colors.Yellow, //黄
-            (int)Colors.Green,  //緑
-            (int)Colors.Violet, //紫
-            (int)Colors.Orange  //橙
+            //(int)Colors.Green,  //緑
+            //(int)Colors.Violet, //紫
+            //(int)Colors.Orange  //橙
         };
         USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
         STAGE_NUMBER    = 1;
@@ -245,12 +256,25 @@ public class PuzzleDefine : MonoBehaviour
             (int)Squares.H2
             */
         };
-        GIMMICKS_COUNT       = 4;
-        GIMMICKS_INFO_ARR    = new int[GIMMICKS_COUNT][];
-        GIMMICKS_INFO_ARR[0] = new int[] { (int)Squares.B1, (int)Gimmicks.Jewelry, (int)Colors.Blue, NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_INFO_ARR[1] = new int[] { (int)Squares.D1, (int)Gimmicks.Hamster, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_INFO_ARR[2] = new int[] { (int)Squares.H1, (int)Gimmicks.Tornado, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_INFO_ARR[3] = new int[] { (int)Squares.D3, (int)Gimmicks.Tornado, COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_COUNT        = 17;
+        GIMMICKS_INFO_ARR     = new int[GIMMICKS_COUNT][];
+        GIMMICKS_INFO_ARR[0]  = new int[] { (int)Squares.B1, (int)Gimmicks.Balloon,            COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[1]  = new int[] { (int)Squares.D1, (int)Gimmicks.Balloon_Color,      (int)Colors.Red,  NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[2]  = new int[] { (int)Squares.F1, (int)Gimmicks.Jewelry,            (int)Colors.Red,  NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[3]  = new int[] { (int)Squares.C2, (int)Gimmicks.Wall,               COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[4]  = new int[] { (int)Squares.E2, (int)Gimmicks.Hamster,            COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[5]  = new int[] { (int)Squares.G2, (int)Gimmicks.NumberTag,          COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 0 };
+        GIMMICKS_INFO_ARR[6]  = new int[] { (int)Squares.B3, (int)Gimmicks.NumberTag,          COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 1 };
+        GIMMICKS_INFO_ARR[7]  = new int[] { (int)Squares.D3, (int)Gimmicks.NumberTag,          COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, 2 };
+        GIMMICKS_INFO_ARR[8]  = new int[] { (int)Squares.F3, (int)Gimmicks.Tornado,            COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[9]  = new int[] { (int)Squares.G7, (int)Gimmicks.Cage,               (int)Colors.Blue, NOT_NUM, 2,        2,        10,      NOT_NUM };
+        GIMMICKS_INFO_ARR[10] = new int[] { (int)Squares.G3, (int)Gimmicks.Frame,              COLORLESS_ID,     0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[11] = new int[] { (int)Squares.G4, (int)Gimmicks.Frame,              COLORLESS_ID,     0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[12] = new int[] { (int)Squares.B5, (int)Gimmicks.Frame_Color,        (int)Colors.Blue, 1,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[13] = new int[] { (int)Squares.C5, (int)Gimmicks.Frame_Color,        (int)Colors.Blue, 1,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[14] = new int[] { (int)Squares.E5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,  2,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[15] = new int[] { (int)Squares.F5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,  2,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[16] = new int[] { (int)Squares.F6, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,  2,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
 
         List<int> usedGroupNum = new List<int>();
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)
