@@ -4506,6 +4506,7 @@ MonoBehaviour:
     - {fileID: 233451393414422907, guid: bfb50728463e92c46b3e4f0264614dc6, type: 3}
   reversiBoardTra: {fileID: 787325015}
   nextPieceBoxesTra: {fileID: 736909303}
+  testAni: {fileID: 0}
 --- !u!4 &1270919793
 Transform:
   m_ObjectHideFlags: 0
@@ -7774,7 +7775,7 @@ PrefabInstance:
     - target: {fileID: 3875978289479638847, guid: 4fb65e3304ab98c4185587d27a42788d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3875978289479638847, guid: 4fb65e3304ab98c4185587d27a42788d,
         type: 3}

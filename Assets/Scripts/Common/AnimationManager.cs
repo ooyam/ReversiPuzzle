@@ -33,8 +33,13 @@ namespace animation
             //アニメーション開始
             ani.Play(stateName, 0, 0.0f);
 
+            //stateが切り替わるまで待機
+            while(!ani.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+            {
+                yield return null;
+            }
+
             //アニメーション終了待機
-            yield return null;
             yield return new WaitWhile(() => ani.GetCurrentAnimatorStateInfo(0).IsName(stateName));
         }
 

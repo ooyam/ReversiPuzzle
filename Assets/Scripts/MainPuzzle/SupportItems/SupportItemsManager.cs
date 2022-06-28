@@ -181,7 +181,7 @@ namespace PuzzleMain
                 if (Array.IndexOf(perSquares, i) >= 0) dirCount++;
 
                 //駒以外は処理をスキップ
-                if (sPieceObjArr[i].tag != PIECE_TAG) continue;
+                if (!sPieceObjArr[i].CompareTag(PIECE_TAG)) continue;
 
                 //行,列判定
                 if (minLine == i)   minLineFlag   = true;
@@ -260,12 +260,10 @@ namespace PuzzleMain
             }
 
             //ギミック破壊待機
-            foreach (Coroutine gimmickCor in sGimmickCorList)
-            { yield return gimmickCor; }
-            sGimmickCorList = new List<Coroutine>();
+            foreach (Coroutine c in sGimmickCorList)
+            { yield return c; }
 
-            //駒破壊開始
-            StartCoroutine(piecesMgr.StartDestroyingPieces(true));
+            StartCoroutine(piecesMgr.TurnEnd(true));
 
             //アイテム使用フラグリセット
             NOW_SUPPORT_ITEM_USE = false;
@@ -298,7 +296,7 @@ namespace PuzzleMain
         public void DuckSupport(int _attackColumn)
         {
             int squareIndex = mDuckSupportLineNum + (_attackColumn * BOARD_LINE_COUNT);
-            piecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID);
+            piecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
         }
     }
 }

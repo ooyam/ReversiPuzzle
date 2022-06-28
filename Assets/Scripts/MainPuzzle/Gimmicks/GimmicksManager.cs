@@ -142,7 +142,8 @@ namespace PuzzleMain
             }
 
             //ダメージアニメーション開始
-            sGimmickCorList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, stateName)));
+            Coroutine coroutine = StartCoroutine(AnimationStart(gimmInfo.ani, stateName));
+            sGimmickCorList.Add(coroutine);
 
             //ダメージ回数計算
             gimmInfo.remainingTimes--;
@@ -162,7 +163,7 @@ namespace PuzzleMain
         {
             //コルーチンリスト
             List<Coroutine> coroutineList = new List<Coroutine>();
-            Coroutine coroutine = null;
+            Coroutine coroutine;
 
             //竜巻オブジェクト情報リスト
             tornadoInfoList = new List<GimmickInformation>();
@@ -874,7 +875,7 @@ namespace PuzzleMain
 
             //コルーチンリスト
             List<Coroutine> coroutineList = new List<Coroutine>();
-            Coroutine coroutine = null;
+            Coroutine coroutine;
 
             //攻撃開始
             int tornadoCount = tornadoInfoList.Count;
