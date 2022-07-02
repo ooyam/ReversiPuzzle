@@ -9,14 +9,16 @@ public class SupportItemInformation : MonoBehaviour
     [System.NonSerialized] public Transform  tra;
     [System.NonSerialized] public GameObject obj;
 
+    public Vector3 pos; //座標
+
     /// <summary>
     /// コンポーネントの設定
     /// </summary>
     void ComponentSetting()
     {
-        ani = this.GetComponent<Animator>();
-        tra = this.transform;
-        obj = this.gameObject;
+        ani = GetComponent<Animator>();
+        tra = transform;
+        obj = gameObject;
     }
 
     /// <summary>
@@ -25,5 +27,6 @@ public class SupportItemInformation : MonoBehaviour
     public void InformationSetting()
     {
         ComponentSetting();
+        pos = tra.localPosition;
     }
 }

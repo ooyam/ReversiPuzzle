@@ -2566,7 +2566,7 @@ GameObject:
   - component: {fileID: 3560871834545767407}
   - component: {fileID: 3560871834545767406}
   m_Layer: 0
-  m_Name: RoketLine
+  m_Name: RocketLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

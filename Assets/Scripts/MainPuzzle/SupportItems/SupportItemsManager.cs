@@ -20,9 +20,9 @@ namespace PuzzleMain
     //ロケットの援護列タイプ
     public enum RocketColumnType
     {
-        Center = 0,
-        Right,
-        Left
+        Center = 0,     //中央:0～
+        Right  = 10,    //右列:10～
+        Left   = 20     //左列:20～
     }
 
     public class SupportItemsManager : MonoBehaviour
@@ -47,7 +47,8 @@ namespace PuzzleMain
 
         int mReadyItemNumber;           //準備中のアイテム番号
         int mDuckSupportLineNum;        //アヒルの援護行番号
-        int mRocketSupportLineNum;  //ロケットの援護行番号
+        int mRocketSupportLineNum;      //ロケット(横)の援護行番号
+        int mRocketSupportColumnNum;    //ロケット(縦)の援護列番号
 
         const int DUCK_USE_DEL_PIECE_COUNT = 6;     //アヒル生成条件
         const int FIREWORK_USE_DIR_PIECE_COUNT = 4; //花火生成条件
@@ -242,7 +243,12 @@ namespace PuzzleMain
             }
 
             //※ほんとはelse if
-            if (delLine)
+            if (delcolumn)
+            {
+                //ロケット(縦)生成
+                StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketColumn, true));
+            }
+            else if (delLine)
             {
                 //ロケット(横)生成
                 StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketLine, true));
@@ -292,9 +298,15 @@ namespace PuzzleMain
                     yield return StartCoroutine(UseDuck(_tapSquare % BOARD_LINE_COUNT));
                     break;
 
-                //ロケット
+                //ロケット(横)
                 case (int)SupportItems.RocketLine:
                     yield return StartCoroutine(UseRocketLine(_tapSquare % BOARD_LINE_COUNT));
+                    allTogether = true;
+                    break;
+
+                //ロケット(縦)
+                case (int)SupportItems.RocketColumn:
+                    yield return StartCoroutine(UseRocketColumn(_tapSquare / BOARD_LINE_COUNT));
                     allTogether = true;
                     break;
             }
@@ -311,6 +323,11 @@ namespace PuzzleMain
             NOW_SUPPORT_ITEM_USE = false;
         }
 
+
+        //==========================================================//
+        //--------------------------0アヒル-------------------------//
+        //==========================================================//
+
         /// <summary>
         /// アヒルの使用
         /// </summary>
@@ -319,16 +336,16 @@ namespace PuzzleMain
         IEnumerator UseDuck(int _lineNum)
         {
             mDuckSupportLineNum = _lineNum;
-            int duckNum = (int)SupportItems.Duck;
+            int itemNum = (int)SupportItems.Duck;
 
             //配置座標指定
-            SetItemsActive(duckNum, true);
-            Vector2 setPos = new Vector2(0.0f, -SQUARE_DISTANCE * _lineNum);
-            mItemsInfoArr[duckNum].tra.localPosition = setPos;
+            SetItemsActive(itemNum, true);
+            Vector2 setPos = new Vector2(0.0f, mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * _lineNum);
+            mItemsInfoArr[itemNum].tra.localPosition = setPos;
 
             //アニメ再生
-            yield return StartCoroutine(AnimationStart(mItemsInfoArr[duckNum].ani, STATE_NAME_SUPPORT));
-            SetItemsActive(duckNum, false);
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT));
+            SetItemsActive(itemNum, false);
         }
 
         /// <summary>
@@ -341,6 +358,11 @@ namespace PuzzleMain
             mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
         }
 
+
+        //==========================================================//
+        //----------------------2ロケット(横)-----------------------//
+        //==========================================================//
+
         /// <summary>
         /// ロケット(横)の使用
         /// </summary>
@@ -349,22 +371,22 @@ namespace PuzzleMain
         IEnumerator UseRocketLine(int _lineNum)
         {
             mRocketSupportLineNum = _lineNum;
-            int RocketNum = (int)SupportItems.RocketLine;
+            int itemNum = (int)SupportItems.RocketLine;
 
             //配置座標指定
-            SetItemsActive(RocketNum, true);
-            Vector2 setPos = new Vector2(0.0f, -SQUARE_DISTANCE * _lineNum);
-            mItemsInfoArr[RocketNum].tra.localPosition = setPos;
+            SetItemsActive(itemNum, true);
+            Vector2 setPos = new Vector2(0.0f, mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * _lineNum);
+            mItemsInfoArr[itemNum].tra.localPosition = setPos;
 
             //アニメ再生
-            yield return StartCoroutine(AnimationStart(mItemsInfoArr[RocketNum].ani, STATE_NAME_SUPPORT));
-            SetItemsActive(RocketNum, false);
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT));
+            SetItemsActive(itemNum, false);
         }
 
         /// <summary>
         /// ロケット(横)の援護
         /// </summary>
-        /// <param name="_supportNum">援護番号(10の位:行指定 1の位:列番号指定)</param>
+        /// <param name="_supportNum">援護番号(10の位:行指定 1の位:列指定)</param>
         public void RocketLineSupport(int _supportNum)
         {
             //列指定
@@ -394,6 +416,71 @@ namespace PuzzleMain
 
                     //下段のマスに修正
                     squareIndex++;
+                    break;
+            }
+
+            //マスへダメージ
+            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID);
+        }
+
+
+        //==========================================================//
+        //----------------------3ロケット(縦)-----------------------//
+        //==========================================================//
+
+        /// <summary>
+        /// ロケット(縦)の使用
+        /// </summary>
+        /// <param name="_columnNum">指定列</param>
+        /// <returns></returns>
+        IEnumerator UseRocketColumn(int _columnNum)
+        {
+            mRocketSupportColumnNum = _columnNum;
+            int itemNum = (int)SupportItems.RocketColumn;
+
+            //配置座標指定
+            SetItemsActive(itemNum, true);
+            Vector2 setPos = new Vector2(mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * _columnNum, 0.0f);
+            mItemsInfoArr[itemNum].tra.localPosition = setPos;
+
+            //アニメ再生
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT));
+            SetItemsActive(itemNum, false);
+        }
+
+        /// <summary>
+        /// ロケット(縦)の援護
+        /// </summary>
+        /// <param name="_supportNum">援護番号(10の位:列指定 1の位:行指定)</param>
+        public void RocketColumnSupport(int _supportNum)
+        {
+            //行指定
+            int line = _supportNum % TEN;
+
+            //マス指定
+            int squareIndex = line + (mRocketSupportColumnNum * BOARD_LINE_COUNT);
+            switch (_supportNum - line)
+            {
+                //右列
+                case (int)RocketColumnType.Right:
+
+                    //マス無しの場合は処理終了
+                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Right, squareIndex))
+                        return;
+
+                    //右列のマスに修正
+                    squareIndex += BOARD_LINE_COUNT;
+                    break;
+
+                //左列
+                case (int)RocketColumnType.Left:
+
+                    //マス無しの場合は処理終了
+                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Left, squareIndex))
+                        return;
+
+                    //左列のマスに修正
+                    squareIndex -= BOARD_LINE_COUNT;
                     break;
             }
 

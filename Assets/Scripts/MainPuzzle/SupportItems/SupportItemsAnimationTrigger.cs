@@ -25,10 +25,19 @@ namespace PuzzleMain
         /// <summary>
         /// ロケット(横)の援護
         /// </summary>
-        /// <param name="_supportNum">援護番号(10の位:行指定 1の位:列番号指定)</param>
+        /// <param name="_supportNum">援護番号(10の位:行指定 1の位:列指定)</param>
         void RocketLineSupportTrigger(int _supportNum)
         {
             mStItemsMgr.RocketLineSupport(_supportNum);
+        }
+
+        /// <summary>
+        /// ロケット(縦)の援護
+        /// </summary>
+        /// <param name="_supportNum">援護番号(10の位:列指定 1の位:行指定)</param>
+        void RocketColumnSupportTrigger(int _supportNum)
+        {
+            mStItemsMgr.RocketColumnSupport(_supportNum);
         }
     }
 }
