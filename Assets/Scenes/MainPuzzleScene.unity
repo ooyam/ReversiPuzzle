@@ -3192,6 +3192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mScreenTap: {fileID: 1270919794}
+  mSquaresManager: {fileID: 1270919795}
   mPiecesManager: {fileID: 1270919792}
   mGimmicksManager: {fileID: 1270919791}
   mSupportItemsManager: {fileID: 1270919790}
@@ -4355,6 +4356,7 @@ GameObject:
   - component: {fileID: 1270919792}
   - component: {fileID: 1270919791}
   - component: {fileID: 1270919790}
+  - component: {fileID: 1270919795}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -4393,6 +4395,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034152e86e0f5244cb67cc1daa5d871d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gimmickPrefabArr:
+  - prefab:
+    - {fileID: 7444513193782154046, guid: a5a45252345508f4c84eae91ca0707c1, type: 3}
+  - prefab:
+    - {fileID: 5005700242043693561, guid: 8290a2a1c7ee33c499cc1071047a3f54, type: 3}
+    - {fileID: 1198219777165012173, guid: 93b38e8bb0983b045b8b2af563ce0bbd, type: 3}
+    - {fileID: 1183272810836873537, guid: 85a419da453674a4f8aa73abd289e241, type: 3}
+    - {fileID: 989532552664830778, guid: 9a0b968d37144b242ba876bd5b526b25, type: 3}
+    - {fileID: 8184163201818294279, guid: caa0d15ea3541fa45b3c05006bb13c36, type: 3}
+    - {fileID: 4443197921532943092, guid: df3690b4664e87b469715b4b3fbdb24a, type: 3}
+  - prefab:
+    - {fileID: 4011911233645673750, guid: 0148b44693846d449bedf10a48898531, type: 3}
+    - {fileID: 8494783888263072934, guid: 218bb1d01e469f74882d0abfda737b97, type: 3}
+    - {fileID: 2282899012803715858, guid: e6a2d31062c49464693a79d7ba836b42, type: 3}
+    - {fileID: 6853246682952833605, guid: e0bff051c9d9df44a842274d31f56217, type: 3}
+    - {fileID: 8718703714248381338, guid: dc529cc95d4cc0241bef9d930cdf9009, type: 3}
+    - {fileID: 4574079881329888388, guid: 9b3103781e00df24cba23dc2c89f516a, type: 3}
+  - prefab:
+    - {fileID: 1254900303936368927, guid: fce9bbfa858e71b449f5eb7e24671f22, type: 3}
+  - prefab:
+    - {fileID: 1391713765904314326, guid: f1cb4f82d68b75745bae29394d190874, type: 3}
+  - prefab:
+    - {fileID: 1802982829477580096, guid: 0a49394f3bbabbb42a74748299eb2e47, type: 3}
+    - {fileID: 4172898381438987210, guid: 377f2809f65362d40b29461729131046, type: 3}
+    - {fileID: 4693892788727898539, guid: d402903f4fc88b84c8012da5ad88b11b, type: 3}
+    - {fileID: 8360422771878371253, guid: 77a56f3993cdc254e9da427d390973a3, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab:
+    - {fileID: 3217500645130671765, guid: ae04208c51d856c449951d7defc4f12c, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab:
+    - {fileID: 3535645932733883387, guid: 4c24c7b3e20ba43458a29781c6ae5578, type: 3}
+  - prefab:
+    - {fileID: 214722836573710542, guid: 72ed79b94effe4c44b6b885ec7b49b3b, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab: []
+  - prefab: []
+  - prefab:
+    - {fileID: 233451393414422907, guid: bfb50728463e92c46b3e4f0264614dc6, type: 3}
   jewelrySprArr:
   - {fileID: 5567795520561486652, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
   - {fileID: -7798462679561967036, guid: 27c3cd35d3a124646807e1493cf59c94, type: 3}
@@ -4516,8 +4560,6 @@ MonoBehaviour:
   - prefab: []
   - prefab:
     - {fileID: 233451393414422907, guid: bfb50728463e92c46b3e4f0264614dc6, type: 3}
-  reversiBoardTra: {fileID: 787325015}
-  nextPieceBoxesTra: {fileID: 736909303}
 --- !u!4 &1270919793
 Transform:
   m_ObjectHideFlags: 0
@@ -4544,6 +4586,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73a6c26c48cb60479c55b3a93171635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1270919795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270919789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 144cbf43d34ef83449be55b23b3a4714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mReversiBoardTra: {fileID: 787325015}
+  mNextPieceBoxesTra: {fileID: 736909303}
 --- !u!1 &1275519623
 GameObject:
   m_ObjectHideFlags: 0
@@ -5059,7 +5115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1401074565}
   m_Layer: 0
-  m_Name: SupportItemBoxe
+  m_Name: SupportItemBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

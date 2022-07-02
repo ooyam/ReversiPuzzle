@@ -10,7 +10,14 @@ namespace PuzzleMain
 {
     public class GimmicksManager : MonoBehaviour
     {
-        PiecesManager piecesMgr;    //PiecesManager
+        SquaresManager squaresMgr;  //SquaresManager
+        PiecesManager  piecesMgr;   //PiecesManager
+
+        [Header("ギミックプレハブの取得")]
+        public GimmickArr[] gimmickPrefabArr;
+        [Serializable]
+        public class GimmickArr
+        { public GameObject[] prefab; }
 
         [Header("宝石sprite")]
         [SerializeField]
@@ -61,9 +68,75 @@ namespace PuzzleMain
         /// </summary>
         public void Initialize()
         {
-            piecesMgr = sPuzzleMain.GetPiecesManager();
+            squaresMgr = sPuzzleMain.GetSquaresManager();
+            piecesMgr  = sPuzzleMain.GetPiecesManager();
+
+            //ギミック生成
+            sGimmickObjArr  = new GameObject[GIMMICKS_COUNT];
+            sGimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
+
+            //駒として配置しないギミックの生成
+            PlaceGimmickNotInSquare();
+
+            //駒として管理するギミック
+            for (int i = 0; i < GIMMICKS_COUNT; i++)
+            {
+                if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
+                {
+                    GeneraeGimmick(i);
+                }
+            }
         }
 
+
+        //===============================================//
+        //=================ギミック生成==================//
+        //===============================================//
+
+        /// <summary>
+        /// ギミック作成(駒として管理する)
+        /// </summary>
+        /// /// <param name="gimmickIndex"> ギミック管理番号</param>
+        void GeneraeGimmick(int gimmickIndex)
+        {
+            int colorId = (GIMMICKS_INFO_ARR[gimmickIndex][COLOR] < 0) ? 0 : GIMMICKS_INFO_ARR[gimmickIndex][COLOR];
+            sGimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICKS_INFO_ARR[gimmickIndex][GIMMICK]].prefab[colorId]);
+
+            //Component取得
+            sGimmickInfoArr[gimmickIndex] = sGimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
+            sGimmickInfoArr[gimmickIndex].InformationSetting(gimmickIndex);
+
+            //番号札の場合
+            if (sGimmickInfoArr[gimmickIndex].id == (int)Gimmicks.NumberTag)
+                NumberTagOrderSetting(ref sGimmickInfoArr[gimmickIndex]);
+        }
+
+
+        //===============================================//
+        //=====================汎用======================//
+        //===============================================//
+
+        /// <summary>
+        /// マスにあるギミックオブジェクト番号取得
+        /// </summary>
+        /// <param name="squareId">マス管理番号</param>
+        /// <returns>ギミックの管理番号</returns>
+        public int GetGimmickIndex_Square(int squareId)
+        {
+            GameObject pieceObj = sPieceObjArr[squareId];
+            if (pieceObj == null) return INT_NULL;
+            return GetGimmickIndex_Obj(pieceObj);
+        }
+
+        /// <summary>
+        /// オブジェクトからギミック管理番号を取得
+        /// </summary>
+        /// <param name="obj">マス管理番号</param>
+        /// <returns>ギミックの管理番号</returns>
+        public int GetGimmickIndex_Obj(GameObject obj)
+        {
+            return Array.IndexOf(sGimmickObjArr, obj);
+        }
 
         //===============================================//
         //=========ギミックダメージ・状態変化============//
@@ -243,7 +316,8 @@ namespace PuzzleMain
                                 int oldColorType = Array.IndexOf(USE_COLOR_TYPE_ARR, gimmInfo.colorId);
                                 int newColorType = (oldColorType == USE_COLOR_COUNT - 1) ? 0 : oldColorType + 1;
                                 gimmInfo.colorId = USE_COLOR_TYPE_ARR[newColorType];
-                                Sprite newSprite = (gimmInfo.tra.localPosition.x == 0.0f) ? frameWidthSprArr[gimmInfo.colorId] : frameHeightSprArr[gimmInfo.colorId];
+                                Sprite newSprite = frameHeightSprArr[gimmInfo.colorId];
+                                if (gimmInfo.tra.localPosition.x == 0.0f) newSprite = frameWidthSprArr[gimmInfo.colorId];
                                 gimmInfo.spriRenChild[0].sprite = newSprite;
 
                                 //sprit変更
@@ -253,7 +327,7 @@ namespace PuzzleMain
                                 //マスの色変更
                                 if (!changedSquare.Contains(gimmInfo.startSquareId))
                                 {
-                                    coroutine = StartCoroutine(piecesMgr.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
+                                    coroutine = StartCoroutine(squaresMgr.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
                                     coroutineList.Add(coroutine);
                                     changedSquare.Add(gimmInfo.startSquareId);
                                 }
@@ -410,7 +484,7 @@ namespace PuzzleMain
 
                     //マスの色指定
                     Color color = GetSquareColor(groupColorNumArr[groupId]);
-                    StartCoroutine(piecesMgr.SquareColorChange(color, squareIndex, false));
+                    StartCoroutine(squaresMgr.SquareColorChange(color, squareIndex, false));
                 }
                 groupId++;
             }
@@ -427,7 +501,7 @@ namespace PuzzleMain
         void GenerateFrame(int colorId, int squareIndex, Sprite[] spriArr, Directions direction, int groupId)
         {
             //フレーム生成,配置
-            GameObject frameObj = Instantiate(piecesMgr.gimmickPrefabArr[(int)Gimmicks.Frame].prefab[(int)direction]);
+            GameObject frameObj = Instantiate(gimmickPrefabArr[(int)Gimmicks.Frame].prefab[(int)direction]);
             frameObjListArr[groupId].Add(frameObj);
             piecesMgr.PlaceGimmick(frameObj, squareIndex);
 
@@ -510,7 +584,7 @@ namespace PuzzleMain
 
                     //マスの色を戻す
                     foreach (int i in squareList)
-                    { StartCoroutine(piecesMgr.SquareColorChange(SQUARE_WHITE, i, true)); }
+                    { StartCoroutine(squaresMgr.SquareColorChange(SQUARE_WHITE, i, true)); }
                     frameSquareIdListArr[groupId] = null;
                 }
 
@@ -554,7 +628,7 @@ namespace PuzzleMain
                 int[] cageInfo = cageInfoArrList[i];
 
                 //檻生成,配置
-                cageObjArr[i]  = Instantiate(piecesMgr.gimmickPrefabArr[cageInfo[GIMMICK]].prefab[0]);
+                cageObjArr[i]  = Instantiate(gimmickPrefabArr[cageInfo[GIMMICK]].prefab[0]);
                 cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
                 cageSquareIdArr[i] = cageInfo[SQUARE];
                 piecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
@@ -738,10 +812,10 @@ namespace PuzzleMain
                     atkPossibleSquares[(int)dir] = false;
 
                     //竜巻が盤の端にある場合は処理スキップ
-                    if (!piecesMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
+                    if (!squaresMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
 
                     //各方向のマス管理番号取得
-                    piecesIndexArr[(int)dir] = piecesMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
+                    piecesIndexArr[(int)dir] = squaresMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
                     if (0 <= piecesIndexArr[(int)dir] && piecesIndexArr[(int)dir] < SQUARES_COUNT)
                     {
                         if (sPieceObjArr[piecesIndexArr[(int)dir]] == null)

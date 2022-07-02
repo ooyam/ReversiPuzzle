@@ -11,6 +11,10 @@ namespace PuzzleMain
         [SerializeField]
         ScreenTap mScreenTap;
 
+        [Header("SquaresManager")]
+        [SerializeField]
+        SquaresManager mSquaresManager;
+
         [Header("PiecesManager")]
         [SerializeField]
         PiecesManager mPiecesManager;
@@ -23,17 +27,23 @@ namespace PuzzleMain
         [SerializeField]
         SupportItemsManager mSupportItemsManager;
 
-        public static PuzzleMain            sPuzzleMain;                                 //自身のインスタンス
+        public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
 
-        public static GameObject[]          sPieceObjArr;                                //駒オブジェクト配列
-        public static Transform[]           sSquareTraArr;                               //マスTransform配列
-        public static PieceInformation[]    sPieceInfoArr;                               //駒の情報配列
-        public static GimmickInformation[]  sGimmickInfoArr;                             //ギミックの情報配列
-        public static List<Coroutine>       sGimmickCorList = new List<Coroutine>();     //動作中ギミックリスト
-        public static List<int>             sDestroyPiecesIndexList = new List<int>();   //削除駒の管理番号リスト
-        public static int                   sDestroyBasePieceIndex = 0;                  //削除駒内の基準駒(置いた駒)の格納インデックス
+        public static GameObject[]          sSquareObjArr;                              //マスオブジェクト配列
+        public static Transform[]           sSquareTraArr;                              //マスTransform配列
+        public static int                   sNextPiecesCount;                           //待機駒の個数
+        public static Transform[]           sNextPieceBoxTraArr;                        //待機駒箱Transform配列
 
-        public static int                   sNumberTagNextOrder = 0;                     //次に破壊する番号(番号札ギミック用)
+        public static GameObject[]          sPieceObjArr;                               //駒オブジェクト配列
+        public static PieceInformation[]    sPieceInfoArr;                              //駒の情報配列
+
+        public static GameObject[]          sGimmickObjArr;                             //ギミックオブジェクト配列
+        public static GimmickInformation[]  sGimmickInfoArr;                            //ギミックの情報配列
+        public static List<Coroutine>       sGimmickCorList = new List<Coroutine>();    //動作中ギミックリスト
+        public static List<int>             sDestroyPiecesIndexList = new List<int>();  //削除駒の管理番号リスト
+        public static int                   sDestroyBasePieceIndex = 0;                 //削除駒内の基準駒(置いた駒)の格納インデックス
+
+        public static int                   sNumberTagNextOrder = 0;                    //次に破壊する番号(番号札ギミック用)
 
         /// <summary>
         /// パズルモード開始
@@ -64,6 +74,9 @@ namespace PuzzleMain
             //ScreenTapの初期化
             mScreenTap.Initialize();
 
+            //SquaresManagerの初期化
+            mSquaresManager.Initialize();
+
             //GimmicksManagerの初期化
             mGimmicksManager.Initialize();
 
@@ -73,6 +86,13 @@ namespace PuzzleMain
             //SupportItemsManagerの初期化
             mSupportItemsManager.Initialize();
         }
+
+        /// <summary>
+        /// SquaresManagerの取得
+        /// </summary>
+        /// <returns></returns>
+        public SquaresManager GetSquaresManager()
+        {  return mSquaresManager; }
 
         /// <summary>
         /// PiecesManagerの取得
