@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 7161055965250299374}
   - component: {fileID: 7161055965250299373}
   m_Layer: 0
-  m_Name: WaitRoketColumn
+  m_Name: WaitRocketColumn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

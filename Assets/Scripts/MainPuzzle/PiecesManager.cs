@@ -896,7 +896,7 @@ namespace PuzzleMain
             else DeletePiece(destroyIndex);
 
             //駒の落下開始
-            StartCoroutine(StratFallingPieces(false));
+            yield return StartCoroutine(StratFallingPieces());
 
             //破壊中フラグリセット
             NOW_DESTROYING_PIECES = false;
@@ -905,7 +905,8 @@ namespace PuzzleMain
         /// <summary>
         /// 駒破壊開始(複数)
         /// </summary>
-        public IEnumerator StartDestroyingPieces()
+        /// <param name="useSupport">援護アイテム使用？</param>
+        public IEnumerator StartDestroyingPieces(bool useSupport = false)
         {
             //破壊中フラグセット
             NOW_DESTROYING_PIECES = true;
@@ -920,7 +921,7 @@ namespace PuzzleMain
             yield return coroutine;
             
             //援護アイテム生成
-            stItemsMgr.GenerateItems();
+           　if (!useSupport) stItemsMgr.GenerateItems();
 
             //駒削除
             foreach (int pieceIndex in sDestroyPiecesIndexList)
@@ -934,7 +935,10 @@ namespace PuzzleMain
             sDestroyPiecesIndexList = new List<int>();
 
             //駒の落下開始
-            StartCoroutine(StratFallingPieces());
+            yield return StartCoroutine(StratFallingPieces());
+
+            //ターン終了
+            StartCoroutine(TurnEnd(useSupport));
 
             //破壊中フラグリセット
             NOW_DESTROYING_PIECES = false;
@@ -943,8 +947,7 @@ namespace PuzzleMain
         /// <summary>
         /// 駒の落下開始
         /// </summary>
-        /// <param name="turnEnd">ターン終了</param>
-        IEnumerator StratFallingPieces(bool turnEnd = true)
+        IEnumerator StratFallingPieces()
         {
             //駒落下中フラグセット
             NOW_FALLING_PIECES = true;
@@ -966,9 +969,6 @@ namespace PuzzleMain
             }
             foreach (Coroutine coroutine in coroutineList)
             { yield return coroutine; }
-
-            //ターン終了処理開始
-            if (!NOW_TURN_END_PROCESSING && turnEnd) StartCoroutine(TurnEnd());
 
             //駒落下中フラグリセット
             NOW_FALLING_PIECES = false;
@@ -1103,6 +1103,13 @@ namespace PuzzleMain
 
                 //特定ギミック破壊判定開始
                 yield return StartCoroutine(GimmickDestroyCheck());
+
+                //ギミックのフラグリセット
+                foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
+                {
+                    if (gimmickInfo == null) continue;
+                    gimmickInfo.nowTurnDamage = false;
+                }
             }
             //援護アイテム未使用時
             else

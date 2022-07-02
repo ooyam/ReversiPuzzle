@@ -434,7 +434,7 @@ GameObject:
   - component: {fileID: 5553163911024386032}
   - component: {fileID: 4367720307867246233}
   m_Layer: 0
-  m_Name: Duck
+  m_Name: RocketColumn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

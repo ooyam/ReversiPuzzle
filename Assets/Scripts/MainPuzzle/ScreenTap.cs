@@ -11,7 +11,7 @@ public class ScreenTap : MonoBehaviour
     PiecesManager piecesMgr;        //PiecesManager
     SupportItemsManager stItemsMgr; //SupportItemsManager
     Camera mainCamera;              //ƒƒCƒ“ƒJƒƒ‰
-    float rayDistance = 10.0f;
+    const float rayDistance = 10.0f;
 
     public void Initialize()
     {

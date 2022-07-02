@@ -9,6 +9,22 @@ using static animation.AnimationManager;
 
 namespace PuzzleMain
 {
+    //ロケットの援護番号(10の位:行指定 1の位:列番号指定)
+    public enum RocketLineSupportNumber
+    {
+        Center = 0,     //中央:0～
+        Top    = 10,    //上段:10～
+        Under  = 20     //下段:20～
+    }
+
+    //ロケットの援護列タイプ
+    public enum RocketColumnType
+    {
+        Center = 0,
+        Right,
+        Left
+    }
+
     public class SupportItemsManager : MonoBehaviour
     {
         PiecesManager piecesMgr;    //PiecesManager
@@ -30,6 +46,7 @@ namespace PuzzleMain
 
         int mReadyItemNumber;           //準備中のアイテム番号
         int mDuckSupportLineNum;        //アヒルの援護行番号
+        int mRocketSupportLineNum;  //ロケットの援護行番号
 
         const int DUCK_USE_DEL_PIECE_COUNT = 6;     //アヒル生成条件
         const int FIREWORK_USE_DIR_PIECE_COUNT = 4; //花火生成条件
@@ -123,6 +140,9 @@ namespace PuzzleMain
         /// <param name="_active"> 表示状態</param>
         IEnumerator SetWaitItemsActive(int _itemNum, bool _active)
         {
+            //切替が必要ない場合
+            if (mWaitItemObjArr[_itemNum].activeSelf == _active) yield break;
+
             if (_active)
             {
                 //表示
@@ -214,9 +234,18 @@ namespace PuzzleMain
             {
                 //花火
             }
+            else if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
+            {
+                //アヒル
+            }
 
             //※ほんとはelse if
-            if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
+            if (delLine)
+            {
+                //ロケット(横)生成
+                StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketLine, true));
+            }
+            else if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
             {
                 //アヒル生成
                 StartCoroutine(SetWaitItemsActive((int)SupportItems.Duck, true));
@@ -251,11 +280,20 @@ namespace PuzzleMain
             //待機アイテム非表示
             StartCoroutine(SetWaitItemsActive(itemNum, false));
 
+            //駒をすべて同じタイミングで破壊する
+            bool allTogether = false;
+
             switch (itemNum)
             {
                 //アヒル
                 case (int)SupportItems.Duck:
                     yield return StartCoroutine(UseDuck(_tapSquare % BOARD_LINE_COUNT));
+                    break;
+
+                //ロケット
+                case (int)SupportItems.RocketLine:
+                    yield return StartCoroutine(UseRocketLine(_tapSquare % BOARD_LINE_COUNT));
+                    allTogether = true;
                     break;
             }
 
@@ -263,7 +301,9 @@ namespace PuzzleMain
             foreach (Coroutine c in sGimmickCorList)
             { yield return c; }
 
-            StartCoroutine(piecesMgr.TurnEnd(true));
+            //駒破壊
+            if (allTogether) yield return StartCoroutine(piecesMgr.StartDestroyingPieces(true));
+            else StartCoroutine(piecesMgr.TurnEnd(true));
 
             //アイテム使用フラグリセット
             NOW_SUPPORT_ITEM_USE = false;
@@ -297,6 +337,66 @@ namespace PuzzleMain
         {
             int squareIndex = mDuckSupportLineNum + (_attackColumn * BOARD_LINE_COUNT);
             piecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
+        }
+
+        /// <summary>
+        /// ロケット(横)の使用
+        /// </summary>
+        /// <param name="_lineNum">指定行</param>
+        /// <returns></returns>
+        IEnumerator UseRocketLine(int _lineNum)
+        {
+            mRocketSupportLineNum = _lineNum;
+            int RocketNum = (int)SupportItems.RocketLine;
+
+            //配置座標指定
+            SetItemsActive(RocketNum, true);
+            Vector2 setPos = new Vector2(0.0f, -SQUARE_DISTANCE * _lineNum);
+            mItemsInfoArr[RocketNum].tra.localPosition = setPos;
+
+            //アニメ再生
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[RocketNum].ani, STATE_NAME_SUPPORT));
+            SetItemsActive(RocketNum, false);
+        }
+
+        /// <summary>
+        /// ロケット(横)の援護
+        /// </summary>
+        /// <param name="_supportNum">援護番号(10の位:行指定 1の位:列番号指定)</param>
+        public void RocketLineSupport(int _supportNum)
+        {
+            //列指定
+            int column = _supportNum % TEN;
+
+            //マス指定
+            int squareIndex = mRocketSupportLineNum + (column * BOARD_LINE_COUNT);
+            switch (_supportNum - column)
+            {
+                //上段
+                case (int)RocketLineSupportNumber.Top:
+
+                    //マス無しの場合は処理終了
+                    if (!piecesMgr.IsSquareSpecifiedDirection(Directions.Up, squareIndex))
+                        return;
+
+                    //上段のマスに修正
+                    squareIndex--;
+                    break;
+
+                //下段
+                case (int)RocketLineSupportNumber.Under:
+
+                    //マス無しの場合は処理終了
+                    if (!piecesMgr.IsSquareSpecifiedDirection(Directions.Down, squareIndex))
+                        return;
+
+                    //下段のマスに修正
+                    squareIndex++;
+                    break;
+            }
+
+            //マスへダメージ
+            piecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID);
         }
     }
 }
