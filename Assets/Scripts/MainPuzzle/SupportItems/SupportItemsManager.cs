@@ -4,11 +4,17 @@ using UnityEngine;
 using System;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
-using static ObjectMove_2D.ObjectMove_2D;
 using static animation.AnimationManager;
 
 namespace PuzzleMain
 {
+    //花火の援護場所
+    public enum FireworkSupportPlace
+    {
+        Center = 0,     //中央
+        Surroundings    //周囲
+    }
+
     //ロケットの援護番号(10の位:行指定 1の位:列番号指定)
     public enum RocketLineSupportNumber
     {
@@ -47,6 +53,7 @@ namespace PuzzleMain
 
         int mReadyItemNumber;           //準備中のアイテム番号
         int mDuckSupportLineNum;        //アヒルの援護行番号
+        int mFireworkSupportSquareId;   //花火の援護マス番号
         int mRocketSupportLineNum;      //ロケット(横)の援護行番号
         int mRocketSupportColumnNum;    //ロケット(縦)の援護列番号
 
@@ -253,6 +260,11 @@ namespace PuzzleMain
                 //ロケット(横)生成
                 StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketLine, true));
             }
+            else if (dirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
+            {
+                //花火
+                StartCoroutine(SetWaitItemsActive((int)SupportItems.Firework, true));
+            }
             else if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
             {
                 //アヒル生成
@@ -296,6 +308,12 @@ namespace PuzzleMain
                 //アヒル
                 case (int)SupportItems.Duck:
                     yield return StartCoroutine(UseDuck(_tapSquare % BOARD_LINE_COUNT));
+                    break;
+
+                //花火
+                case (int)SupportItems.Firework:
+                    yield return StartCoroutine(UseFirework(_tapSquare));
+                    allTogether = true;
                     break;
 
                 //ロケット(横)
@@ -356,6 +374,63 @@ namespace PuzzleMain
         {
             int squareIndex = mDuckSupportLineNum + (_attackColumn * BOARD_LINE_COUNT);
             mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
+        }
+
+
+        //==========================================================//
+        //--------------------------2花火--------------------------//
+        //==========================================================//
+
+        const int FIREWORK_TYPE_COUNT = 3;  //花火の種類数
+
+        /// <summary>
+        /// 花火の使用
+        /// </summary>
+        /// <param name="_squareId">指定マス</param>
+        /// <returns></returns>
+        IEnumerator UseFirework(int _squareId)
+        {
+            mFireworkSupportSquareId = _squareId;
+            int itemNum = (int)SupportItems.Firework;
+            int line    = _squareId % BOARD_LINE_COUNT;
+            int column  = _squareId / BOARD_LINE_COUNT;
+            float posX  = mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * column;
+            float posY  = mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * line;
+
+            //配置座標指定
+            SetItemsActive(itemNum, true);
+            Vector2 setPos = new Vector2(posX, posY);
+            mItemsInfoArr[itemNum].tra.localPosition = setPos;
+
+            //アニメ再生
+            int type = USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, FIREWORK_TYPE_COUNT)];
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT + type.ToString()));
+            SetItemsActive(itemNum, false);
+        }
+
+        /// <summary>
+        /// 花火の援護
+        /// </summary>
+        /// <param name="_place">援護場所</param>
+        public void FireworkSupport(FireworkSupportPlace _place)
+        {
+            switch (_place)
+            {
+                //中心を攻撃
+                case FireworkSupportPlace.Center:
+                    mPiecesMgr.DamageSpecifiedSquare(mFireworkSupportSquareId, COLORLESS_ID);
+                    break;
+
+                //周辺を攻撃
+                case FireworkSupportPlace.Surroundings:
+                    foreach (Directions dir in Enum.GetValues(typeof(Directions)))
+                    {
+                        if (!mSquaresMgr.IsSquareSpecifiedDirection(dir, mFireworkSupportSquareId)) continue;
+                        int square = mSquaresMgr.GetDesignatedDirectionIndex((int)dir, mFireworkSupportSquareId);
+                        mPiecesMgr.DamageSpecifiedSquare(square, COLORLESS_ID);
+                    }
+                    break;
+            }
         }
 
 
