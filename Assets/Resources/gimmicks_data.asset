@@ -18,6 +18,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -28,6 +29,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -38,6 +40,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -48,6 +51,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 3
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -58,6 +62,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 3
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: -0.65
@@ -68,6 +73,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0.73
     position_y: 0.73
@@ -78,6 +84,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0.73
     position_y: 0.73
@@ -88,6 +95,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0.73
     position_y: 0.73
@@ -98,6 +106,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 2
     continuous: 1
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: -0.72
@@ -108,6 +117,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -118,6 +128,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -128,6 +139,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0.73
     position_y: -0.73
@@ -138,6 +150,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 1
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: -0.71
@@ -148,6 +161,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -158,6 +172,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 1
     in_square: 1
     position_x: 0
     position_y: 0
@@ -168,6 +183,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0
     position_y: 0
@@ -178,6 +194,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0
     position_y: 0
@@ -188,6 +205,7 @@ MonoBehaviour:
     free_fall: 1
     damage_times: 1
     continuous: 0
+    assault_only: 0
     in_square: 1
     position_x: 0
     position_y: 0
@@ -198,6 +216,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 1
     continuous: 0
+    assault_only: 1
     in_square: 1
     position_x: 0
     position_y: 0
@@ -208,6 +227,7 @@ MonoBehaviour:
     free_fall: 0
     damage_times: 0
     continuous: 0
+    assault_only: 0
     in_square: 0
     position_x: 0
     position_y: 0

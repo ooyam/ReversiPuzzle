@@ -145,9 +145,10 @@ namespace PuzzleMain
         /// <summary>
         /// ギミックにダメージがあるかの確認
         /// </summary>
-        /// /// <param name="putPieceColorId">  置いた駒のタグ</param>
-        /// /// <param name="gimmickIndex">     ギミック管理番号(ステージ毎の)</param>
-        public bool DamageCheck(ref int putPieceColorId, ref int gimmickIndex)
+        /// <param name="putPieceColorId">  置いた駒のタグ</param>
+        /// <param name="gimmickIndex">     ギミック管理番号(ステージ毎の)</param>
+        /// <param name="assault">          強撃</param>
+        public bool DamageCheck(ref int putPieceColorId, ref int gimmickIndex, bool assault = false)
         {
             //ダメージの有無フラグ
             bool damage = false;
@@ -155,23 +156,27 @@ namespace PuzzleMain
             switch (sGimmickInfoArr[gimmickIndex].id)
             {
                 //無条件
-                case (int)Gimmicks.Balloon:     //風船
-                case (int)Gimmicks.Wall:        //壁
-                case (int)Gimmicks.Flower:      //花
-                case (int)Gimmicks.Hamster:     //ハムスター
-                case (int)Gimmicks.Tornado:     //竜巻
+                case (int)Gimmicks.Balloon: //風船
+                case (int)Gimmicks.Wall:    //壁
+                case (int)Gimmicks.Flower:  //花
+                case (int)Gimmicks.Hamster: //ハムスター
+                case (int)Gimmicks.Tornado: //竜巻
                     damage = true;
                     break;
 
                 //色判定
                 case (int)Gimmicks.Balloon_Color: //風船(色)
                 case (int)Gimmicks.Jewelry:       //宝石
-                    if (putPieceColorId == sGimmickInfoArr[gimmickIndex].colorId)
-                        damage = true;
+                    damage = putPieceColorId == sGimmickInfoArr[gimmickIndex].colorId;
+                    break;
+
+                //強撃
+                case (int)Gimmicks.Steel: //鋼
+                    damage = assault;
                     break;
 
                 //順番
-                case (int)Gimmicks.NumberTag:
+                case (int)Gimmicks.NumberTag:   //番号札
                     if (sNumberTagNextOrder == sGimmickInfoArr[gimmickIndex].order)
                     {
                         damage = true;
@@ -189,7 +194,8 @@ namespace PuzzleMain
         /// </summary>
         /// /// <param name="gimmickIndex">ギミック管理番号(ステージ毎の)</param>
         /// /// <param name="squareIndex"> ギミック配置番号</param>
-        public void DamageGimmick(ref int gimmickIndex, int squareIndex)
+        /// /// <param name="stateAddName">ステート名追加文字列</param>
+        public void DamageGimmick(ref int gimmickIndex, int squareIndex, string stateAddName = "")
         {
             string stateName = "";     //ステート名
             GimmickInformation gimmInfo = sGimmickInfoArr[gimmickIndex]; //ギミックの情報取得
@@ -203,6 +209,11 @@ namespace PuzzleMain
                 case (int)Gimmicks.NumberTag:       //番号札
                 case (int)Gimmicks.Tornado:         //竜巻
                     stateName = STATE_NAME_BURST;
+                    break;
+
+                //無条件破壊(ステート名追加)
+                case (int)Gimmicks.Steel:           //鋼
+                    stateName = STATE_NAME_BURST + stateAddName;
                     break;
 
                 //複数回ダメージ

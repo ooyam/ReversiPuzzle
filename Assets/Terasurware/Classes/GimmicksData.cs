@@ -15,6 +15,7 @@ public class GimmicksData : ScriptableObject
 		public bool free_fall;
 		public int damage_times;
 		public bool continuous;
+		public bool assault_only;
 		public bool in_square;
 		public float position_x;
 		public float position_y;

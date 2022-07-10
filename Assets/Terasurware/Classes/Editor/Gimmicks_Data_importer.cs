@@ -63,11 +63,12 @@ public class Gimmicks_Data_importer : AssetPostprocessor
 					cell = row.GetCell(2); p.free_fall = (cell == null ? false : cell.BooleanCellValue);
 					cell = row.GetCell(3); p.damage_times = (int)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(4); p.continuous = (cell == null ? false : cell.BooleanCellValue);
-					cell = row.GetCell(5); p.in_square = (cell == null ? false : cell.BooleanCellValue);
-					cell = row.GetCell(6); p.position_x = (float)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(7); p.position_y = (float)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(8); p.scale_x = (float)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(9); p.scale_y = (float)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(5); p.assault_only = (cell == null ? false : cell.BooleanCellValue);
+					cell = row.GetCell(6); p.in_square = (cell == null ? false : cell.BooleanCellValue);
+					cell = row.GetCell(7); p.position_x = (float)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(8); p.position_y = (float)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(9); p.scale_x = (float)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(10); p.scale_y = (float)(cell == null ? 0 : cell.NumericCellValue);
 
                         data.param.Add(p);
                     }

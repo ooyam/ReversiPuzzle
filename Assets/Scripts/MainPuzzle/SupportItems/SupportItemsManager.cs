@@ -15,15 +15,15 @@ namespace PuzzleMain
         Surroundings    //周囲
     }
 
-    //ロケットの援護番号(10の位:行指定 1の位:列番号指定)
-    public enum RocketLineSupportNumber
+    //ロケットの援護行タイプ(10の位:行指定 1の位:列番号指定)
+    public enum RocketLineType
     {
         Center = 0,     //中央:0～
         Top    = 10,    //上段:10～
         Under  = 20     //下段:20～
     }
 
-    //ロケットの援護列タイプ
+    //ロケットの援護列タイプ(10の位:列指定 1の位:行番号指定)
     public enum RocketColumnType
     {
         Center = 0,     //中央:0～
@@ -232,23 +232,6 @@ namespace PuzzleMain
             {
                 //全消し
             }
-            else if (delcolumn)
-            {
-                //ロケット(縦)
-            }
-            else if (delLine)
-            {
-                //ロケット(横)
-            }
-            else if (dirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
-            {
-                //花火
-            }
-            else if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
-            {
-                //アヒル
-            }
-
             //※ほんとはelse if
             if (delcolumn)
             {
@@ -378,7 +361,7 @@ namespace PuzzleMain
 
 
         //==========================================================//
-        //--------------------------2花火--------------------------//
+        //---------------------------2花火--------------------------//
         //==========================================================//
 
         const int FIREWORK_TYPE_COUNT = 3;  //花火の種類数
@@ -418,7 +401,7 @@ namespace PuzzleMain
             {
                 //中心を攻撃
                 case FireworkSupportPlace.Center:
-                    mPiecesMgr.DamageSpecifiedSquare(mFireworkSupportSquareId, COLORLESS_ID);
+                    mPiecesMgr.DamageSpecifiedSquare(mFireworkSupportSquareId, COLORLESS_ID, false, true);
                     break;
 
                 //周辺を攻撃
@@ -427,7 +410,7 @@ namespace PuzzleMain
                     {
                         if (!mSquaresMgr.IsSquareSpecifiedDirection(dir, mFireworkSupportSquareId)) continue;
                         int square = mSquaresMgr.GetDesignatedDirectionIndex((int)dir, mFireworkSupportSquareId);
-                        mPiecesMgr.DamageSpecifiedSquare(square, COLORLESS_ID);
+                        mPiecesMgr.DamageSpecifiedSquare(square, COLORLESS_ID, false, true, dir.ToString());
                     }
                     break;
             }
@@ -467,12 +450,22 @@ namespace PuzzleMain
             //列指定
             int column = _supportNum % TEN;
 
+            //ステート名
+            string stateAddName = "";
+
             //マス指定
             int squareIndex = mRocketSupportLineNum + (column * BOARD_LINE_COUNT);
             switch (_supportNum - column)
             {
+                //中央
+                case (int)RocketLineType.Center:
+
+                    //ステート名指定
+                    stateAddName = Directions.Left.ToString();
+                    break;
+
                 //上段
-                case (int)RocketLineSupportNumber.Top:
+                case (int)RocketLineType.Top:
 
                     //マス無しの場合は処理終了
                     if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Up, squareIndex))
@@ -480,10 +473,13 @@ namespace PuzzleMain
 
                     //上段のマスに修正
                     squareIndex--;
+
+                    //ステート名指定
+                    stateAddName = Directions.UpLeft.ToString();
                     break;
 
                 //下段
-                case (int)RocketLineSupportNumber.Under:
+                case (int)RocketLineType.Under:
 
                     //マス無しの場合は処理終了
                     if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Down, squareIndex))
@@ -491,11 +487,14 @@ namespace PuzzleMain
 
                     //下段のマスに修正
                     squareIndex++;
+
+                    //ステート名指定
+                    stateAddName = Directions.DownLeft.ToString();
                     break;
             }
 
             //マスへダメージ
-            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID);
+            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
         }
 
 
@@ -532,10 +531,20 @@ namespace PuzzleMain
             //行指定
             int line = _supportNum % TEN;
 
+            //ステート名
+            string stateAddName = "";
+
             //マス指定
             int squareIndex = line + (mRocketSupportColumnNum * BOARD_LINE_COUNT);
             switch (_supportNum - line)
             {
+                //中央
+                case (int)RocketColumnType.Center:
+
+                    //ステート名指定
+                    stateAddName = Directions.Up.ToString();
+                    break;
+
                 //右列
                 case (int)RocketColumnType.Right:
 
@@ -545,6 +554,9 @@ namespace PuzzleMain
 
                     //右列のマスに修正
                     squareIndex += BOARD_LINE_COUNT;
+
+                    //ステート名修正
+                    stateAddName = Directions.UpRight.ToString();
                     break;
 
                 //左列
@@ -556,11 +568,14 @@ namespace PuzzleMain
 
                     //左列のマスに修正
                     squareIndex -= BOARD_LINE_COUNT;
+
+                    //ステート名修正
+                    stateAddName = Directions.UpLeft.ToString();
                     break;
             }
 
             //マスへダメージ
-            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID);
+            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
         }
     }
 }

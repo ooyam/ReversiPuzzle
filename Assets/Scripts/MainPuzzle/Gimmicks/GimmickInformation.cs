@@ -26,6 +26,7 @@ public class GimmickInformation : MonoBehaviour
     [System.NonSerialized] public bool    freeFall;             //自由落下フラグ
     [System.NonSerialized] public bool    destructible;         //破壊可能フラグ(true：破壊可能)
     [System.NonSerialized] public bool    nowTurnDamage;        //今のターンにダメージを受けたかのフラグ
+    [System.NonSerialized] public bool    assaultOnly;          //強撃でのみ破壊可能
     [System.NonSerialized] public bool    inSquare;             //駒として配置するかのフラグ(true：駒として配置)
     [System.NonSerialized] public Vector3 defaultPos;           //基準座標
     [System.NonSerialized] public Vector3 defaultScale;         //基準スケール
@@ -75,6 +76,7 @@ public class GimmickInformation : MonoBehaviour
         order               = GIMMICKS_INFO_ARR[_index][ORDER];
         freeFall            = gimmickData.free_fall;
         destructible        = !gimmickData.continuous;
+        assaultOnly         = gimmickData.assault_only;
         inSquare            = gimmickData.in_square;
         defaultPos          = new Vector3(gimmickData.position_x, gimmickData.position_y, (inSquare) ? Z_PIECE : Z_GIMMICK);
         defaultScale        = new Vector3(gimmickData.scale_x, gimmickData.scale_y, 1.0f);

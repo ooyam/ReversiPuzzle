@@ -304,7 +304,9 @@ namespace PuzzleMain
         /// <param name="squareIndex">   マス番号</param>
         /// <param name="reversiColorId">反転後の色ID</param>
         /// <param name="instantly">     単体・即破壊</param>
-        public void DamageSpecifiedSquare(int squareIndex, int reversiColorId, bool instantly = false)
+        /// <param name="assault">       強撃</param>
+        /// <param name="stateAddName">  ステート名追加文字列</param>
+        public void DamageSpecifiedSquare(int squareIndex, int reversiColorId, bool instantly, bool assault = false, string stateAddName = "")
         {
             if (sPieceObjArr[squareIndex] == null) return;   //空マス
 
@@ -313,10 +315,10 @@ namespace PuzzleMain
             {
                 //ダメージ判定
                 int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(squareIndex);
-                bool damage = gimmicksMgr.DamageCheck(ref sGimmickInfoArr[gimmickIndex].colorId, ref gimmickIndex);
+                bool damage = gimmicksMgr.DamageCheck(ref sGimmickInfoArr[gimmickIndex].colorId, ref gimmickIndex, assault);
 
                 //ダメージ有の場合
-                if (damage) gimmicksMgr.DamageGimmick(ref gimmickIndex, squareIndex);
+                if (damage) gimmicksMgr.DamageGimmick(ref gimmickIndex, squareIndex, stateAddName);
             }
             //駒
             else
