@@ -4288,7 +4288,8 @@ MonoBehaviour:
     - {fileID: 3535645932733883387, guid: 4c24c7b3e20ba43458a29781c6ae5578, type: 3}
   - prefab:
     - {fileID: 214722836573710542, guid: 72ed79b94effe4c44b6b885ec7b49b3b, type: 3}
-  - prefab: []
+  - prefab:
+    - {fileID: 3457959979839171257, guid: 301b73a17f22d9848b35065b7f4213cf, type: 3}
   - prefab:
     - {fileID: 4694616286728443182, guid: 5b05b6a948fde9041bd9644d5750bad9, type: 3}
   - prefab: []

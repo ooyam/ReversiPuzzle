@@ -54,6 +54,26 @@ namespace PuzzleMain
         }
 
         /// <summary>
+        /// 列番号取得
+        /// </summary>
+        /// <param name="_squareId">マス管理番号</param>
+        /// <returns></returns>
+        public int GetColumnNumber(int _squareId)
+        {
+            return _squareId / BOARD_LINE_COUNT;
+        }
+
+        /// <summary>
+        /// 行番号取得
+        /// </summary>
+        /// <param name="_squareId">マス管理番号</param>
+        /// <returns></returns>
+        public int GetLineNumber(int _squareId)
+        {
+            return _squareId % BOARD_LINE_COUNT;
+        }
+
+        /// <summary>
         /// マスの色変更
         /// </summary>
         /// <param name="_afterColor"> 変化後の色</param>

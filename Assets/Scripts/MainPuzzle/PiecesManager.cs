@@ -42,9 +42,9 @@ namespace PuzzleMain
             gimmicksMgr = sPuzzleMain.GetGimmicksManager();
             stItemsMgr  = sPuzzleMain.GetSupportItemsManager();
 
-            pieceTraArr         = new Transform[SQUARES_COUNT];
-            sPieceObjArr        = new GameObject[SQUARES_COUNT];
-            sPieceInfoArr       = new PieceInformation[SQUARES_COUNT];
+            pieceTraArr   = new Transform[SQUARES_COUNT];
+            sPieceObjArr  = new GameObject[SQUARES_COUNT];
+            sPieceInfoArr = new PieceInformation[SQUARES_COUNT];
 
             //ギミック情報設定（駒として管理する）
             List<int> notPlaceIndex = new List<int>();  //駒を配置しないマス番号
@@ -233,10 +233,21 @@ namespace PuzzleMain
         /// <summary>
         /// 駒のランダム色取得
         /// </summary>
+        /// <param name="exclusionColor">除外色</param>
         /// <returns>駒のランダムなプレハブのインデックス</returns>
-        public int GetRandomPieceColor()
+        public int GetRandomPieceColor(int exclusionColor = COLORLESS_ID)
         {
-            return USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, USE_COLOR_COUNT)];
+            int returnColor = USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, USE_COLOR_COUNT)];
+            if (exclusionColor != COLORLESS_ID)
+            {
+                //除外色と同色だった場合は10回まで再試行する
+                for (int i = 0; i < 10; i++)
+                {
+                    if (exclusionColor != returnColor) break;
+                    else returnColor = USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, USE_COLOR_COUNT)];
+                }
+            }
+            return returnColor;
         }
 
         /// <summary>
@@ -372,7 +383,7 @@ namespace PuzzleMain
             PutPiece(putIndex);
 
             //90°回転
-            nextPieceTraArr[nextPuPieceIndex].localRotation = PIECE_GENERATE_QUA;
+            nextPieceTraArr[nextPuPieceIndex].localRotation = PIECE_GENERATE_QUEST;
             StartCoroutine(RotateMovement(nextPieceTraArr[nextPuPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_FRONT_ROT));
 
             //駒縮小
@@ -414,10 +425,10 @@ namespace PuzzleMain
         bool GetReversIndex(int putPieceIndex, ref int putPieceColorId, ref List<int[]> reversIndexList)
         {
             //同タグ番号取得
-            int sqrCountUp    = putPieceIndex % BOARD_LINE_COUNT;       //置いた駒の上にあるマスの数
-            int sqrCountLeft  = putPieceIndex / BOARD_LINE_COUNT;       //置いた駒の左にあるマスの数
-            int sqrCountDown  = BOARD_LINE_COUNT - sqrCountUp - 1;      //置いた駒の下にあるマスの数
-            int sqrCountRight = BOARD_COLUMN_COUNT - sqrCountLeft - 1;  //置いた駒の右にあるマスの数
+            int sqrCountUp    = squaresMgr.GetLineNumber(putPieceIndex);    //置いた駒の上にあるマスの数
+            int sqrCountLeft  = squaresMgr.GetColumnNumber(putPieceIndex);  //置いた駒の左にあるマスの数
+            int sqrCountDown  = BOARD_LINE_COUNT - sqrCountUp - 1;          //置いた駒の下にあるマスの数
+            int sqrCountRight = BOARD_COLUMN_COUNT - sqrCountLeft - 1;      //置いた駒の右にあるマスの数
 
             //反転判定方向順番の設定
             int[] loopCounts = new int[DIRECTIONS_COUNT];
@@ -667,6 +678,7 @@ namespace PuzzleMain
         /// <param name="generateColorId"> 生成駒の色番号</param>
         public IEnumerator ReversingPieces(int reversPieceIndex, int generateColorId)
         {
+            //指定インデックスが正しくない場合は強制終了
             if (pieceTraArr[reversPieceIndex] == null) yield break;
 
             //駒90°回転,拡大
@@ -679,7 +691,7 @@ namespace PuzzleMain
 
             //駒90°回転,縮小
             pieceTraArr[reversPieceIndex].localScale    = new Vector3(REVERSE_PIECE_CHANGE_SCALE, REVERSE_PIECE_CHANGE_SCALE, 0.0f);
-            pieceTraArr[reversPieceIndex].localRotation = PIECE_GENERATE_QUA;
+            pieceTraArr[reversPieceIndex].localRotation = PIECE_GENERATE_QUEST;
             StartCoroutine(AllScaleChange(pieceTraArr[reversPieceIndex], REVERSE_PIECE_SCALING_SPEED, PIECE_DEFAULT_SCALE));
             yield return StartCoroutine(RotateMovement(pieceTraArr[reversPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_FRONT_ROT));
         }
@@ -808,7 +820,7 @@ namespace PuzzleMain
                 fallPiecesIndexList.Add(i);
 
                 //駒の上にある管理番号をすべて調査
-                int loopCount = i % BOARD_LINE_COUNT;
+                int loopCount = squaresMgr.GetLineNumber(i);
                 for (int n = 0; n <= loopCount; n++)
                 {
                     //自身よりn個上の番号が空でない場合
@@ -907,50 +919,24 @@ namespace PuzzleMain
             //ターン終了処理中フラグセット
             NOW_TURN_END_PROCESSING = true;
 
-            //援護アイテム使用時
-            if (supportItem)
-            {
-                //特定ギミック破壊判定開始
-                yield return StartCoroutine(GimmickDestroyCheck());
+            //特定ギミック破壊判定開始
+            yield return StartCoroutine(GimmickDestroyCheck());
 
-                //自由落下
-                yield return StartCoroutine(StratFallingPieces());
+            //自由落下
+            yield return StartCoroutine(StratFallingPieces());
 
-                //特定ギミック破壊判定開始
-                yield return StartCoroutine(GimmickDestroyCheck());
-
-                //ギミックのフラグリセット
-                foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
-                {
-                    if (gimmickInfo == null) continue;
-                    gimmickInfo.nowTurnDamage = false;
-                }
-            }
             //援護アイテム未使用時
-            else
+            if (!supportItem)
             {
-                //特定ギミック破壊判定開始
-                yield return StartCoroutine(GimmickDestroyCheck());
-
-                //自由落下
-                yield return StartCoroutine(StratFallingPieces());
-
                 //ギミック状態変化開始
                 yield return StartCoroutine(StartChangeGimmickState());
-
-                //特定ギミック破壊判定開始
-                yield return StartCoroutine(GimmickDestroyCheck());
-
-                //ギミックのフラグリセット
-                foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
-                {
-                    if (gimmickInfo == null) continue;
-                    gimmickInfo.nowTurnDamage = false;
-                }
             }
 
-            //ギミック待機リストの初期化
-            sGimmickCorList = new List<Coroutine>();
+            //特定ギミック破壊判定開始
+            yield return StartCoroutine(GimmickDestroyCheck());
+
+            //ギミックターン終了処理
+            gimmicksMgr.ResetTurnInfo();
 
             //ターン終了処理中フラグリセット
             NOW_TURN_END_PROCESSING = false;

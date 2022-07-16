@@ -179,11 +179,11 @@ namespace PuzzleMain
             int criteriaSquareId = sDestroyPiecesIndexList[sDestroyBasePieceIndex];
 
             //基準行の端(左右)を取得
-            int minLine = criteriaSquareId % BOARD_LINE_COUNT;
+            int minLine = mSquaresMgr.GetLineNumber(criteriaSquareId);
             int maxLine = SQUARES_COUNT - BOARD_LINE_COUNT + minLine;
 
             //基準列の端(上下)を取得
-            int minColumn = criteriaSquareId - criteriaSquareId % BOARD_LINE_COUNT;
+            int minColumn = criteriaSquareId - minLine;
             int maxColumn = minColumn + BOARD_LINE_COUNT - 1;
 
             //破壊方向数の取得
@@ -290,7 +290,7 @@ namespace PuzzleMain
             {
                 //アヒル
                 case (int)SupportItems.Duck:
-                    yield return StartCoroutine(UseDuck(_tapSquare % BOARD_LINE_COUNT));
+                    yield return StartCoroutine(UseDuck(mSquaresMgr.GetLineNumber(_tapSquare)));
                     break;
 
                 //花火
@@ -301,13 +301,13 @@ namespace PuzzleMain
 
                 //ロケット(横)
                 case (int)SupportItems.RocketLine:
-                    yield return StartCoroutine(UseRocketLine(_tapSquare % BOARD_LINE_COUNT));
+                    yield return StartCoroutine(UseRocketLine(mSquaresMgr.GetLineNumber(_tapSquare)));
                     allTogether = true;
                     break;
 
                 //ロケット(縦)
                 case (int)SupportItems.RocketColumn:
-                    yield return StartCoroutine(UseRocketColumn(_tapSquare / BOARD_LINE_COUNT));
+                    yield return StartCoroutine(UseRocketColumn(mSquaresMgr.GetColumnNumber(_tapSquare)));
                     allTogether = true;
                     break;
             }
@@ -375,8 +375,8 @@ namespace PuzzleMain
         {
             mFireworkSupportSquareId = _squareId;
             int itemNum = (int)SupportItems.Firework;
-            int line    = _squareId % BOARD_LINE_COUNT;
-            int column  = _squareId / BOARD_LINE_COUNT;
+            int line    = mSquaresMgr.GetLineNumber(_squareId);
+            int column  = mSquaresMgr.GetColumnNumber(_squareId);
             float posX  = mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * column;
             float posY  = mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * line;
 

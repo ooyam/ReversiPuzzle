@@ -5,6 +5,7 @@ using System;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static animation.AnimationManager;
+using static ObjectMove_2D.ObjectMove_2D;
 
 namespace PuzzleMain
 {
@@ -58,6 +59,9 @@ namespace PuzzleMain
         GimmickInformation[] cageInfoArr;   //檻オブジェクト情報リスト
         int[] cageSquareIdArr;              //檻配置マスリスト
 
+        //攻撃を行う駒リスト
+        List<int> attackPiecesList;
+
 
         //==========================================================//
         //----------------------初期設定,取得-----------------------//
@@ -86,6 +90,9 @@ namespace PuzzleMain
                     GeneraeGimmick(i);
                 }
             }
+
+            //攻撃を行う駒リスト
+            attackPiecesList = new List<int>();
         }
 
 
@@ -160,6 +167,7 @@ namespace PuzzleMain
                 case (int)Gimmicks.Wall:    //壁
                 case (int)Gimmicks.Flower:  //花
                 case (int)Gimmicks.Hamster: //ハムスター
+                case (int)Gimmicks.Thief:   //泥棒
                 case (int)Gimmicks.Tornado: //竜巻
                     damage = true;
                     break;
@@ -207,6 +215,7 @@ namespace PuzzleMain
                 case (int)Gimmicks.Balloon_Color:   //風船(色)
                 case (int)Gimmicks.Jewelry:         //宝石
                 case (int)Gimmicks.NumberTag:       //番号札
+                case (int)Gimmicks.Thief:           //泥棒
                 case (int)Gimmicks.Tornado:         //竜巻
                     stateName = STATE_NAME_BURST;
                     break;
@@ -272,8 +281,7 @@ namespace PuzzleMain
                             gimmInfo.spriRenChild[0].sprite = newSprite;
 
                             //sprit変更
-                            coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
-                            coroutineList.Add(coroutine);
+                            coroutineList.Add(StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite)));
                             break;
 
                         //ハムスター(連続フラグ確認)
@@ -288,10 +296,16 @@ namespace PuzzleMain
                                     //初期状態に戻す
                                     gimmInfo.destructible = false;
                                     gimmInfo.remainingTimes++;
-                                    coroutine = StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN));
-                                    coroutineList.Add(coroutine);
+                                    coroutineList.Add(StartCoroutine(AnimationStart(gimmInfo.ani, STATE_NAME_RETURN)));
                                 }
                             }
+                            break;
+
+                        //泥棒
+                        case (int)Gimmicks.Thief:
+
+                            //攻撃開始
+                            coroutineList.Add(StartCoroutine(StartThiefAttack(gimmInfo)));
                             break;
 
                         //竜巻
@@ -384,6 +398,24 @@ namespace PuzzleMain
             { yield return c; }
         }
 
+        /// <summary>
+        /// ターン情報をリセット
+        /// </summary>
+        public void ResetTurnInfo()
+        {
+            //ギミックのフラグリセット
+            foreach (GimmickInformation gimmickInfo in sGimmickInfoArr)
+            {
+                if (gimmickInfo == null) continue;
+                gimmickInfo.nowTurnDamage = false;
+            }
+
+            //ギミック待機リストの初期化
+            sGimmickCorList = new List<Coroutine>();
+
+            //攻撃を行う駒リストの初期化
+            attackPiecesList = new List<int>();
+        }
 
         //===============================================//
         //==================ギミック配置=================//
@@ -758,7 +790,6 @@ namespace PuzzleMain
         }
 
 
-
         //===============================================//
         //=========番号札（NumberTag）の固有関数=========//
         //===============================================//
@@ -773,6 +804,101 @@ namespace PuzzleMain
         public void NumberTagOrderSetting(ref GimmickInformation gimInfo)
         {
             gimInfo.spriRenChild[NUMBERTAG_FRONT].sprite = NumberTagSprArr[gimInfo.order];
+        }
+
+
+        //===============================================//
+        //=============泥棒（Thief）の固有関数===========//
+        //===============================================//
+
+        //攻撃時の移動速度定数
+        const float THIEF_ATTACK_MOVE_SPEED = 0.2f;
+
+        /// <summary>
+        /// 泥棒攻撃開始
+        /// </summary>
+        /// <param name="gimInfo">ギミック情報</param>
+        IEnumerator StartThiefAttack(GimmickInformation gimInfo)
+        {
+            //反転可能駒のリスト取得
+            List<int> invertableSquareIdList = new List<int>();
+            foreach (PieceInformation pieceInfo in sPieceInfoArr)
+            {
+                if (pieceInfo == null) continue;                                //空マス
+                if (!pieceInfo.invertable) continue;                            //反転不可
+                if (attackPiecesList.Contains(pieceInfo.squareId)) continue;    //すでに攻撃リストにある
+
+                //反転可能リスとに追加
+                invertableSquareIdList.Add(pieceInfo.squareId);
+            }
+
+            //攻撃可能な駒がなければ終了
+            int squareIdLCount = invertableSquareIdList.Count;
+            if (squareIdLCount == 0) yield break;
+
+            //攻撃する駒をランダムに選出
+            int attackSquareId = invertableSquareIdList[UnityEngine.Random.Range(0, squareIdLCount)];
+            attackPiecesList.Add(attackSquareId);
+
+            //移動する座標を算出
+            int thiefLine   = squaresMgr.GetLineNumber(gimInfo.nowSquareId);
+            int thiefColumn = squaresMgr.GetColumnNumber(gimInfo.nowSquareId);
+            int pieseLine   = squaresMgr.GetLineNumber(attackSquareId);
+            int pieseColumn = squaresMgr.GetColumnNumber(attackSquareId);
+            int moveLine = pieseLine - thiefLine;
+            int moveColumn = pieseColumn - thiefColumn;
+            Vector3 movePos = new Vector3(moveColumn * SQUARE_DISTANCE, -moveLine * SQUARE_DISTANCE, Z_GIMMICK);
+
+            //移動開始アニメーション
+            int attackNumber = 1;
+            yield return StartCoroutine(AnimationStart(gimInfo.ani, STATE_NAME_ATTACK + attackNumber.ToString()));
+
+            //攻撃するマスを向く(デフォルトは左向き)
+            Vector2 dt = gimInfo.defaultPos - movePos;
+            float rad = Mathf.Atan2(dt.y, dt.x);
+            float degreeZ = rad * Mathf.Rad2Deg;
+            float degreeX = 0.0f;
+            if (Mathf.Abs(degreeZ) >= 90)
+            {
+                degreeX = 180.0f;
+                degreeZ = -degreeZ;
+            }
+            gimInfo.tra.rotation = Quaternion.Euler(degreeX, 0.0f, degreeZ);
+
+            //移動
+            yield return StartCoroutine(ConstantSpeedMovement(gimInfo.tra, THIEF_ATTACK_MOVE_SPEED, movePos));
+            gimInfo.tra.rotation = DEFAULT_QUEST;
+
+            //攻撃前左右確認アニメーション
+            attackNumber++;
+            yield return StartCoroutine(AnimationStart(gimInfo.ani, STATE_NAME_ATTACK + attackNumber.ToString()));
+
+            //駒の反転開始
+            int generateColor = piecesMgr.GetRandomPieceColor(piecesMgr.GetSquarePieceColorId(attackSquareId));
+            StartCoroutine(piecesMgr.ReversingPieces(attackSquareId, generateColor));
+
+            //攻撃アニメーション
+            attackNumber++;
+            yield return StartCoroutine(AnimationStart(gimInfo.ani, STATE_NAME_ATTACK + attackNumber.ToString()));
+
+            //帰るマスを向く
+            dt = movePos - gimInfo.defaultPos ;
+            rad = Mathf.Atan2(dt.y, dt.x);
+            degreeZ = rad * Mathf.Rad2Deg;
+            degreeX = 0.0f;
+            if (Mathf.Abs(degreeZ) >= 90)
+            {
+                degreeX = 180.0f;
+                degreeZ = -degreeZ;
+            }
+            gimInfo.tra.rotation = Quaternion.Euler(degreeX, 0.0f, degreeZ);
+
+            //移動
+            yield return StartCoroutine(ConstantSpeedMovement(gimInfo.tra, THIEF_ATTACK_MOVE_SPEED, gimInfo.defaultPos));
+            gimInfo.tra.rotation = DEFAULT_QUEST;
+
+            //待機アニメーション
+            LoopAnimationStart(gimInfo.ani);
         }
 
 
@@ -826,21 +952,28 @@ namespace PuzzleMain
                     if (!squaresMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
 
                     //各方向のマス管理番号取得
-                    piecesIndexArr[(int)dir] = squaresMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
-                    if (0 <= piecesIndexArr[(int)dir] && piecesIndexArr[(int)dir] < SQUARES_COUNT)
+                    int piecesIndex = squaresMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
+
+                    //すでに攻撃予定駒の場合は処理スキップ
+                    if (attackPiecesList.Contains(piecesIndex)) continue;
+
+                    //if (0 <= piecesIndex && piecesIndex < SQUARES_COUNT)   //必要のない条件であると思われる
                     {
-                        if (sPieceObjArr[piecesIndexArr[(int)dir]] == null)
+                        if (sPieceObjArr[piecesIndex] == null)
                         {
                             //空マス
                             squareNull[(int)dir] = true;
                             atkPossibleSquares[(int)dir] = true;
                         }
-                        else if (sPieceInfoArr[piecesIndexArr[(int)dir]] != null && sPieceInfoArr[piecesIndexArr[(int)dir]].invertable)
+                        else if (sPieceInfoArr[piecesIndex] != null && sPieceInfoArr[piecesIndex].invertable)
                         {
                             //反転可能駒
                             atkPossibleSquares[(int)dir] = true;
                         }
                     }
+
+                    //配列に格納
+                    piecesIndexArr[(int)dir] = piecesIndex;
                 }
 
                 int[]  atkDirNumArr          = new int[ATK_COUNT];               //攻撃箇所の番号
@@ -947,6 +1080,11 @@ namespace PuzzleMain
                         tornadoAttackInfoArr[i][ATK_THIRD]  = piecesIndexArr[(int)Directions.Down];
                         break;
                 }
+
+                //攻撃駒リストに追加
+                attackPiecesList.Add(tornadoAttackInfoArr[i][ATK_FIRST]);
+                attackPiecesList.Add(tornadoAttackInfoArr[i][ATK_SECOND]);
+                attackPiecesList.Add(tornadoAttackInfoArr[i][ATK_THIRD]);
             }
         }
 
@@ -991,14 +1129,7 @@ namespace PuzzleMain
             int gimIndex = tornadoInfoList.IndexOf(gimInfo);
             int nowPieceColor = piecesMgr.GetSquarePieceColorId(tornadoAttackInfoArr[gimIndex][atkNum]);
 
-            //今の駒と同色だった場合は10回まで再試行する
-            int generateColorId = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                generateColorId = piecesMgr.GetRandomPieceColor();
-                if (nowPieceColor != generateColorId) break;
-            }
-            StartCoroutine(piecesMgr.ReversingPieces(tornadoAttackInfoArr[gimIndex][atkNum], generateColorId));
+            StartCoroutine(piecesMgr.ReversingPieces(tornadoAttackInfoArr[gimIndex][atkNum], piecesMgr.GetRandomPieceColor(nowPieceColor)));
         }
     }
 }

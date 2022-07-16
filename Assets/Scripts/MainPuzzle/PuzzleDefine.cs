@@ -107,8 +107,9 @@ public class PuzzleDefine : MonoBehaviour
     public const float  SQUARE_DISTANCE_HALF    = SQUARE_DISTANCE / 2.0f;                   //半マスの距離
     public const float  PIECE_DEFAULT_SCALE     = 0.6f;                                     //駒のスケール
 
-    public static readonly Vector3 PIECE_DEFAULT_POS     = new Vector3(0.0f, 0.0f, Z_PIECE);        //駒の基本座標
-    public static readonly Quaternion PIECE_GENERATE_QUA = Quaternion.Euler(0.0f, -90.0f, 0.0f);    //駒の生成時の角度
+    public static readonly Vector3 PIECE_DEFAULT_POS        = new Vector3(0.0f, 0.0f, Z_PIECE);     //駒の基本座標
+    public static readonly Quaternion PIECE_GENERATE_QUEST  = Quaternion.Euler(0.0f, -90.0f, 0.0f); //駒の生成時の角度
+    public static readonly Quaternion DEFAULT_QUEST         = Quaternion.Euler(0.0f, 00.0f, 0.0f);  //基本の角度
 
     public static readonly Color COLOR_PRIMARY    = new Color(1.0f, 1.0f, 1.0f, 1.0f);               //原色
     public static readonly Color COLOR_ALPHA_ZERO = new Color(1.0f, 1.0f, 1.0f, 0.0f);               //透明
@@ -256,7 +257,7 @@ public class PuzzleDefine : MonoBehaviour
             (int)Squares.H2
             */
         };
-        GIMMICKS_COUNT        = 26;
+        GIMMICKS_COUNT        = 28;
         GIMMICKS_INFO_ARR     = new int[GIMMICKS_COUNT][];
         GIMMICKS_INFO_ARR[0]  = new int[] { (int)Squares.B1, (int)Gimmicks.Balloon,            COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
         GIMMICKS_INFO_ARR[1]  = new int[] { (int)Squares.D1, (int)Gimmicks.Balloon_Color,      (int)Colors.Red,  NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
@@ -284,6 +285,8 @@ public class PuzzleDefine : MonoBehaviour
         GIMMICKS_INFO_ARR[23] = new int[] { (int)Squares.C7, (int)Gimmicks.Steel,              COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
         GIMMICKS_INFO_ARR[24] = new int[] { (int)Squares.D7, (int)Gimmicks.Steel,              COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
         GIMMICKS_INFO_ARR[25] = new int[] { (int)Squares.C6, (int)Gimmicks.Steel,              COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[26] = new int[] { (int)Squares.B4, (int)Gimmicks.Thief,              COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        GIMMICKS_INFO_ARR[27] = new int[] { (int)Squares.C4, (int)Gimmicks.Thief,              COLORLESS_ID,     NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
 
         List<int> usedGroupNum = new List<int>();
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)

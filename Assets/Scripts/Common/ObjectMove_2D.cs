@@ -28,7 +28,6 @@ namespace ObjectMove_2D
             float playTime     = 0.0f;   //揺れ動作再生時間
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
                 float rotZ = tra.localRotation.eulerAngles.z;
                 rotZ = (rotZ >= 180.0f) ? rotZ - 360.0f : rotZ;
@@ -94,6 +93,7 @@ namespace ObjectMove_2D
                         break;  //揺れ終了
                     }
                 }
+                yield return FIXED_UPDATE;
             }
         }
 
@@ -111,7 +111,6 @@ namespace ObjectMove_2D
             bool sideways  = Mathf.Abs(targetPos.x - nowPos.x) >= Mathf.Abs(targetPos.y - nowPos.y); //X方向に動作？
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
                 tra.localPosition = Vector3.Lerp(tra.localPosition, targetPos, moveSpeed);
                 nowPos = tra.localPosition;
@@ -125,6 +124,7 @@ namespace ObjectMove_2D
                     tra.localPosition = targetPos;
                     break;
                 }
+                yield return FIXED_UPDATE;
             }
         }
 
@@ -135,20 +135,22 @@ namespace ObjectMove_2D
         /// <param name="moveSpeed"> 動作速度</param>
         /// <param name="targetPos"> 目標座標</param>
         /// <param name="acceleRate">加速率(等速移動は0.0f指定)</param>
-        const float DEFAULT_ACCELE_RATE = 1.0f;
+        const float DEFAULT_ACCELE_RATE = 0.0f;
         public static IEnumerator ConstantSpeedMovement(Transform tra, float moveSpeed, Vector3 targetPos, float acceleRate = DEFAULT_ACCELE_RATE)
         {
-            float minSpeed = 0.01f;             //最低速度指定(無限ループ対策)
+            float minSpeed = 0.01f;            //最低速度指定(無限ループ対策)
             float offset   = 0.05f;             //停止場所のオフセット
             Vector3 nowPos = tra.localPosition; //現在の座標
             bool sideways  = Mathf.Abs(targetPos.x - nowPos.x) >= Mathf.Abs(targetPos.y - nowPos.y); //X方向に動作？
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
                 moveSpeed += acceleRate;
-                if (0.0f <= moveSpeed && moveSpeed < minSpeed) moveSpeed = minSpeed;
-                else if (-minSpeed < moveSpeed && moveSpeed <= 0.0f) moveSpeed = -minSpeed;
+                if (acceleRate != DEFAULT_ACCELE_RATE)
+                {
+                    if (0.0f <= moveSpeed && moveSpeed < minSpeed) moveSpeed = minSpeed;
+                    else if (-minSpeed < moveSpeed && moveSpeed <= 0.0f) moveSpeed = -minSpeed;
+                }
                 tra.localPosition = Vector3.MoveTowards(tra.localPosition, targetPos, moveSpeed);
                 nowPos = tra.localPosition;
 
@@ -161,6 +163,7 @@ namespace ObjectMove_2D
                     tra.localPosition = targetPos;
                     break;
                 }
+                yield return FIXED_UPDATE;
             }
         }
 
@@ -233,7 +236,6 @@ namespace ObjectMove_2D
                 Vector2 tarPos = new Vector2(defaultPos.x + offsetX * vector, defaultPos.y + offsetY * vector);
                 while (true)
                 {
-                    yield return FIXED_UPDATE;
                     if (tra == null) yield break;
                     tra.localPosition = Vector2.MoveTowards(tra.localPosition, tarPos, shakeSpeed);
                     Vector2 nowPos = tra.localPosition;
@@ -248,13 +250,13 @@ namespace ObjectMove_2D
                         yield return new WaitForSeconds(delayTime);
                         break;
                     }
+                    yield return FIXED_UPDATE;
                 }
             }
 
             //元の座標に戻る
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
                 tra.localPosition = Vector2.MoveTowards(tra.localPosition, defaultPos, shakeSpeed);
                 Vector2 nowPos = tra.localPosition;
@@ -268,6 +270,7 @@ namespace ObjectMove_2D
                     tra.localPosition = defaultPos;
                     break;
                 }
+                yield return FIXED_UPDATE;
             }
         }
 
@@ -360,7 +363,6 @@ namespace ObjectMove_2D
             float tolerance = 10.0f;
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
                 tra.Rotate(rotSpeed.x, rotSpeed.y, rotSpeed.z);
                 Vector3 nowRot   = tra.localEulerAngles;
@@ -378,6 +380,7 @@ namespace ObjectMove_2D
                         break;
                 }
                 if (refStopRot - tolerance <= refRot && refRot <= refStopRot + tolerance) break;
+                yield return FIXED_UPDATE;
             }
 
             //最終角度に合わせる
@@ -452,7 +455,6 @@ namespace ObjectMove_2D
 
             while (true)
             {
-                yield return FIXED_UPDATE;
                 if (tra == null) yield break;
 
                 //拡縮率更新
@@ -467,6 +469,7 @@ namespace ObjectMove_2D
 
                 //現在のスケール更新
                 nowScale = tra.localScale;
+                yield return FIXED_UPDATE;
             }
         }
 
