@@ -74,6 +74,34 @@ namespace PuzzleMain
         }
 
         /// <summary>
+        /// マスが存在するか？
+        /// </summary>
+        /// <param name="_squareId">マス管理番号</param>
+        /// <returns></returns>
+        public bool IsSquareExists(int _squareId)
+        {
+            if (0 <= _squareId && _squareId < SQUARES_COUNT)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// マスはアクティブか？
+        /// </summary>
+        /// <param name="_squareId">マス管理番号</param>
+        /// <returns></returns>
+        public bool IsSquareActive(int _squareId)
+        {
+            if (IsSquareExists(_squareId))
+            {
+                return sSquareObjArr[_squareId].activeSelf;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// マスの色変更
         /// </summary>
         /// <param name="_afterColor"> 変化後の色</param>
@@ -83,6 +111,16 @@ namespace PuzzleMain
         {
             if (!_fade) mSquareSpriRenArr[_squareId].color = _afterColor;
             else yield return StartCoroutine(SpriteRendererPaletteChange(mSquareSpriRenArr[_squareId], SQUARE_CHANGE_SPEED, new Color[] { mSquareSpriRenArr[_squareId].color, _afterColor }));
+        }
+
+        /// <summary>
+        /// オブジェクトがあるマス管理番号を取得
+        /// </summary>
+        /// <param name="_obj"></param>
+        /// <returns></returns>
+        public int GetSquareId(GameObject _obj)
+        {
+            return Array.IndexOf(sPieceObjArr, _obj);
         }
 
         /// <summary>
@@ -173,18 +211,80 @@ namespace PuzzleMain
         /// <returns>指定場所の管理番号</returns>
         public int GetDesignatedDirectionIndex(int direction, int baseIndex, int distance = 1)
         {
-            return direction switch
+            //距離が0以下の場合はマス無し判定
+            if (distance <= 0) return INT_NULL;
+
+            bool difDir = false;    //方向ズレフラグ
+            int square = INT_NULL;  //指定場所マス番号
+
+            //方向ずれ確認用変数
+            int baseLine = GetLineNumber(baseIndex);
+            int baseColumn = GetColumnNumber(baseIndex);
+            int offsetLine;
+            int offsetColumn;
+
+            switch (direction)
             {
-                (int)Directions.Up          => baseIndex - distance,                                //上
-                (int)Directions.UpRight     => baseIndex + BOARD_LINE_COUNT * distance - distance,  //右上
-                (int)Directions.Right       => baseIndex + BOARD_LINE_COUNT * distance,             //右
-                (int)Directions.DownRight   => baseIndex + BOARD_LINE_COUNT * distance + distance,  //右下
-                (int)Directions.Down        => baseIndex + distance,                                //下
-                (int)Directions.DownLeft    => baseIndex - BOARD_LINE_COUNT * distance + distance,  //左下
-                (int)Directions.Left        => baseIndex - BOARD_LINE_COUNT * distance,             //左
-                (int)Directions.UpLeft      => baseIndex - BOARD_LINE_COUNT * distance - distance,  //左上
-                _ => INT_NULL,  //default
-            };
+                //上
+                case (int)Directions.Up:
+                    square = baseIndex - distance;
+                    difDir = GetColumnNumber(baseIndex) != GetColumnNumber(square);
+                    break;
+
+                //右上
+                case (int)Directions.UpRight:
+                    square = baseIndex + BOARD_LINE_COUNT * distance - distance;
+                    offsetLine = GetLineNumber(square) - baseLine;
+                    offsetColumn = GetColumnNumber(square) - baseColumn;
+                    difDir = offsetLine >= 0 || offsetColumn <= 0 || -offsetLine != offsetColumn;
+                    break;
+
+                //右
+                case (int)Directions.Right:
+                    square = baseIndex + BOARD_LINE_COUNT * distance;
+                    break;
+
+                //右下
+                case (int)Directions.DownRight:
+                    square = baseIndex + BOARD_LINE_COUNT * distance + distance;
+                    offsetLine = GetLineNumber(square) - baseLine;
+                    offsetColumn = GetColumnNumber(square) - baseColumn;
+                    difDir = offsetLine <= 0 || offsetColumn <= 0 || offsetLine != offsetColumn;
+                    break;
+
+                //下
+                case (int)Directions.Down:
+                    square = baseIndex + distance;
+                    difDir = GetColumnNumber(baseIndex) != GetColumnNumber(square);
+                    break;
+
+                //左下
+                case (int)Directions.DownLeft:
+                    square = baseIndex - BOARD_LINE_COUNT * distance + distance;
+                    offsetLine = GetLineNumber(square) - baseLine;
+                    offsetColumn = GetColumnNumber(square) - baseColumn;
+                    difDir = offsetLine <= 0 || offsetColumn >= 0 || offsetLine != -offsetColumn;
+                    break;
+
+                //左
+                case (int)Directions.Left:
+                    square = baseIndex - BOARD_LINE_COUNT * distance;
+                    break;
+
+                //左上
+                case (int)Directions.UpLeft:
+                    square = baseIndex - BOARD_LINE_COUNT * distance - distance;
+                    offsetLine = GetLineNumber(square) - baseLine;
+                    offsetColumn = GetColumnNumber(square) - baseColumn;
+                    difDir = offsetLine >= 0 || offsetColumn >= 0 || offsetLine != offsetColumn;
+                    break;
+            }
+
+            //方向ズレもしくはマスが存在しない場合
+            if (difDir || !IsSquareExists(square)) square = INT_NULL;
+
+            //マス番号を返す
+            return square;
         }
     }
 }

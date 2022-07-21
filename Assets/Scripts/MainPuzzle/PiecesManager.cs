@@ -754,6 +754,7 @@ namespace PuzzleMain
             foreach (int pieceIndex in sDestroyPiecesIndexList)
             {
                 GameObject obj = sPieceObjArr[pieceIndex];
+                if (obj == null) continue;
                 if (obj.CompareTag(GIMMICK_TAG)) DeleteGimmick(obj);
                 else DeletePiece(pieceIndex);
             }

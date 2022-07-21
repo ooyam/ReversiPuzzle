@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 30f4066d8318f904da1316306647d29c, type: 2}
+  m_Motion: {fileID: 7400000, guid: e5b65f086e6b89345a43ae9fe17c90fb, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -55,7 +55,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AllAnimeController
+  m_Name: StarAnimeController
   serializedVersion: 5
   m_AnimatorParameters: []
   m_AnimatorLayers:

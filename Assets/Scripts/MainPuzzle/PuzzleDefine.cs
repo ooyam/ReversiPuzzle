@@ -48,7 +48,7 @@ public class PuzzleDefine : MonoBehaviour
         Firework,       //花火
         RocketLine,     //ロケット(横)
         RocketColumn,   //ロケット(縦)
-        All             //全消し
+        Star            //星
     }
     public static readonly int SUPPORT_ITEMS_COUNT = Enum.GetValues(typeof(SupportItems)).Length;
 

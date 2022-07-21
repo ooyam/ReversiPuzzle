@@ -33,17 +33,19 @@ namespace PuzzleMain
 
     public class SupportItemsManager : MonoBehaviour
     {
-        SquaresManager mSquaresMgr;  //SquaresManager
-        PiecesManager  mPiecesMgr;   //PiecesManager
+        SquaresManager  mSquaresMgr;    //SquaresManager
+        PiecesManager   mPiecesMgr;     //PiecesManager
+        GimmicksManager mGimmicksMgr;   //GimmicksManager
 
         [Header("援護アイテムの取得")]
         [SerializeField]
-        GameObject[] mItemsArr;
+        Transform mItemBoxArr;
 
         [Header("補助アイテム待機ボックスの取得")]
         [SerializeField]
         Transform mWaitItemBoxesTra;
 
+        GameObject[] mItemsArr;                 //援護アイテム
         SupportItemInformation[] mItemsInfoArr; //援護アイテム情報
 
         Transform[]  mWaitItemBoxsTraArr;       //待機援護アイテム箱Transform
@@ -56,6 +58,9 @@ namespace PuzzleMain
         int mFireworkSupportSquareId;   //花火の援護マス番号
         int mRocketSupportLineNum;      //ロケット(横)の援護行番号
         int mRocketSupportColumnNum;    //ロケット(縦)の援護列番号
+        int mStarSupportSquareId;       //星の援護マス番号
+
+        List<int> mStarSupportedSquaresList = new List<int>();  //星が援護したマスの保管(当たり判定重複防止)
 
         const int DUCK_USE_DEL_PIECE_COUNT = 6;     //アヒル生成条件
         const int FIREWORK_USE_DIR_PIECE_COUNT = 4; //花火生成条件
@@ -65,10 +70,12 @@ namespace PuzzleMain
         /// </summary>
         public void Initialize()
         {
-            mSquaresMgr = sPuzzleMain.GetSquaresManager();
-            mPiecesMgr  = sPuzzleMain.GetPiecesManager();
+            mSquaresMgr  = sPuzzleMain.GetSquaresManager();
+            mPiecesMgr   = sPuzzleMain.GetPiecesManager();
+            mGimmicksMgr = sPuzzleMain.GetGimmicksManager();
 
             mReadyItemNumber    = INT_NULL;
+            mItemsArr           = new GameObject[SUPPORT_ITEMS_COUNT];
             mWaitItemBoxsTraArr = new Transform[SUPPORT_ITEMS_COUNT];
             mWaitItemObjArr     = new GameObject[SUPPORT_ITEMS_COUNT];
             mWaitItemAniArr     = new Animator[SUPPORT_ITEMS_COUNT];
@@ -76,11 +83,12 @@ namespace PuzzleMain
             mItemsInfoArr       = new SupportItemInformation[SUPPORT_ITEMS_COUNT];
             for (int i = 0; i < SUPPORT_ITEMS_COUNT; i++)
             {
-                mWaitItemBoxsTraArr[i] = mWaitItemBoxesTra.GetChild(i).transform;
-                mWaitItemObjArr[i]     = mWaitItemBoxsTraArr[i].GetChild(0).gameObject;
-                mWaitItemAniArr[i]     = mWaitItemObjArr[i].GetComponent<Animator>();
-                mWaitItemReadyUse[i]   = false;
-                mItemsInfoArr[i]       = mItemsArr[i].GetComponent<SupportItemInformation>();
+                mItemsArr[i]            = mItemBoxArr.GetChild(i).gameObject;
+                mWaitItemBoxsTraArr[i]  = mWaitItemBoxesTra.GetChild(i).transform;
+                mWaitItemObjArr[i]      = mWaitItemBoxsTraArr[i].GetChild(0).gameObject;
+                mWaitItemAniArr[i]      = mWaitItemObjArr[i].GetComponent<Animator>();
+                mWaitItemReadyUse[i]    = false;
+                mItemsInfoArr[i]        = mItemsArr[i].GetComponent<SupportItemInformation>();
                 mItemsInfoArr[i].InformationSetting();
             }
         }
@@ -227,32 +235,29 @@ namespace PuzzleMain
             bool delLine   = minLineFlag && maxLineFlag;
             bool delcolumn = minColumnFlag && maxColumnFlag;
 
-            //生成アイテム決定
-            if (delLine && delcolumn)
-            {
-                //全消し
-            }
-            //※ほんとはelse if
-            if (delcolumn)
-            {
-                //ロケット(縦)生成
-                StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketColumn, true));
-            }
-            else if (delLine)
-            {
-                //ロケット(横)生成
-                StartCoroutine(SetWaitItemsActive((int)SupportItems.RocketLine, true));
-            }
-            else if (dirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
-            {
-                //花火
-                StartCoroutine(SetWaitItemsActive((int)SupportItems.Firework, true));
-            }
-            else if (delPieceCount >= DUCK_USE_DEL_PIECE_COUNT)
-            {
-                //アヒル生成
-                StartCoroutine(SetWaitItemsActive((int)SupportItems.Duck, true));
-            }
+            //生成アイテムの待機オブジェクト表示
+            int itemNum = GetGenerateItemNumber(delLine, delcolumn, dirCount, delPieceCount);
+            if (itemNum != INT_NULL) StartCoroutine(SetWaitItemsActive(itemNum, true));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_line">      一行削除？</param>
+        /// <param name="_column">    一列削除？</param>
+        /// <param name="_dirCount">  削除方向数</param>
+        /// <param name="_pieceCount">削除駒数</param>
+        /// <returns></returns>
+        int GetGenerateItemNumber(bool _line, bool _column, int _dirCount, int _pieceCount)
+        {
+            if (_line && _column)                          return (int)SupportItems.Star;           //星生成
+            if (_column)                                   return (int)SupportItems.RocketColumn;   //ロケット(縦)生成
+            if (_line)                                     return (int)SupportItems.RocketLine;     //ロケット(横)生成
+            if (_dirCount >= FIREWORK_USE_DIR_PIECE_COUNT) return (int)SupportItems.Firework;       //花火
+            if (_pieceCount >= DUCK_USE_DEL_PIECE_COUNT)   return (int)SupportItems.Duck;           //アヒル生成
+
+            //生成無し
+            return INT_NULL;
         }
 
         /// <summary>
@@ -310,6 +315,12 @@ namespace PuzzleMain
                     yield return StartCoroutine(UseRocketColumn(mSquaresMgr.GetColumnNumber(_tapSquare)));
                     allTogether = true;
                     break;
+
+                //星
+                case (int)SupportItems.Star:
+                    yield return StartCoroutine(UseStar(_tapSquare));
+                    allTogether = true;
+                    break;
             }
 
             //ギミック破壊待機
@@ -319,6 +330,9 @@ namespace PuzzleMain
             //駒破壊
             if (allTogether) yield return StartCoroutine(mPiecesMgr.StartDestroyingPieces(true));
             else StartCoroutine(mPiecesMgr.TurnEnd(true));
+
+            //星攻撃済リスト初期化
+            mStarSupportedSquaresList = new List<int>();
 
             //アイテム使用フラグリセット
             NOW_SUPPORT_ITEM_USE = false;
@@ -576,6 +590,81 @@ namespace PuzzleMain
 
             //マスへダメージ
             mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
+        }
+
+
+        //==========================================================//
+        //----------------------------4星---------------------------//
+        //==========================================================//
+
+        /// <summary>
+        /// 星の使用
+        /// </summary>
+        /// <param name="_squareId">指定マス</param>
+        /// <returns></returns>
+        IEnumerator UseStar(int _squareId)
+        {
+            mStarSupportSquareId = _squareId;
+            int itemNum = (int)SupportItems.Star;
+            int line = mSquaresMgr.GetLineNumber(_squareId);
+            int column = mSquaresMgr.GetColumnNumber(_squareId);
+            float posX = mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * column;
+            float posY = mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * line;
+
+            //配置座標指定
+            SetItemsActive(itemNum, true);
+            Vector2 setPos = new Vector2(posX, posY);
+            mItemsInfoArr[itemNum].tra.localPosition = setPos;
+
+            //アニメ再生
+            yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT));
+            SetItemsActive(itemNum, false);
+        }
+
+        /// <summary>
+        /// 星の援護
+        /// </summary>
+        /// <param name="_obj">接触オブジェクト</param>
+        public void StarSupport(GameObject _obj)
+        {
+            //マスへダメージ
+            int sqrId = mSquaresMgr.GetSquareId(_obj);
+
+            //援護済もしくはマスが取得できなかった場合は処理をスキップ
+            if (sqrId < 0 || mStarSupportedSquaresList.Contains(sqrId)) return;
+
+            //鉄ギミックの場合
+            string addStateName = "";
+            int gimIndex = mGimmicksMgr.GetGimmickIndex_Obj(_obj);
+            if (gimIndex >= 0)
+            {
+                if (sGimmickInfoArr[gimIndex].id == (int)Gimmicks.Steel)
+                {
+                    //飛ばす方向を指定
+                    int gimSqrId   = sGimmickInfoArr[gimIndex].nowSquareId;
+                    int gimLine    = mSquaresMgr.GetLineNumber(gimSqrId);
+                    int gimColumn  = mSquaresMgr.GetColumnNumber(gimSqrId);
+                    int starLine   = mSquaresMgr.GetLineNumber(mStarSupportSquareId);
+                    int starColumn = mSquaresMgr.GetColumnNumber(mStarSupportSquareId);
+                    bool up    = gimLine < starLine;
+                    bool down  = gimLine > starLine;
+                    bool left  = gimColumn < starColumn;
+                    bool right = gimColumn > starColumn;
+
+                    if      (up && left)    addStateName = Directions.UpLeft.ToString();    //左上
+                    else if (up && right)   addStateName = Directions.UpRight.ToString();   //右上
+                    else if (down && left)  addStateName = Directions.DownLeft.ToString();  //左下
+                    else if (down && right) addStateName = Directions.DownRight.ToString(); //右下
+                    else if (up)            addStateName = Directions.Up.ToString();        //上
+                    else if (down)          addStateName = Directions.Down.ToString();      //下
+                    else if (left)          addStateName = Directions.Left.ToString();      //左
+                    else if (right)         addStateName = Directions.Right.ToString();     //右
+                }
+            }
+
+            //援護開始
+            mStarSupportedSquaresList.Add(sqrId);
+            mPiecesMgr.DamageSpecifiedSquare(sqrId, COLORLESS_ID, false, true, addStateName);
         }
     }
 }
