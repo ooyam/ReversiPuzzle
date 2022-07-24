@@ -27,6 +27,14 @@ namespace PuzzleMain
         [SerializeField]
         SupportItemsManager mSupportItemsManager;
 
+        [Header("TargetManager")]
+        [SerializeField]
+        TargetManager mTargetManager;
+
+        [Header("TurnManager")]
+        [SerializeField]
+        TurnManager mTurnManager;
+
         public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
 
         public static GameObject[]          sSquareObjArr;                              //マスオブジェクト配列

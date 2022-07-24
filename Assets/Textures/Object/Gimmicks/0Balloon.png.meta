@@ -29,6 +29,9 @@ TextureImporter:
   - first:
       213: 30008239244290808
     second: Balloon_8
+  - first:
+      213: 2434171766643519268
+    second: Balloon_White
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -330,7 +333,7 @@ TextureImporter:
         width: 1021
         height: 1207
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -338,6 +341,27 @@ TextureImporter:
       bones: []
       spriteID: 8faad78a55c9a6000800000000000000
       internalID: 30008239244290808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Balloon_White
+      rect:
+        serializedVersion: 2
+        x: 3052
+        y: 2725
+        width: 1021
+        height: 1207
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42f6211335ae7c120800000000000000
+      internalID: 2434171766643519268
       vertices: []
       indices: 
       edges: []
