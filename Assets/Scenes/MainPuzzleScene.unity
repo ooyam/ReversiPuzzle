@@ -3315,6 +3315,8 @@ MonoBehaviour:
   mPiecesManager: {fileID: 1270919792}
   mGimmicksManager: {fileID: 1270919791}
   mSupportItemsManager: {fileID: 1270919790}
+  mTargetManager: {fileID: 1270919797}
+  mTurnManager: {fileID: 1270919796}
 --- !u!4 &646406369
 Transform:
   m_ObjectHideFlags: 0
@@ -4865,6 +4867,8 @@ GameObject:
   - component: {fileID: 1270919792}
   - component: {fileID: 1270919791}
   - component: {fileID: 1270919790}
+  - component: {fileID: 1270919797}
+  - component: {fileID: 1270919796}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -5063,6 +5067,87 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mReversiBoardTra: {fileID: 787325015}
   mNextPieceBoxesTra: {fileID: 736909303}
+--- !u!114 &1270919796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270919789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c81a177707d3fe42aebfb7d93d82455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTurnWindowNormalSpr: {fileID: 2527607607167286074, guid: 8583b962d447ffe49b8d45f801b9a9f2,
+    type: 3}
+  mTurnWindowRedSpr: {fileID: -7707917330291737424, guid: 8583b962d447ffe49b8d45f801b9a9f2,
+    type: 3}
+  mTurnWindowImg: {fileID: 1012497123}
+  mNumberText: {fileID: 1966463358}
+--- !u!114 &1270919797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270919789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b914adbc7201594085beb9749f848c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTexturesBoxTra: {fileID: 1333822801}
+  mTargetGimmicksPrefabArr:
+  - prefab:
+    - {fileID: 2292930362916964899, guid: f74280ebc8e0f7c4b8279ab3e8116d24, type: 3}
+  - prefab:
+    - {fileID: 7715714399232177031, guid: 320727a734acc894db91585ee26fc09a, type: 3}
+    - {fileID: 7928382299377349560, guid: b137fbd3151948e47bf2a0b8f0c53e50, type: 3}
+    - {fileID: 1423543394989875198, guid: 9d7f3544f26d36c4f9efb2f80a944f43, type: 3}
+    - {fileID: 3438498110538653376, guid: 257c381917c233847b8733dcaf32f9ee, type: 3}
+    - {fileID: 1093983990806027266, guid: af61540aa0ba1f441b677798999e6569, type: 3}
+    - {fileID: 465369219004755546, guid: daaa291ce72bd3d43ae4bd81e69940e5, type: 3}
+  - prefab:
+    - {fileID: 3955518866827108445, guid: 2b93238846076b4499ddba33bded713c, type: 3}
+  - prefab:
+    - {fileID: 3284196499763097955, guid: 26791c80cfc64cb4c90889d9ee270a6a, type: 3}
+  - prefab:
+    - {fileID: 2927022878489205045, guid: edc34c7b9a739934aa1f72a435abe0f8, type: 3}
+  - prefab:
+    - {fileID: 1357112440502240627, guid: b63850610155094409b7afa713af5bdb, type: 3}
+  - prefab:
+    - {fileID: 1040377912284501121, guid: 06098950fd1efb14badae1726923bc00, type: 3}
+    - {fileID: 8747529859927780863, guid: 9564d785c71fea040b441c4f9c3015d7, type: 3}
+    - {fileID: 8243221139065651053, guid: 76bf2206b316f45468b5a83d3b829c79, type: 3}
+    - {fileID: 392966733209171794, guid: 7cc84fcd15d4f494faaa721c1fe0bc05, type: 3}
+    - {fileID: 7786833187343812357, guid: 9df3a542ec73eae4385887ef958acc71, type: 3}
+    - {fileID: 2917341920099555240, guid: 6ca8c680823d42b47a99f31604b658af, type: 3}
+  - prefab:
+    - {fileID: 988476140885640923, guid: 977edeebb4692784e9b45b8a5e4ced65, type: 3}
+  - prefab:
+    - {fileID: 7859470445621834069, guid: 93903b6058a46c24d8041ffd2bf25001, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab:
+    - {fileID: 6555515698877983284, guid: ef51121d198015b459c92261ee43d726, type: 3}
+  - prefab:
+    - {fileID: 7061614882439982906, guid: 58ea6ddf4fe9aea48aa799d5ed7f60b7, type: 3}
+  - prefab:
+    - {fileID: 6582137674570682648, guid: 000ca1838beb82a40accc7945c1e0531, type: 3}
+  - prefab:
+    - {fileID: 8250636061667104646, guid: b709849bb9c7c1b408c221945d96ce6e, type: 3}
+  - prefab: []
+  - prefab: []
+  - prefab:
+    - {fileID: 5680381096096201479, guid: fd12adf6d56e92447b284245f3d8a3c3, type: 3}
+  mTargetPiecesPrefabArr:
+  - {fileID: 2244239807926034943, guid: eb9c9339159f33947a74daca0b3b8a13, type: 3}
+  - {fileID: 7267167860268851491, guid: 8850b359a6b1de9418b643a3e9f7bd34, type: 3}
+  - {fileID: 9187927946528588123, guid: 33ee8e9778db5664dac10a90605ed647, type: 3}
+  - {fileID: 7383162864908304852, guid: 5827b9ebb429efe49b69bc80625725e3, type: 3}
+  - {fileID: 6093044009741698285, guid: 37008f0595a26454f84d62bf505c0768, type: 3}
+  - {fileID: 2973976964344148595, guid: 9af70ce2d9274054392734a7c7378e06, type: 3}
 --- !u!1 &1275519623
 GameObject:
   m_ObjectHideFlags: 0
@@ -5325,7 +5410,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1333822801}
   m_Layer: 5
-  m_Name: Textures
+  m_Name: TexturesBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -76,14 +76,14 @@ namespace PuzzleMain
             piecesMgr  = sPuzzleMain.GetPiecesManager();
 
             //ギミック生成
-            sGimmickObjArr  = new GameObject[GIMMICKS_COUNT];
-            sGimmickInfoArr = new GimmickInformation[GIMMICKS_COUNT];
+            sGimmickObjArr  = new GameObject[GIMMICKS_DEPLOY_COUNT];
+            sGimmickInfoArr = new GimmickInformation[GIMMICKS_DEPLOY_COUNT];
 
             //駒として配置しないギミックの生成
             PlaceGimmickNotInSquare();
 
             //駒として管理するギミック
-            for (int i = 0; i < GIMMICKS_COUNT; i++)
+            for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
                 if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
                 {

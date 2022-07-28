@@ -107,7 +107,7 @@ public class GimmickInformation : MonoBehaviour
     /// <param name="_groupId">    ÉOÉãÅ[Évî‘çÜ</param>
     public void InformationSetting_SquareIndex(int _squareIndex, int _gimmickId, int _groupId)
     {
-        for (int i = 0; i < GIMMICKS_COUNT; i++)
+        for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
         {
             if (GIMMICKS_INFO_ARR[i][SQUARE] == _squareIndex && 
                 (GIMMICKS_INFO_ARR[i][GIMMICK] == _gimmickId || GIMMICKS_INFO_ARR[i][GROUP] == _groupId))

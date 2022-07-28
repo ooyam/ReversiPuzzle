@@ -1,3 +1,5 @@
+#define DO_COMPLIE
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -93,6 +95,12 @@ namespace PuzzleMain
 
             //SupportItemsManagerの初期化
             mSupportItemsManager.Initialize();
+
+            //TargetManagerの初期化
+            mTargetManager.Initialize();
+
+            //TurnManagerの初期化
+            mTurnManager.Initialize();
         }
 
         /// <summary>
@@ -122,5 +130,38 @@ namespace PuzzleMain
         /// <returns></returns>
         public SupportItemsManager GetSupportItemsManager()
         { return mSupportItemsManager; }
+
+        /// <summary>
+        /// TargetManagerの取得
+        /// </summary>
+        /// <returns></returns>
+        public TargetManager GetTargetManager()
+        { return mTargetManager; }
+
+        /// <summary>
+        /// TurnManagerの取得
+        /// </summary>
+        /// <returns></returns>
+        public TurnManager GetTurnManager()
+        { return mTurnManager; }
+
+#if !DO_COMPLIE
+        /// <summary>
+        /// ゲームステートフラグセット
+        /// </summary>
+        /// <param name="_gameState">ステート</param>
+        public static void FlagSet(GameState _gameState)
+        {
+            GAME_STATE = _gameState;
+        }
+
+        /// <summary>
+        /// ゲームステートフラグリセット
+        /// </summary>
+        public static void FlagReset()
+        {
+            FlagSet(GameState.NONE);
+        }
+#endif
     }
 }

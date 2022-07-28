@@ -13,6 +13,7 @@ namespace PuzzleMain
         SquaresManager      squaresMgr;     //SquaresManager
         GimmicksManager     gimmicksMgr;    //GimmicksManager
         SupportItemsManager stItemsMgr;     //SupportItemsManager
+        TurnManager         turnMgr;        //TurnManager
 
         [Header("駒プレハブの取得")]
         [SerializeField]
@@ -41,6 +42,7 @@ namespace PuzzleMain
             squaresMgr  = sPuzzleMain.GetSquaresManager();
             gimmicksMgr = sPuzzleMain.GetGimmicksManager();
             stItemsMgr  = sPuzzleMain.GetSupportItemsManager();
+            turnMgr     = sPuzzleMain.GetTurnManager();
 
             pieceTraArr   = new Transform[SQUARES_COUNT];
             sPieceObjArr  = new GameObject[SQUARES_COUNT];
@@ -48,7 +50,7 @@ namespace PuzzleMain
 
             //ギミック情報設定（駒として管理する）
             List<int> notPlaceIndex = new List<int>();  //駒を配置しないマス番号
-            for (int i = 0; i < GIMMICKS_COUNT; i++)
+            for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
                 //駒として管理するギミック
                 if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
@@ -938,6 +940,13 @@ namespace PuzzleMain
 
             //ギミックターン終了処理
             gimmicksMgr.ResetTurnInfo();
+
+            //援護アイテム未使用時
+            if (!supportItem)
+            {
+                //ターン数減少
+                turnMgr.TurnDecrease();
+            }
 
             //ターン終了処理中フラグリセット
             NOW_TURN_END_PROCESSING = false;
