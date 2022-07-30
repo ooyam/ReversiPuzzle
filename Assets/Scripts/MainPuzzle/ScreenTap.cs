@@ -54,6 +54,8 @@ public class ScreenTap : MonoBehaviour
     //タップ可能判定
     bool TappableJudgment()
     {
+        if (GAME_CLEAR)               return false;  //ゲームクリア
+        if (GAME_OVER)                return false;  //ゲームオーバー
         if (NOW_PUTTING_PIECES)       return false;  //駒配置中
         if (NOW_REVERSING_PIECES)     return false;  //駒反転中
         if (NOW_DESTROYING_PIECES)    return false;  //駒破壊中

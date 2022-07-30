@@ -37,6 +37,7 @@ namespace PuzzleMain
         [SerializeField]
         TurnManager mTurnManager;
 
+        //----スタティック変数----//
         public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
 
         public static GameObject[]          sSquareObjArr;                              //マスオブジェクト配列
@@ -54,6 +55,7 @@ namespace PuzzleMain
         public static int                   sDestroyBasePieceIndex = 0;                 //削除駒内の基準駒(置いた駒)の格納インデックス
 
         public static int                   sNumberTagNextOrder = 0;                    //次に破壊する番号(番号札ギミック用)
+        //------------------------//
 
         /// <summary>
         /// パズルモード開始
@@ -68,6 +70,24 @@ namespace PuzzleMain
 
             //初期化開始
             PuzzuleInitialize();
+        }
+
+        /// <summary>
+        /// ゲームオーバー
+        /// </summary>
+        public void GameOver()
+        {
+            GAME_OVER = true;
+            Debug.Log("GameOver");
+        }
+
+        /// <summary>
+        /// ゲームクリア
+        /// </summary>
+        public void GameClear()
+        {
+            GAME_CLEAR = true;
+            Debug.Log("GameClear");
         }
 
         /// <summary>

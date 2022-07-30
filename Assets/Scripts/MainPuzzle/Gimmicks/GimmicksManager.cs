@@ -13,6 +13,7 @@ namespace PuzzleMain
     {
         SquaresManager squaresMgr;  //SquaresManager
         PiecesManager  piecesMgr;   //PiecesManager
+        TargetManager  targetMgr;   //TargetManager
 
         [Header("ギミックプレハブの取得")]
         public GimmickArr[] gimmickPrefabArr;
@@ -74,6 +75,7 @@ namespace PuzzleMain
         {
             squaresMgr = sPuzzleMain.GetSquaresManager();
             piecesMgr  = sPuzzleMain.GetPiecesManager();
+            targetMgr  = sPuzzleMain.GetTargetManager();
 
             //ギミック生成
             sGimmickObjArr  = new GameObject[GIMMICKS_DEPLOY_COUNT];
@@ -246,7 +248,11 @@ namespace PuzzleMain
 
             //ダメージ残回数が0で破壊
             if (gimmInfo.remainingTimes <= 0)
+            {
+                //破壊リストに追加
                 sDestroyPiecesIndexList.Add(squareIndex);
+                targetMgr.TargetDecreaseCheck(INT_NULL, gimmInfo.id);
+            }
         }
 
         /// <summary>
@@ -254,6 +260,9 @@ namespace PuzzleMain
         /// </summary>
         public IEnumerator ChangeGimmickState()
         {
+            //ギミック状態変化中フラグセット
+            NOW_GIMMICK_STATE_CHANGE = true;
+
             //コルーチンリスト
             List<Coroutine> coroutineList = new List<Coroutine>();
             Coroutine coroutine;
@@ -369,6 +378,9 @@ namespace PuzzleMain
             //ギミック変更待機
             foreach (Coroutine c in coroutineList)
             { yield return c; }
+
+            //ギミック状態変化中フラグリセット
+            NOW_GIMMICK_STATE_CHANGE = false;
         }
 
         /// <summary>
@@ -388,6 +400,9 @@ namespace PuzzleMain
         /// <returns></returns>
         public IEnumerator DestroyGimmicks_TurnEnd()
         {
+            //ギミック破壊待機中フラグセット
+            NOW_GIMMICK_DESTROY_WAIT = true;
+
             //ギミック破壊
             Coroutine[] coroutines = new Coroutine[]
             {
@@ -396,6 +411,9 @@ namespace PuzzleMain
             };
             foreach (Coroutine c in coroutines)
             { yield return c; }
+
+            //ギミック破壊待機中フラグリセット
+            NOW_GIMMICK_DESTROY_WAIT = false;
         }
 
         /// <summary>
@@ -617,6 +635,9 @@ namespace PuzzleMain
                     { coroutine = StartCoroutine(AnimationStart(gimmickInfo.ani, STATE_NAME_BURST)); }
                     yield return coroutine;
 
+                    //目標確認
+                    targetMgr.TargetDecreaseCheck(INT_NULL, frameInfoListArr[groupId][0].id);
+
                     //ギミック破壊
                     foreach (GameObject obj in frameObjListArr[groupId])
                     { Destroy(obj);}
@@ -729,22 +750,27 @@ namespace PuzzleMain
         /// <param name="_colorId">色番号</param>
         public IEnumerator DamageCage(int _colorId)
         {
-            foreach (GimmickInformation cageInfo in cageInfoArr)
+            List<Coroutine> corList = new List<Coroutine>();
+            int cageInfoCount = cageInfoArr.Length;
+            for (int i = 0; i < cageInfoCount; i++)
             {
-                if (cageInfo == null) continue;
-                if (cageInfo.remainingQuantity == 0) continue;
+                if (cageInfoArr[i] == null) continue;
+                if (cageInfoArr[i].remainingQuantity == 0) continue;
 
-                if (cageInfo.colorId == _colorId && cageInfo.remainingQuantity > 0)
+                if (cageInfoArr[i].colorId == _colorId && cageInfoArr[i].remainingQuantity > 0)
                 {
                     //同色の爆弾カウントを減らす
-                    cageInfo.remainingQuantity--;
+                    cageInfoArr[i].remainingQuantity--;
 
                     //sprite更新(数字)
-                    BobmCountSpriteUpdate(cageInfo);
-                    yield return StartCoroutine(AnimationStart(cageInfo.ani, STATE_NAME_DAMAGE));
-                    break;
+                    BobmCountSpriteUpdate(cageInfoArr[i]);
+                    corList.Add(StartCoroutine(AnimationStart(cageInfoArr[i].ani, STATE_NAME_DAMAGE)));
                 }
             }
+
+            //ダメージ待機
+            foreach (Coroutine c in corList)
+            {  yield return c; }
         }
 
         /// <summary>
@@ -781,6 +807,9 @@ namespace PuzzleMain
 
                 //オブジェクト破壊
                 Destroy(cageObjArr[desIndex]);
+
+                //目標確認
+                targetMgr.TargetDecreaseCheck(INT_NULL, (int)Gimmicks.Cage);
 
                 //管理配列リセット
                 cageObjArr[desIndex] = null;           //檻オブジェクトリスト

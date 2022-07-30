@@ -36,6 +36,7 @@ namespace PuzzleMain
         SquaresManager  mSquaresMgr;    //SquaresManager
         PiecesManager   mPiecesMgr;     //PiecesManager
         GimmicksManager mGimmicksMgr;   //GimmicksManager
+        TurnManager     mTurnMgr;       //TurnManager
 
         [Header("援護アイテムの取得")]
         [SerializeField]
@@ -73,6 +74,7 @@ namespace PuzzleMain
             mSquaresMgr  = sPuzzleMain.GetSquaresManager();
             mPiecesMgr   = sPuzzleMain.GetPiecesManager();
             mGimmicksMgr = sPuzzleMain.GetGimmicksManager();
+            mTurnMgr     = sPuzzleMain.GetTurnManager();
 
             mReadyItemNumber    = INT_NULL;
             mItemsArr           = new GameObject[SUPPORT_ITEMS_COUNT];
@@ -329,7 +331,7 @@ namespace PuzzleMain
 
             //駒破壊
             if (allTogether) yield return StartCoroutine(mPiecesMgr.StartDestroyingPieces(true));
-            else StartCoroutine(mPiecesMgr.TurnEnd(true));
+            else StartCoroutine(mTurnMgr.TurnEnd(true));
 
             //星攻撃済リスト初期化
             mStarSupportedSquaresList = new List<int>();

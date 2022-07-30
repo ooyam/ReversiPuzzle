@@ -147,14 +147,14 @@ namespace PuzzleMain
         {
             return directions switch
             {
-                Directions.Up           => up,                              //上
-                Directions.UpRight      => (up <= right) ? up : right,      //右上
-                Directions.Right        => right,                           //右
-                Directions.DownRight    => (down <= right) ? down : right,  //右下
-                Directions.Down         => down,                            //下
-                Directions.DownLeft     => (down <= left) ? down : left,    //左下
-                Directions.Left         => left,                            //左
-                Directions.UpLeft       => (up <= left) ? up : left,        //左上
+                Directions.Up        => up,                              //上
+                Directions.UpRight   => (up <= right) ? up : right,      //右上
+                Directions.Right     => right,                           //右
+                Directions.DownRight => (down <= right) ? down : right,  //右下
+                Directions.Down      => down,                            //下
+                Directions.DownLeft  => (down <= left) ? down : left,    //左下
+                Directions.Left      => left,                            //左
+                Directions.UpLeft    => (up <= left) ? up : left,        //左上
                 _ => 0, //default
             };
         }

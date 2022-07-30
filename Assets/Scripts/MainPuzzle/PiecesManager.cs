@@ -13,6 +13,7 @@ namespace PuzzleMain
         SquaresManager      squaresMgr;     //SquaresManager
         GimmicksManager     gimmicksMgr;    //GimmicksManager
         SupportItemsManager stItemsMgr;     //SupportItemsManager
+        TargetManager       targetMgr;      //TargetManager
         TurnManager         turnMgr;        //TurnManager
 
         [Header("駒プレハブの取得")]
@@ -42,6 +43,7 @@ namespace PuzzleMain
             squaresMgr  = sPuzzleMain.GetSquaresManager();
             gimmicksMgr = sPuzzleMain.GetGimmicksManager();
             stItemsMgr  = sPuzzleMain.GetSupportItemsManager();
+            targetMgr   = sPuzzleMain.GetTargetManager();
             turnMgr     = sPuzzleMain.GetTurnManager();
 
             pieceTraArr   = new Transform[SQUARES_COUNT];
@@ -339,11 +341,15 @@ namespace PuzzleMain
                 //反転可能判定
                 if (sPieceInfoArr[squareIndex].invertable)
                 {
-                    //駒カウントギミックにダメージ(反転駒)
-                    StartCoroutine(gimmicksMgr.DamageCage(sPieceInfoArr[squareIndex].colorId));    //檻
+                    //即破壊でない場合
+                    if (!instantly)
+                    {
+                        //反転開始
+                        StartCoroutine(ReversingPieces(squareIndex, reversiColorId));
 
-                    //反転開始
-                    if (!instantly) StartCoroutine(ReversingPieces(squareIndex, reversiColorId));
+                        //駒反転カウント
+                        PieceReverseCount(sPieceInfoArr[squareIndex].colorId);
+                    }
                     sDestroyPiecesIndexList.Add(squareIndex);
                 }
             }
@@ -365,6 +371,9 @@ namespace PuzzleMain
         /// <param name="deletePiece">削除駒</param>
         IEnumerator PutPieceToSquare(GameObject deletePiece)
         {
+            //ターン数減少
+            turnMgr.TurnDecrease();
+
             //配置中フラグセット
             NOW_PUTTING_PIECES = true;
 
@@ -381,6 +390,9 @@ namespace PuzzleMain
             nextPieceTraArr[nextPuPieceIndex].localPosition = new Vector3(nowPos.x, nowPos.y, PUT_PIECE_MOVE_START_Z);
             yield return StartCoroutine(DecelerationMovement(nextPieceTraArr[nextPuPieceIndex], PUT_PIECE_MOVE_SPEED, PIECE_DEFAULT_POS));
 
+            //駒反転カウント
+            PieceReverseCount(sPieceInfoArr[putIndex].colorId);
+
             //待機駒を置く
             PutPiece(putIndex);
 
@@ -392,9 +404,6 @@ namespace PuzzleMain
             StopCoroutine(scaleUpCoroutine);
             yield return StartCoroutine(AllScaleChange(pieceTraArr[putIndex], PUT_PIECE_SCALING_SPEED, PIECE_DEFAULT_SCALE));
             pieceTraArr[putIndex].localScale = new Vector2(PIECE_DEFAULT_SCALE, PIECE_DEFAULT_SCALE);
-
-            //駒カウントギミックにダメージ(置いた駒)
-            StartCoroutine(gimmicksMgr.DamageCage(sPieceInfoArr[putIndex].colorId));    //檻
 
             //反転駒リスト取得
             int colorId = sPieceInfoArr[putIndex].colorId;      //置いた駒の色番号取得
@@ -410,7 +419,7 @@ namespace PuzzleMain
             else
             {
                 //ターン終了処理開始
-                StartCoroutine(TurnEnd());
+                StartCoroutine(turnMgr.TurnEnd());
             }
 
             //配置中フラグリセット
@@ -598,14 +607,11 @@ namespace PuzzleMain
             //駒
             else
             {
+                //駒反転カウント
+                PieceReverseCount(sPieceInfoArr[reversIndex].colorId);
+
                 //反転
-                Coroutine coroutine = StartCoroutine(ReversingPieces(reversIndex, putPieceColorId));
-
-                //駒カウントギミックにダメージ(反転駒)
-                StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
-
-                //反転終了待機
-                yield return coroutine;
+                yield return StartCoroutine(ReversingPieces(reversIndex, putPieceColorId));
             }
 
             //反転駒の破壊
@@ -645,19 +651,20 @@ namespace PuzzleMain
                     //削除対象に反転駒の管理番号追加
                     sDestroyPiecesIndexList.Add(reversIndex);
 
-                    //駒カウントギミックにダメージ(反転駒)
-                    StartCoroutine(gimmicksMgr.DamageCage(sPieceInfoArr[reversIndex].colorId));    //檻
+                    //駒反転カウント
+                    PieceReverseCount(sPieceInfoArr[reversIndex].colorId);
 
                     //反転
                     coroutine = StartCoroutine(ReversingPieces(reversIndex, putPieceColorId));
 
                     yield return PIECE_REVERSAL_INTERVAL;
                 }
+
+                //駒反転カウント(反転しない最後の駒も追加)
+                PieceReverseCount(putPieceColorId);
+
                 yield return PIECE_GROUP_REVERSAL_INTERVAL;
             }
-
-            //駒カウントギミックにダメージ(反転駒)
-            StartCoroutine(gimmicksMgr.DamageCage(putPieceColorId));    //檻
 
             //ギミック終了待機
             foreach (Coroutine c in sGimmickCorList)
@@ -696,6 +703,19 @@ namespace PuzzleMain
             pieceTraArr[reversPieceIndex].localRotation = PIECE_GENERATE_QUEST;
             StartCoroutine(AllScaleChange(pieceTraArr[reversPieceIndex], REVERSE_PIECE_SCALING_SPEED, PIECE_DEFAULT_SCALE));
             yield return StartCoroutine(RotateMovement(pieceTraArr[reversPieceIndex], REVERSE_PIECE_ROT_SPEED, REVERSE_PIECE_FRONT_ROT));
+        }
+
+        /// <summary>
+        /// 駒反転数のカウント処理
+        /// </summary>
+        /// <param name="colorId">色番号</param>
+        void PieceReverseCount(int colorId)
+        {
+            //駒カウントギミックにダメージ(反転駒)
+            StartCoroutine(gimmicksMgr.DamageCage(colorId));    //檻
+
+            //目標減少確認
+            targetMgr.TargetDecreaseCheck(colorId);
         }
 
         //==========================================================//
@@ -768,7 +788,7 @@ namespace PuzzleMain
             yield return StartCoroutine(StratFallingPieces());
 
             //ターン終了
-            StartCoroutine(TurnEnd(useSupport));
+            StartCoroutine(turnMgr.TurnEnd(useSupport));
 
             //破壊中フラグリセット
             NOW_DESTROYING_PIECES = false;
@@ -777,7 +797,7 @@ namespace PuzzleMain
         /// <summary>
         /// 駒の落下開始
         /// </summary>
-        IEnumerator StratFallingPieces()
+        public IEnumerator StratFallingPieces()
         {
             //駒落下中フラグセット
             NOW_FALLING_PIECES = true;
@@ -875,81 +895,6 @@ namespace PuzzleMain
             }
 
             return false;
-        }
-
-
-        //==========================================================//
-        //-------------------ターン終了時の処理---------------------//
-        //==========================================================//
-
-        /// <summary>
-        /// ギミック破壊確認
-        /// </summary>
-        IEnumerator GimmickDestroyCheck()
-        {
-            //ギミック破壊待機中フラグセット
-            NOW_GIMMICK_DESTROY_WAIT = true;
-
-            //破壊開始
-            yield return StartCoroutine(gimmicksMgr.DestroyGimmicks_TurnEnd());
-
-            //ギミック破壊待機中フラグリセット
-            NOW_GIMMICK_DESTROY_WAIT = false;
-        }
-
-        /// <summary>
-        /// ギミックの状態変化開始
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator StartChangeGimmickState()
-        {
-            //ギミック状態変化中フラグセット
-            NOW_GIMMICK_STATE_CHANGE = true;
-
-            //状態変化待機
-            yield return StartCoroutine(gimmicksMgr.ChangeGimmickState());
-
-            //ギミック状態変化中フラグリセット
-            NOW_GIMMICK_STATE_CHANGE = false;
-        }
-
-        /// <summary>
-        /// ターン終了
-        /// </summary>
-        /// <param name="supportItem">援護アイテム？</param>
-        public IEnumerator TurnEnd(bool supportItem = false)
-        {
-            //ターン終了処理中フラグセット
-            NOW_TURN_END_PROCESSING = true;
-
-            //特定ギミック破壊判定開始
-            yield return StartCoroutine(GimmickDestroyCheck());
-
-            //自由落下
-            yield return StartCoroutine(StratFallingPieces());
-
-            //援護アイテム未使用時
-            if (!supportItem)
-            {
-                //ギミック状態変化開始
-                yield return StartCoroutine(StartChangeGimmickState());
-            }
-
-            //特定ギミック破壊判定開始
-            yield return StartCoroutine(GimmickDestroyCheck());
-
-            //ギミックターン終了処理
-            gimmicksMgr.ResetTurnInfo();
-
-            //援護アイテム未使用時
-            if (!supportItem)
-            {
-                //ターン数減少
-                turnMgr.TurnDecrease();
-            }
-
-            //ターン終了処理中フラグリセット
-            NOW_TURN_END_PROCESSING = false;
         }
     }
 }
