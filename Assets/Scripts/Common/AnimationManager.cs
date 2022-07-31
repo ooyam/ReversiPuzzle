@@ -18,6 +18,7 @@ namespace animation
         public const string STATE_NAME_READY        = "Ready";          //準備
         public const string STATE_NAME_ACTIVE       = "Active";         //アクティブ
         public const string STATE_NAME_INACTIVE     = "Inactive";       //非アクティブ
+        public const string STATE_NAME_APPEARANCE   = "Appearance";     //出現
 
         //===============================================//
         //===========アニメーション動作関数==============//

@@ -37,6 +37,10 @@ namespace PuzzleMain
         [SerializeField]
         TurnManager mTurnManager;
 
+        [Header("ResultManager")]
+        [SerializeField]
+        ResultManager mResultManager;
+
         //----スタティック変数----//
         public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
 
@@ -78,7 +82,7 @@ namespace PuzzleMain
         public void GameOver()
         {
             GAME_OVER = true;
-            Debug.Log("GameOver");
+            StartCoroutine(mResultManager.GameOver());
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace PuzzleMain
         public void GameClear()
         {
             GAME_CLEAR = true;
-            Debug.Log("GameClear");
+            StartCoroutine(mResultManager.GameClear());
         }
 
         /// <summary>

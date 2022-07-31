@@ -180,6 +180,7 @@ public class PuzzleDefine : MonoBehaviour
     public static bool GAME_START                   = false;  //ゲーム開始？
     public static bool GAME_OVER                    = false;  //ゲームオーバー？
     public static bool GAME_CLEAR                   = false;  //ゲームクリア？
+    public static bool TURN_RECOVERED               = false;  //ターン回復済？(一度ゲームーバーした)
     public static bool NOW_PUTTING_PIECES           = false;  //駒配置中？
     public static bool NOW_REVERSING_PIECES         = false;  //駒反転中？
     public static bool NOW_DESTROYING_PIECES        = false;  //駒破壊中？
@@ -196,6 +197,7 @@ public class PuzzleDefine : MonoBehaviour
         GAME_START                  = false;
         GAME_OVER                   = false;
         GAME_CLEAR                  = false;
+        TURN_RECOVERED              = false;
         NOW_PUTTING_PIECES          = false;
         NOW_REVERSING_PIECES        = false;
         NOW_DESTROYING_PIECES       = false;
