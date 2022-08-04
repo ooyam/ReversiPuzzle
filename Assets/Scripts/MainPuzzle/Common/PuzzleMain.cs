@@ -3,6 +3,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PuzzleMain.Ui;
+using Ui;
 using static PuzzleDefine;
 
 namespace PuzzleMain
@@ -40,6 +42,10 @@ namespace PuzzleMain
         [Header("ResultManager")]
         [SerializeField]
         ResultManager mResultManager;
+
+        [Header("CanvasManager")]
+        [SerializeField]
+        CanvasManager mCanvasManager;
 
         //----スタティック変数----//
         public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
@@ -82,7 +88,7 @@ namespace PuzzleMain
         public void GameOver()
         {
             GAME_OVER = true;
-            StartCoroutine(mResultManager.GameOver());
+            StartCoroutine(mResultManager.GenerateGameOverObj());
         }
 
         /// <summary>
@@ -91,7 +97,7 @@ namespace PuzzleMain
         public void GameClear()
         {
             GAME_CLEAR = true;
-            StartCoroutine(mResultManager.GameClear());
+            StartCoroutine(mResultManager.GenerateGameClearObj());
         }
 
         /// <summary>
@@ -168,6 +174,20 @@ namespace PuzzleMain
         /// <returns></returns>
         public TurnManager GetTurnManager()
         { return mTurnManager; }
+
+        /// <summary>
+        /// ResultManagerの取得
+        /// </summary>
+        /// <returns></returns>
+        public ResultManager GetResultManager()
+        { return mResultManager; }
+
+        /// <summary>
+        /// CanvasManagerの取得
+        /// </summary>
+        /// <returns></returns>
+        public CanvasManager GetCanvasManager()
+        { return mCanvasManager; }
 
 #if !DO_COMPLIE
         /// <summary>

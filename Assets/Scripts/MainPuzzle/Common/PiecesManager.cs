@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using PuzzleMain.Ui;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static ObjectMove_2D.ObjectMove_2D;

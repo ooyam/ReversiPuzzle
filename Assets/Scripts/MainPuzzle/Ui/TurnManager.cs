@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 
-namespace PuzzleMain
+namespace PuzzleMain.Ui
 {
     public class TurnManager : MonoBehaviour
     {
@@ -31,7 +31,7 @@ namespace PuzzleMain
 
         const int RED_LINE = 5;     //ウィンドウを切り替えるターン
         const int TURN_MAX = 99;    //ターン最大数
-        readonly WaitForSeconds RECOVERY_DELAY_TIME = new WaitForSeconds(0.2f);   //ターン回復の間隔
+        readonly WaitForSeconds RECOVERY_DELAY_TIME = new WaitForSeconds(0.3f);   //ターン回復の間隔
 
         //==========================================================//
         //----------------------初期設定,取得-----------------------//
@@ -48,6 +48,7 @@ namespace PuzzleMain
 
             if (TURN_MAX < TURN_COUNT) TURN_COUNT = TURN_MAX;
             mNumberText.text = TURN_COUNT.ToString();
+            if (TURN_COUNT <= RED_LINE) WindowChange(true);
         }
 
         /// <summary>
@@ -62,12 +63,15 @@ namespace PuzzleMain
         }
 
         /// <summary>
-        /// ターン回復
+        /// ターン回復(リワード広告視聴)
         /// </summary>
-        /// <param name="_count">回復数</param>
-        public IEnumerator TurnRecovery(int _count = 1)
+        public IEnumerator TurnRecovery_AdReward()
         {
-            for (int i = 0; i < _count; i++)
+            //フィルター解除
+            sPuzzleMain.GetCanvasManager().SetFilter(false);
+
+            //回復
+            for (int i = 0; i < REWARD_RECOVERY_COUNT; i++)
             {
                 TURN_COUNT++;
                 if (TURN_MAX < TURN_COUNT) TURN_COUNT = TURN_MAX;
@@ -76,6 +80,7 @@ namespace PuzzleMain
                 yield return RECOVERY_DELAY_TIME;
             }
         }
+        const int REWARD_RECOVERY_COUNT = 5;
 
         /// <summary>
         /// ウィンドウSprite差し替え

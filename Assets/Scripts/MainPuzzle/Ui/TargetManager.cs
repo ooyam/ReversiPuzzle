@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 
-namespace PuzzleMain
+namespace PuzzleMain.Ui
 {
     public class TargetManager : MonoBehaviour
     {

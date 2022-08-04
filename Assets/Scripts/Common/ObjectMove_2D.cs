@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static CommonDefine.CommonDefine;
+using static CommonDefine;
 
 namespace ObjectMove_2D
 {

@@ -20,9 +20,9 @@ public class PieceInformation : MonoBehaviour
     /// <summary>
     /// 駒情報の設定
     /// </summary>
-    /// <param name="_squareIndex">     配置マス管理番号</param>
-    /// <param name="_generate">        生成？</param>
-    /// <param name="gimmickInfoArr">   ギミック情報配列</param>
+    /// <param name="_squareIndex">  配置マス管理番号</param>
+    /// <param name="_generate">     生成？</param>
+    /// <param name="gimmickInfoArr">ギミック情報配列</param>
     public void InformationSetting(int _squareIndex, bool _generate, GimmickInformation[] gimmickInfoArr = null)
     {
         tra        = this.transform;

@@ -297,7 +297,7 @@ public class PuzzleDefine : MonoBehaviour
         };
 
         //É^Å[Éìêî
-        TURN_COUNT = 8;
+        TURN_COUNT = 2;
 
         //(âº)
         int[][] GIMMICKS_dummy     = new int[10][];
