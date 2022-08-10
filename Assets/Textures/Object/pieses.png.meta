@@ -4,22 +4,40 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4555098084182336714
-    second: pieses_1Red
+    second: pieses_01_Red
   - first:
       213: -8790519494909169550
-    second: pieses_1Blue
+    second: pieses_00_Blue
   - first:
       213: -3460668933861132748
-    second: pieses_2Yellow
+    second: pieses_02_Yellow
   - first:
       213: -1867457327565832694
-    second: pieses_3Green
+    second: pieses_03_Green
   - first:
       213: 4780804830873495064
-    second: pieses_5Orange
+    second: pieses_05_Orange
   - first:
       213: 2789398468089535112
-    second: pieses_4Violet
+    second: pieses_04_Violet
+  - first:
+      213: 4659617981423430386
+    second: pieses_11_Red
+  - first:
+      213: -2835961627735372747
+    second: pieses_10_Blue
+  - first:
+      213: -5856079765533914782
+    second: pieses_14_Violet
+  - first:
+      213: -9191309273081509747
+    second: pieses_13_Green
+  - first:
+      213: 4596487868734206620
+    second: pieses_12_Yellow
+  - first:
+      213: -8726439058628436430
+    second: pieses_15_Orange
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -145,7 +163,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pieses_1Red
+      name: pieses_01_Red
       rect:
         serializedVersion: 2
         x: 67
@@ -166,7 +184,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pieses_1Blue
+      name: pieses_00_Blue
       rect:
         serializedVersion: 2
         x: 939
@@ -187,7 +205,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pieses_2Yellow
+      name: pieses_02_Yellow
       rect:
         serializedVersion: 2
         x: 503
@@ -208,7 +226,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pieses_3Green
+      name: pieses_03_Green
       rect:
         serializedVersion: 2
         x: 721
@@ -229,7 +247,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pieses_5Orange
+      name: pieses_05_Orange
       rect:
         serializedVersion: 2
         x: 285
@@ -250,7 +268,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pieses_4Violet
+      name: pieses_04_Violet
       rect:
         serializedVersion: 2
         x: 1157
@@ -266,6 +284,132 @@ TextureImporter:
       bones: []
       spriteID: 88ade7bb02fe5b620800000000000000
       internalID: 2789398468089535112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_11_Red
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fa24cbcdd94aa040800000000000000
+      internalID: 4659617981423430386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_10_Blue
+      rect:
+        serializedVersion: 2
+        x: 939
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53cc136dce3a4a8d0800000000000000
+      internalID: -2835961627735372747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_14_Violet
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2698ff6ea760bbea0800000000000000
+      internalID: -5856079765533914782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_13_Green
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d88093de9e8e17080800000000000000
+      internalID: -9191309273081509747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_12_Yellow
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c927b460d510acf30800000000000000
+      internalID: 4596487868734206620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pieses_15_Orange
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 64
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23e9b5c29e575e680800000000000000
+      internalID: -8726439058628436430
       vertices: []
       indices: 
       edges: []

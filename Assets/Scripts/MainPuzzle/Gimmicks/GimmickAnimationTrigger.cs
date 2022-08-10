@@ -9,11 +9,9 @@ namespace PuzzleMain
     {
         //自身のギミック情報
         GimmickInformation mGimmickInfo;
-        GimmicksManager mGimmicksMan;
         void Start()
         {
             mGimmickInfo = this.GetComponent<GimmickInformation>();
-            mGimmicksMan = sPuzzleMain.GetGimmicksManager();
         }
 
         /// <summary>
@@ -22,7 +20,7 @@ namespace PuzzleMain
         /// <param name="attackNum">攻撃番号</param>
         void TornadoAttackTrigger(int attackNum)
         {
-            mGimmicksMan.TornadoAttackPieceChange(mGimmickInfo, attackNum);
+            GimmicksMgr.TornadoAttackPieceChange(mGimmickInfo, attackNum);
         }
     }
 }

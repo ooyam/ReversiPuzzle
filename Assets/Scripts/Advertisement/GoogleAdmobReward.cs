@@ -8,18 +8,10 @@ using static PuzzleMain.PuzzleMain;
 public class GoogleAdmobReward : MonoBehaviour
 {
     private RewardedAd rewardedAd = null;
-    private PuzzleMain.ResultManager resMgr;
 
     //広告ユニットID
     private const string adId = "ca-app-pub-3940256099942544/5224354917"; //テスト
     private bool rewardedAdRetry = false;
-
-    //ResultManager取得
-    void GetResultManager()
-    {
-        if (resMgr != null) return;
-        resMgr = sPuzzleMain.GetResultManager();
-    }
 
     //初期化
     void Start()
@@ -27,7 +19,6 @@ public class GoogleAdmobReward : MonoBehaviour
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(initStatus => { });
         LoadRewardAd();
-        GetResultManager();
     }
 
     //更新
@@ -91,8 +82,7 @@ public class GoogleAdmobReward : MonoBehaviour
     {
         //Debug.Log("HandleRewardAdLoaded event received with message: " + args);
         rewardedAdRetry = false;
-        GetResultManager();
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.Loaded;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.Loaded;
     }
 
     /// <summary>
@@ -119,8 +109,7 @@ public class GoogleAdmobReward : MonoBehaviour
         //    Debug.Log("error no fill");
         //}
         //rewardedAdRetry = true;
-        GetResultManager();
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.FailedToLoad;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.FailedToLoad;
     }
 
     /// <summary>
@@ -131,7 +120,7 @@ public class GoogleAdmobReward : MonoBehaviour
     public void HandleRewardedAdAdOpened(object sender, EventArgs args)
     {
         //Debug.Log("HandleRewardedAdAdOpened event received");
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdOpen;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdOpen;
     }
 
     /// <summary>
@@ -142,7 +131,7 @@ public class GoogleAdmobReward : MonoBehaviour
     public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
     {
         //MonoBehaviour.print("HandleRewardedAdFailedToShow event received with message: " + args.AdError.GetMessage());
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.FailedToOpen;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.FailedToOpen;
     }
 
     /// <summary>
@@ -155,7 +144,7 @@ public class GoogleAdmobReward : MonoBehaviour
         //string type = args.Type;
         //double amount = args.Amount;
         //MonoBehaviour.print("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.EarnedReward;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.EarnedReward;
     }
 
     /// <summary>
@@ -166,7 +155,7 @@ public class GoogleAdmobReward : MonoBehaviour
     public void HandleRewardedAdAdClosed(object sender, EventArgs args)
     {
         //Debug.Log("HandleRewardedAdClosed event received");
-        resMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdClosed;
+        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdClosed;
     }
 
     /// <summary>

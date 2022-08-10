@@ -70,6 +70,7 @@ namespace PuzzleMain
             ObjectDestroy();
             mDisplayObj = Instantiate(mGameClearPre);
             yield return StartCoroutine(ObjectAppearance());
+            SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace PuzzleMain
         /// </summary>
         public IEnumerator GenerateGameOverObj()
         {
-            StartCoroutine(sPuzzleMain.GetCanvasManager().SetFilter(true));
+            StartCoroutine(CanvasMgr.SetFilter(true));
             ObjectDestroy();
             mDisplayObj = Instantiate(mGameOverPreArr[(TURN_RECOVERED) ? 1 : 0]);
             yield return StartCoroutine(ObjectAppearance());
@@ -218,7 +219,7 @@ namespace PuzzleMain
 
                     //報酬獲得
                     case AdRewardState.EarnedReward:
-                        StartCoroutine(sPuzzleMain.GetTurnManager().TurnRecovery_AdReward());
+                        StartCoroutine(TurnMgr.TurnRecovery_AdReward());
                         end = true;
                         break;
 
@@ -306,6 +307,42 @@ namespace PuzzleMain
         Text mMessageBtnText;           //ボタンテキスト
         RectTransform mMessageBtnTra;   //ボタンRectTransform
 
+        /// <summary>
+        /// ゲーム再開
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator GameRestart()
+        {
+            //フィルターの解除
+            Coroutine cor = StartCoroutine(CanvasMgr.SetFilter(false));
+
+            //フィルターの解除待機(閉じるボタンのタップに駒を反応させないためでもある)
+            yield return null;  //1フレームは必ず待機
+            yield return cor;
+
+            //フラグのリセット
+            FlagReset();
+            TURN_RECOVERED = true;
+        }
+
+        /// <summary>
+        /// 再挑戦
+        /// </summary>
+        /// <returns></returns>
+        void TryAgain()
+        {
+            SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
+        }
+
+        /// <summary>
+        /// タイトルへ
+        /// </summary>
+        /// <returns></returns>
+        void ReturnTitle()
+        {
+            SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
+        }
+
 
         //==========================================================//
         //----------------------ボタン判定--------------------------//
@@ -320,12 +357,12 @@ namespace PuzzleMain
             {
                 //再挑戦する？
                 case ConfirmWinStatus.TryAgain:
-                    Debug.Log("再挑戦");
+                    TryAgain();
                     break;
 
                 //タイトルに戻る？
                 case ConfirmWinStatus.ReturnTitle:
-                    Debug.Log("タイトルへ");
+                    ReturnTitle();
                     break;
             }
         }
@@ -408,21 +445,19 @@ namespace PuzzleMain
         }
 
         /// <summary>
-        /// ゲーム再開
+        /// 再挑戦する
         /// </summary>
-        /// <returns></returns>
-        IEnumerator GameRestart()
+        public void IsPushTryAgain()
         {
-            //フィルターの解除
-            Coroutine cor = StartCoroutine(sPuzzleMain.GetCanvasManager().SetFilter(false));
+            TryAgain();
+        }
 
-            //フィルターの解除待機(閉じるボタンのタップに駒を反応させないためでもある)
-            yield return null;  //1フレームは必ず待機
-            yield return cor;
-
-            //フラグのリセット
-            FlagReset();
-            TURN_RECOVERED = true;
+        /// <summary>
+        /// タイトルに戻る
+        /// </summary>
+        public void IsPushReturnTitle()
+        {
+            ReturnTitle();
         }
     }
 }

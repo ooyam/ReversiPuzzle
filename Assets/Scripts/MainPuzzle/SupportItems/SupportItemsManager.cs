@@ -34,11 +34,6 @@ namespace PuzzleMain
 
     public class SupportItemsManager : MonoBehaviour
     {
-        SquaresManager  mSquaresMgr;    //SquaresManager
-        PiecesManager   mPiecesMgr;     //PiecesManager
-        GimmicksManager mGimmicksMgr;   //GimmicksManager
-        TurnManager     mTurnMgr;       //TurnManager
-
         [Header("援護アイテムの取得")]
         [SerializeField]
         Transform mItemBoxArr;
@@ -72,11 +67,6 @@ namespace PuzzleMain
         /// </summary>
         public void Initialize()
         {
-            mSquaresMgr  = sPuzzleMain.GetSquaresManager();
-            mPiecesMgr   = sPuzzleMain.GetPiecesManager();
-            mGimmicksMgr = sPuzzleMain.GetGimmicksManager();
-            mTurnMgr     = sPuzzleMain.GetTurnManager();
-
             mReadyItemNumber    = INT_NULL;
             mItemsArr           = new GameObject[SUPPORT_ITEMS_COUNT];
             mWaitItemBoxsTraArr = new Transform[SUPPORT_ITEMS_COUNT];
@@ -128,7 +118,7 @@ namespace PuzzleMain
             if (mReadyItemNumber >= 0)
             {
                 mWaitItemReadyUse[mReadyItemNumber] = false;
-                LoopAnimationStart(mWaitItemAniArr[mReadyItemNumber]);
+                AnimationPlay(mWaitItemAniArr[mReadyItemNumber]);
             }
 
             //準備中のアイテム番号更新
@@ -148,7 +138,7 @@ namespace PuzzleMain
 
             //解除状態にする
             mWaitItemReadyUse[mReadyItemNumber] = false;
-            LoopAnimationStart(mWaitItemAniArr[mReadyItemNumber]);
+            AnimationPlay(mWaitItemAniArr[mReadyItemNumber]);
 
             //準備中のアイテム番号リセット
             mReadyItemNumber = INT_NULL;
@@ -190,7 +180,7 @@ namespace PuzzleMain
             int criteriaSquareId = sDestroyPiecesIndexList[sDestroyBasePieceIndex];
 
             //基準行の端(左右)を取得
-            int minLine = mSquaresMgr.GetLineNumber(criteriaSquareId);
+            int minLine = SquaresMgr.GetLineNumber(criteriaSquareId);
             int maxLine = SQUARES_COUNT - BOARD_LINE_COUNT + minLine;
 
             //基準列の端(上下)を取得
@@ -204,8 +194,8 @@ namespace PuzzleMain
             int[] perSquares = new int[DIRECTIONS_COUNT];
             foreach (Directions dir in Enum.GetValues(typeof(Directions)))
             {
-                if (!mSquaresMgr.IsSquareSpecifiedDirection(dir, criteriaSquareId)) perSquares[(int)dir] = INT_NULL;  //端マスの場合
-                else  perSquares[(int)dir] = mSquaresMgr.GetDesignatedDirectionIndex((int)dir, criteriaSquareId);     //その他
+                if (!SquaresMgr.IsSquareSpecifiedDirection(dir, criteriaSquareId)) perSquares[(int)dir] = INT_NULL;  //端マスの場合
+                else  perSquares[(int)dir] = SquaresMgr.GetDesignatedDirectionIndex((int)dir, criteriaSquareId);     //その他
             }
 
             //各存在フラグ
@@ -298,7 +288,7 @@ namespace PuzzleMain
             {
                 //アヒル
                 case (int)SupportItems.Duck:
-                    yield return StartCoroutine(UseDuck(mSquaresMgr.GetLineNumber(_tapSquare)));
+                    yield return StartCoroutine(UseDuck(SquaresMgr.GetLineNumber(_tapSquare)));
                     break;
 
                 //花火
@@ -309,13 +299,13 @@ namespace PuzzleMain
 
                 //ロケット(横)
                 case (int)SupportItems.RocketLine:
-                    yield return StartCoroutine(UseRocketLine(mSquaresMgr.GetLineNumber(_tapSquare)));
+                    yield return StartCoroutine(UseRocketLine(SquaresMgr.GetLineNumber(_tapSquare)));
                     allTogether = true;
                     break;
 
                 //ロケット(縦)
                 case (int)SupportItems.RocketColumn:
-                    yield return StartCoroutine(UseRocketColumn(mSquaresMgr.GetColumnNumber(_tapSquare)));
+                    yield return StartCoroutine(UseRocketColumn(SquaresMgr.GetColumnNumber(_tapSquare)));
                     allTogether = true;
                     break;
 
@@ -331,8 +321,8 @@ namespace PuzzleMain
             { yield return c; }
 
             //駒破壊
-            if (allTogether) yield return StartCoroutine(mPiecesMgr.StartDestroyingPieces(true));
-            else StartCoroutine(mTurnMgr.TurnEnd(true));
+            if (allTogether) yield return StartCoroutine(PiecesMgr.StartDestroyingPieces(true));
+            else StartCoroutine(TurnMgr.TurnEnd(true));
 
             //星攻撃済リスト初期化
             mStarSupportedSquaresList = new List<int>();
@@ -373,7 +363,7 @@ namespace PuzzleMain
         public void DuckSupport(int _attackColumn)
         {
             int squareIndex = mDuckSupportLineNum + (_attackColumn * BOARD_LINE_COUNT);
-            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
+            PiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, true);
         }
 
 
@@ -392,8 +382,8 @@ namespace PuzzleMain
         {
             mFireworkSupportSquareId = _squareId;
             int itemNum = (int)SupportItems.Firework;
-            int line    = mSquaresMgr.GetLineNumber(_squareId);
-            int column  = mSquaresMgr.GetColumnNumber(_squareId);
+            int line    = SquaresMgr.GetLineNumber(_squareId);
+            int column  = SquaresMgr.GetColumnNumber(_squareId);
             float posX  = mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * column;
             float posY  = mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * line;
 
@@ -418,16 +408,16 @@ namespace PuzzleMain
             {
                 //中心を攻撃
                 case FireworkSupportPlace.Center:
-                    mPiecesMgr.DamageSpecifiedSquare(mFireworkSupportSquareId, COLORLESS_ID, false, true);
+                    PiecesMgr.DamageSpecifiedSquare(mFireworkSupportSquareId, COLORLESS_ID, false, true);
                     break;
 
                 //周辺を攻撃
                 case FireworkSupportPlace.Surroundings:
                     foreach (Directions dir in Enum.GetValues(typeof(Directions)))
                     {
-                        if (!mSquaresMgr.IsSquareSpecifiedDirection(dir, mFireworkSupportSquareId)) continue;
-                        int square = mSquaresMgr.GetDesignatedDirectionIndex((int)dir, mFireworkSupportSquareId);
-                        mPiecesMgr.DamageSpecifiedSquare(square, COLORLESS_ID, false, true, dir.ToString());
+                        if (!SquaresMgr.IsSquareSpecifiedDirection(dir, mFireworkSupportSquareId)) continue;
+                        int square = SquaresMgr.GetDesignatedDirectionIndex((int)dir, mFireworkSupportSquareId);
+                        PiecesMgr.DamageSpecifiedSquare(square, COLORLESS_ID, false, true, dir.ToString());
                     }
                     break;
             }
@@ -485,7 +475,7 @@ namespace PuzzleMain
                 case (int)RocketLineType.Top:
 
                     //マス無しの場合は処理終了
-                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Up, squareIndex))
+                    if (!SquaresMgr.IsSquareSpecifiedDirection(Directions.Up, squareIndex))
                         return;
 
                     //上段のマスに修正
@@ -499,7 +489,7 @@ namespace PuzzleMain
                 case (int)RocketLineType.Under:
 
                     //マス無しの場合は処理終了
-                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Down, squareIndex))
+                    if (!SquaresMgr.IsSquareSpecifiedDirection(Directions.Down, squareIndex))
                         return;
 
                     //下段のマスに修正
@@ -511,7 +501,7 @@ namespace PuzzleMain
             }
 
             //マスへダメージ
-            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
+            PiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
         }
 
 
@@ -566,7 +556,7 @@ namespace PuzzleMain
                 case (int)RocketColumnType.Right:
 
                     //マス無しの場合は処理終了
-                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Right, squareIndex))
+                    if (!SquaresMgr.IsSquareSpecifiedDirection(Directions.Right, squareIndex))
                         return;
 
                     //右列のマスに修正
@@ -580,7 +570,7 @@ namespace PuzzleMain
                 case (int)RocketColumnType.Left:
 
                     //マス無しの場合は処理終了
-                    if (!mSquaresMgr.IsSquareSpecifiedDirection(Directions.Left, squareIndex))
+                    if (!SquaresMgr.IsSquareSpecifiedDirection(Directions.Left, squareIndex))
                         return;
 
                     //左列のマスに修正
@@ -592,7 +582,7 @@ namespace PuzzleMain
             }
 
             //マスへダメージ
-            mPiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
+            PiecesMgr.DamageSpecifiedSquare(squareIndex, COLORLESS_ID, false, true, stateAddName);
         }
 
 
@@ -609,8 +599,8 @@ namespace PuzzleMain
         {
             mStarSupportSquareId = _squareId;
             int itemNum = (int)SupportItems.Star;
-            int line = mSquaresMgr.GetLineNumber(_squareId);
-            int column = mSquaresMgr.GetColumnNumber(_squareId);
+            int line = SquaresMgr.GetLineNumber(_squareId);
+            int column = SquaresMgr.GetColumnNumber(_squareId);
             float posX = mItemsInfoArr[itemNum].pos.x + SQUARE_DISTANCE * column;
             float posY = mItemsInfoArr[itemNum].pos.y - SQUARE_DISTANCE * line;
 
@@ -631,24 +621,24 @@ namespace PuzzleMain
         public void StarSupport(GameObject _obj)
         {
             //マスへダメージ
-            int sqrId = mSquaresMgr.GetSquareId(_obj);
+            int sqrId = SquaresMgr.GetSquareId(_obj);
 
             //援護済もしくはマスが取得できなかった場合は処理をスキップ
             if (sqrId < 0 || mStarSupportedSquaresList.Contains(sqrId)) return;
 
             //鉄ギミックの場合
             string addStateName = "";
-            int gimIndex = mGimmicksMgr.GetGimmickIndex_Obj(_obj);
+            int gimIndex = GimmicksMgr.GetGimmickIndex_Obj(_obj);
             if (gimIndex >= 0)
             {
                 if (sGimmickInfoArr[gimIndex].id == (int)Gimmicks.Steel)
                 {
                     //飛ばす方向を指定
                     int gimSqrId   = sGimmickInfoArr[gimIndex].nowSquareId;
-                    int gimLine    = mSquaresMgr.GetLineNumber(gimSqrId);
-                    int gimColumn  = mSquaresMgr.GetColumnNumber(gimSqrId);
-                    int starLine   = mSquaresMgr.GetLineNumber(mStarSupportSquareId);
-                    int starColumn = mSquaresMgr.GetColumnNumber(mStarSupportSquareId);
+                    int gimLine    = SquaresMgr.GetLineNumber(gimSqrId);
+                    int gimColumn  = SquaresMgr.GetColumnNumber(gimSqrId);
+                    int starLine   = SquaresMgr.GetLineNumber(mStarSupportSquareId);
+                    int starColumn = SquaresMgr.GetColumnNumber(mStarSupportSquareId);
                     bool up    = gimLine < starLine;
                     bool down  = gimLine > starLine;
                     bool left  = gimColumn < starColumn;
@@ -667,7 +657,7 @@ namespace PuzzleMain
 
             //援護開始
             mStarSupportedSquaresList.Add(sqrId);
-            mPiecesMgr.DamageSpecifiedSquare(sqrId, COLORLESS_ID, false, true, addStateName);
+            PiecesMgr.DamageSpecifiedSquare(sqrId, COLORLESS_ID, false, true, addStateName);
         }
     }
 }

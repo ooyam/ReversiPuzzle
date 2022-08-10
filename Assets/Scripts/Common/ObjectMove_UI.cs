@@ -279,6 +279,7 @@ namespace ObjectMove_UI
         /// <returns></returns>
         public static IEnumerator AllScaleChange(RectTransform tra, float scalingSpeed, float changedScale)
         {
+            if (tra == null) yield break;
             Vector3 nowScale = tra.localScale;         //現在のスケール
             bool scaleUp = nowScale.x < changedScale;  //拡大？
 

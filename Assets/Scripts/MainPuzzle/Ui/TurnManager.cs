@@ -9,10 +9,6 @@ namespace PuzzleMain.Ui
 {
     public class TurnManager : MonoBehaviour
     {
-        PiecesManager   mPiecesMgr;     //PiecesManager
-        GimmicksManager mGimmicksMgr;   //GimmicksManager
-        TargetManager   mTargetMgr;     //TargetManager
-
         [Header("ターン数ウィンドウ(通常)のSprite取得")]
         [SerializeField]
         Sprite mTurnWindowNormalSpr;
@@ -42,10 +38,6 @@ namespace PuzzleMain.Ui
         /// </summary>
         public void Initialize()
         {
-            mPiecesMgr   = sPuzzleMain.GetPiecesManager();
-            mGimmicksMgr = sPuzzleMain.GetGimmicksManager();
-            mTargetMgr   = sPuzzleMain.GetTargetManager();
-
             if (TURN_MAX < TURN_COUNT) TURN_COUNT = TURN_MAX;
             mNumberText.text = TURN_COUNT.ToString();
             if (TURN_COUNT <= RED_LINE) WindowChange(true);
@@ -68,7 +60,7 @@ namespace PuzzleMain.Ui
         public IEnumerator TurnRecovery_AdReward()
         {
             //フィルター解除
-            sPuzzleMain.GetCanvasManager().SetFilter(false);
+            CanvasMgr.SetFilter(false);
 
             //回復
             for (int i = 0; i < REWARD_RECOVERY_COUNT; i++)
@@ -117,26 +109,26 @@ namespace PuzzleMain.Ui
             NOW_TURN_END_PROCESSING = true;
 
             //特定ギミック破壊判定開始
-            yield return StartCoroutine(mGimmicksMgr.DestroyGimmicks_TurnEnd());
+            yield return StartCoroutine(GimmicksMgr.DestroyGimmicks_TurnEnd());
 
             //自由落下
-            yield return StartCoroutine(mPiecesMgr.StratFallingPieces());
+            yield return StartCoroutine(PiecesMgr.StratFallingPieces());
 
             //援護アイテム未使用時
             if (!supportItem)
             {
                 //ギミック状態変化開始
-                yield return StartCoroutine(mGimmicksMgr.ChangeGimmickState());
+                yield return StartCoroutine(GimmicksMgr.ChangeGimmickState());
             }
 
             //特定ギミック破壊判定開始
-            yield return StartCoroutine(mGimmicksMgr.DestroyGimmicks_TurnEnd());
+            yield return StartCoroutine(GimmicksMgr.DestroyGimmicks_TurnEnd());
 
             //ギミックターン終了処理
-            mGimmicksMgr.ResetTurnInfo();
+            GimmicksMgr.ResetTurnInfo();
 
             //目標残数確認
-            mTargetMgr.TargetCheck();
+            TargetMgr.TargetCheck();
 
             //ターン数確認
             if (!GAME_CLEAR) TurnCountCheck();

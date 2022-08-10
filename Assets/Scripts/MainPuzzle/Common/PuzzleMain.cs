@@ -11,6 +11,11 @@ namespace PuzzleMain
 {
     public class PuzzleMain : MonoBehaviour
     {
+        [Header("Managers")]
+        [SerializeField]
+        GameObject mManagers;
+
+#if !DO_COMPLIE
         [Header("ScreenTap")]
         [SerializeField]
         ScreenTap mScreenTap;
@@ -46,6 +51,19 @@ namespace PuzzleMain
         [Header("CanvasManager")]
         [SerializeField]
         CanvasManager mCanvasManager;
+#endif
+
+        //--------Manager--------//
+        public static ScreenTap             ScreenTap       { get; private set; }
+        public static SquaresManager        SquaresMgr      { get; private set; }
+        public static PiecesManager         PiecesMgr       { get; private set; }
+        public static GimmicksManager       GimmicksMgr     { get; private set; }
+        public static SupportItemsManager   SupportItemsMgr { get; private set; }
+        public static TargetManager         TargetMgr       { get; private set; }
+        public static TurnManager           TurnMgr         { get; private set; }
+        public static ResultManager         ResultMgr       { get; private set; }
+        public static CanvasManager         CanvasMgr       { get; private set; }
+        //------------------------//
 
         //----スタティック変数----//
         public static PuzzleMain            sPuzzleMain;                                //自身のインスタンス
@@ -88,7 +106,7 @@ namespace PuzzleMain
         public void GameOver()
         {
             GAME_OVER = true;
-            StartCoroutine(mResultManager.GenerateGameOverObj());
+            StartCoroutine(ResultMgr.GenerateGameOverObj());
         }
 
         /// <summary>
@@ -97,7 +115,7 @@ namespace PuzzleMain
         public void GameClear()
         {
             GAME_CLEAR = true;
-            StartCoroutine(mResultManager.GenerateGameClearObj());
+            StartCoroutine(ResultMgr.GenerateGameClearObj());
         }
 
         /// <summary>
@@ -105,6 +123,28 @@ namespace PuzzleMain
         /// </summary>
         void PuzzuleInitialize()
         {
+            //Manager取得
+#if !DO_COMPLIE
+            ScreenTap = mScreenTap;
+            SquaresMgr = mSquaresManager;
+            PiecesMgr = mPiecesManager;
+            GimmicksMgr = mGimmicksManager;
+            SupportItemsMgr = mSupportItemsManager;
+            TargetMgr = mTargetManager;
+            TurnMgr = mTurnManager;
+            ResultMgr = mResultManager;
+            CanvasMgr = mCanvasManager;
+#endif
+            ScreenTap       = mManagers.GetComponent<ScreenTap>();
+            SquaresMgr      = mManagers.GetComponent<SquaresManager>();
+            PiecesMgr       = mManagers.GetComponent<PiecesManager>();
+            GimmicksMgr     = mManagers.GetComponent<GimmicksManager>();
+            SupportItemsMgr = mManagers.GetComponent<SupportItemsManager>();
+            TargetMgr       = mManagers.GetComponent<TargetManager>();
+            TurnMgr         = mManagers.GetComponent<TurnManager>();
+            ResultMgr       = mManagers.GetComponent<ResultManager>();
+            CanvasMgr       = mManagers.GetComponent<CanvasManager>();
+
             //ギミックのデータベース読み込み
             GetGimmicksData();
 
@@ -112,82 +152,26 @@ namespace PuzzleMain
             StageSetting();
 
             //ScreenTapの初期化
-            mScreenTap.Initialize();
+            ScreenTap.Initialize();
 
             //SquaresManagerの初期化
-            mSquaresManager.Initialize();
+            SquaresMgr.Initialize();
 
             //GimmicksManagerの初期化
-            mGimmicksManager.Initialize();
+            GimmicksMgr.Initialize();
 
             //PiecesManagerの初期化
-            mPiecesManager.Initialize();
+            PiecesMgr.Initialize();
 
             //SupportItemsManagerの初期化
-            mSupportItemsManager.Initialize();
+            SupportItemsMgr.Initialize();
 
             //TargetManagerの初期化
-            mTargetManager.Initialize();
+            TargetMgr.Initialize();
 
             //TurnManagerの初期化
-            mTurnManager.Initialize();
+            TurnMgr.Initialize();
         }
-
-        /// <summary>
-        /// SquaresManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public SquaresManager GetSquaresManager()
-        {  return mSquaresManager; }
-
-        /// <summary>
-        /// PiecesManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public PiecesManager GetPiecesManager()
-        {  return mPiecesManager; }
-
-        /// <summary>
-        /// GimmicksManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public GimmicksManager GetGimmicksManager()
-        { return mGimmicksManager; }
-
-        /// <summary>
-        /// SupportItemsManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public SupportItemsManager GetSupportItemsManager()
-        { return mSupportItemsManager; }
-
-        /// <summary>
-        /// TargetManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public TargetManager GetTargetManager()
-        { return mTargetManager; }
-
-        /// <summary>
-        /// TurnManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public TurnManager GetTurnManager()
-        { return mTurnManager; }
-
-        /// <summary>
-        /// ResultManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public ResultManager GetResultManager()
-        { return mResultManager; }
-
-        /// <summary>
-        /// CanvasManagerの取得
-        /// </summary>
-        /// <returns></returns>
-        public CanvasManager GetCanvasManager()
-        { return mCanvasManager; }
 
 #if !DO_COMPLIE
         /// <summary>

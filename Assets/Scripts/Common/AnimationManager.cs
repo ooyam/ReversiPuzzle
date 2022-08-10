@@ -19,6 +19,7 @@ namespace animation
         public const string STATE_NAME_ACTIVE       = "Active";         //アクティブ
         public const string STATE_NAME_INACTIVE     = "Inactive";       //非アクティブ
         public const string STATE_NAME_APPEARANCE   = "Appearance";     //出現
+        public const string STATE_NAME_EFFECT       = "Effect";         //演出
 
         //===============================================//
         //===========アニメーション動作関数==============//
@@ -42,11 +43,11 @@ namespace animation
         }
 
         /// <summary>
-        /// ループアニメーション再生
+        /// アニメーション再生(待機無し)
         /// </summary>
         /// <param name="ani">      破壊するオブジェクトのAnimator</param>
         /// <param name="stateName">再生アニメーションステート名</param>
-        public static void LoopAnimationStart(Animator ani, string stateName = STATE_NAME_EMPTY)
+        public static void AnimationPlay(Animator ani, string stateName = STATE_NAME_EMPTY)
         {
             //アニメーション開始
             ani.Play(stateName, 0, 0.0f);

@@ -12,10 +12,6 @@ namespace PuzzleMain
 {
     public class GimmicksManager : MonoBehaviour
     {
-        SquaresManager squaresMgr;  //SquaresManager
-        PiecesManager  piecesMgr;   //PiecesManager
-        TargetManager  targetMgr;   //TargetManager
-
         [Header("ギミックプレハブの取得")]
         public GimmickArr[] gimmickPrefabArr;
         [Serializable]
@@ -74,10 +70,6 @@ namespace PuzzleMain
         /// </summary>
         public void Initialize()
         {
-            squaresMgr = sPuzzleMain.GetSquaresManager();
-            piecesMgr  = sPuzzleMain.GetPiecesManager();
-            targetMgr  = sPuzzleMain.GetTargetManager();
-
             //ギミック生成
             sGimmickObjArr  = new GameObject[GIMMICKS_DEPLOY_COUNT];
             sGimmickInfoArr = new GimmickInformation[GIMMICKS_DEPLOY_COUNT];
@@ -252,7 +244,7 @@ namespace PuzzleMain
             {
                 //破壊リストに追加
                 sDestroyPiecesIndexList.Add(squareIndex);
-                targetMgr.TargetDecreaseCheck(INT_NULL, gimmInfo.id);
+                TargetMgr.TargetDecreaseCheck(INT_NULL, gimmInfo.id);
             }
         }
 
@@ -362,7 +354,7 @@ namespace PuzzleMain
                                 //マスの色変更
                                 if (!changedSquare.Contains(gimmInfo.startSquareId))
                                 {
-                                    coroutine = StartCoroutine(squaresMgr.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
+                                    coroutine = StartCoroutine(SquaresMgr.SquareColorChange(GetSquareColor(gimmInfo.colorId), gimmInfo.startSquareId, true));
                                     coroutineList.Add(coroutine);
                                     changedSquare.Add(gimmInfo.startSquareId);
                                 }
@@ -546,7 +538,7 @@ namespace PuzzleMain
 
                     //マスの色指定
                     Color color = GetSquareColor(groupColorNumArr[groupId]);
-                    StartCoroutine(squaresMgr.SquareColorChange(color, squareIndex, false));
+                    StartCoroutine(SquaresMgr.SquareColorChange(color, squareIndex, false));
                 }
                 groupId++;
             }
@@ -565,7 +557,7 @@ namespace PuzzleMain
             //フレーム生成,配置
             GameObject frameObj = Instantiate(gimmickPrefabArr[(int)Gimmicks.Frame].prefab[(int)direction]);
             frameObjListArr[groupId].Add(frameObj);
-            piecesMgr.PlaceGimmick(frameObj, squareIndex);
+            PiecesMgr.PlaceGimmick(frameObj, squareIndex);
 
             //フレームギミックの情報取得
             GimmickInformation gimInfo = frameObj.GetComponent<GimmickInformation>();
@@ -637,7 +629,7 @@ namespace PuzzleMain
                     yield return coroutine;
 
                     //目標確認
-                    targetMgr.TargetDecreaseCheck(INT_NULL, frameInfoListArr[groupId][0].id);
+                    TargetMgr.TargetDecreaseCheck(INT_NULL, frameInfoListArr[groupId][0].id);
 
                     //ギミック破壊
                     foreach (GameObject obj in frameObjListArr[groupId])
@@ -649,7 +641,7 @@ namespace PuzzleMain
 
                     //マスの色を戻す
                     foreach (int i in squareList)
-                    { StartCoroutine(squaresMgr.SquareColorChange(SQUARE_WHITE, i, true)); }
+                    { StartCoroutine(SquaresMgr.SquareColorChange(SQUARE_WHITE, i, true)); }
                     frameSquareIdListArr[groupId] = null;
                 }
 
@@ -696,7 +688,7 @@ namespace PuzzleMain
                 cageObjArr[i]  = Instantiate(gimmickPrefabArr[cageInfo[GIMMICK]].prefab[0]);
                 cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
                 cageSquareIdArr[i] = cageInfo[SQUARE];
-                piecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
+                PiecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
                 cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SQUARE], cageInfo[GIMMICK], NOT_NUM);
                 sGimmickInfoArr[cageInfoArr[i].settingIndex] = cageInfoArr[i];
                 cageInfoArr[i].spriRenChild[CAGE_BOBM].sprite = CageBobmSprArr[cageInfo[COLOR]];
@@ -804,13 +796,13 @@ namespace PuzzleMain
             {
                 //駒の操作フラグ切替
                 foreach (int squareId in cageInfoArr[desIndex].innerSquaresId)
-                { piecesMgr.PieceOperationFlagChange(squareId, true); }
+                { PiecesMgr.PieceOperationFlagChange(squareId, true); }
 
                 //オブジェクト破壊
                 Destroy(cageObjArr[desIndex]);
 
                 //目標確認
-                targetMgr.TargetDecreaseCheck(INT_NULL, (int)Gimmicks.Cage);
+                TargetMgr.TargetDecreaseCheck(INT_NULL, (int)Gimmicks.Cage);
 
                 //管理配列リセット
                 cageObjArr[desIndex] = null;           //檻オブジェクトリスト
@@ -871,10 +863,10 @@ namespace PuzzleMain
             attackPiecesList.Add(attackSquareId);
 
             //移動する座標を算出
-            int thiefLine   = squaresMgr.GetLineNumber(gimInfo.nowSquareId);
-            int thiefColumn = squaresMgr.GetColumnNumber(gimInfo.nowSquareId);
-            int pieseLine   = squaresMgr.GetLineNumber(attackSquareId);
-            int pieseColumn = squaresMgr.GetColumnNumber(attackSquareId);
+            int thiefLine   = SquaresMgr.GetLineNumber(gimInfo.nowSquareId);
+            int thiefColumn = SquaresMgr.GetColumnNumber(gimInfo.nowSquareId);
+            int pieseLine   = SquaresMgr.GetLineNumber(attackSquareId);
+            int pieseColumn = SquaresMgr.GetColumnNumber(attackSquareId);
             int moveLine = pieseLine - thiefLine;
             int moveColumn = pieseColumn - thiefColumn;
             Vector3 movePos = new Vector3(moveColumn * SQUARE_DISTANCE, -moveLine * SQUARE_DISTANCE, Z_GIMMICK);
@@ -904,8 +896,8 @@ namespace PuzzleMain
             yield return StartCoroutine(AnimationStart(gimInfo.ani, STATE_NAME_ATTACK + attackNumber.ToString()));
 
             //駒の反転開始
-            int generateColor = piecesMgr.GetRandomPieceColor(piecesMgr.GetSquarePieceColorId(attackSquareId));
-            StartCoroutine(piecesMgr.ReversingPieces(attackSquareId, generateColor));
+            int generateColor = PiecesMgr.GetRandomPieceColor(PiecesMgr.GetSquarePieceColorId(attackSquareId));
+            StartCoroutine(PiecesMgr.ReversingPieces(attackSquareId, generateColor));
 
             //攻撃アニメーション
             attackNumber++;
@@ -928,7 +920,7 @@ namespace PuzzleMain
             gimInfo.tra.rotation = DEFAULT_QUEST;
 
             //待機アニメーション
-            LoopAnimationStart(gimInfo.ani);
+            AnimationPlay(gimInfo.ani);
         }
 
 
@@ -979,10 +971,10 @@ namespace PuzzleMain
                     atkPossibleSquares[(int)dir] = false;
 
                     //竜巻が盤の端にある場合は処理スキップ
-                    if (!squaresMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
+                    if (!SquaresMgr.IsSquareSpecifiedDirection(dir, nowSquareId)) continue;
 
                     //各方向のマス管理番号取得
-                    int piecesIndex = squaresMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
+                    int piecesIndex = SquaresMgr.GetDesignatedDirectionIndex((int)dir, nowSquareId);
 
                     //すでに攻撃予定駒の場合は処理スキップ
                     if (attackPiecesList.Contains(piecesIndex)) continue;
@@ -1157,9 +1149,9 @@ namespace PuzzleMain
         public void TornadoAttackPieceChange(GimmickInformation gimInfo, int atkNum)
         {
             int gimIndex = tornadoInfoList.IndexOf(gimInfo);
-            int nowPieceColor = piecesMgr.GetSquarePieceColorId(tornadoAttackInfoArr[gimIndex][atkNum]);
+            int nowPieceColor = PiecesMgr.GetSquarePieceColorId(tornadoAttackInfoArr[gimIndex][atkNum]);
 
-            StartCoroutine(piecesMgr.ReversingPieces(tornadoAttackInfoArr[gimIndex][atkNum], piecesMgr.GetRandomPieceColor(nowPieceColor)));
+            StartCoroutine(PiecesMgr.ReversingPieces(tornadoAttackInfoArr[gimIndex][atkNum], PiecesMgr.GetRandomPieceColor(nowPieceColor)));
         }
     }
 }

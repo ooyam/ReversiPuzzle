@@ -11,12 +11,6 @@ namespace PuzzleMain
 {
     public class PiecesManager : MonoBehaviour
     {
-        SquaresManager      squaresMgr;     //SquaresManager
-        GimmicksManager     gimmicksMgr;    //GimmicksManager
-        SupportItemsManager stItemsMgr;     //SupportItemsManager
-        TargetManager       targetMgr;      //TargetManager
-        TurnManager         turnMgr;        //TurnManager
-
         [Header("駒プレハブの取得")]
         [SerializeField]
         GameObject[] piecePrefabArr;
@@ -40,13 +34,6 @@ namespace PuzzleMain
         /// </summary>
         public void Initialize()
         {
-            //他クラス取得
-            squaresMgr  = sPuzzleMain.GetSquaresManager();
-            gimmicksMgr = sPuzzleMain.GetGimmicksManager();
-            stItemsMgr  = sPuzzleMain.GetSupportItemsManager();
-            targetMgr   = sPuzzleMain.GetTargetManager();
-            turnMgr     = sPuzzleMain.GetTurnManager();
-
             pieceTraArr   = new Transform[SQUARES_COUNT];
             sPieceObjArr  = new GameObject[SQUARES_COUNT];
             sPieceInfoArr = new PieceInformation[SQUARES_COUNT];
@@ -182,7 +169,7 @@ namespace PuzzleMain
         /// /// <param name="gimmickObj">削除駒</param>
         public void DeleteGimmick(GameObject gimmickObj)
         {
-            sGimmickObjArr[gimmicksMgr.GetGimmickIndex_Obj(gimmickObj)] = null;
+            sGimmickObjArr[GimmicksMgr.GetGimmickIndex_Obj(gimmickObj)] = null;
 
             DeletePiece(Array.IndexOf(sPieceObjArr, gimmickObj));
         }
@@ -204,7 +191,7 @@ namespace PuzzleMain
             sPieceInfoArr[oldIndex] = null;
             if (sPieceInfoArr[newIndex] != null) sPieceInfoArr[newIndex].squareId = newIndex;
 
-            int gimIndex = gimmicksMgr.GetGimmickIndex_Square(newIndex);
+            int gimIndex = GimmicksMgr.GetGimmickIndex_Square(newIndex);
             if (gimIndex >= 0) sGimmickInfoArr[gimIndex].nowSquareId = newIndex;
         }
 
@@ -293,7 +280,7 @@ namespace PuzzleMain
                 //援護アイテム準備中の場合
                 if (NOW_SUPPORT_ITEM_READY)
                 {
-                    StartCoroutine(stItemsMgr.UseItems(pieceObjIndex));
+                    StartCoroutine(SupportItemsMgr.UseItems(pieceObjIndex));
                 }
                 //駒反転(反転フラグ確認)
                 else if (sPieceInfoArr[pieceObjIndex].invertable)
@@ -307,10 +294,10 @@ namespace PuzzleMain
                 //援護アイテム準備中の場合は解除
                 if (NOW_SUPPORT_ITEM_READY)
                 {
-                    stItemsMgr.ResetWaitItemReady();
+                    SupportItemsMgr.ResetWaitItemReady();
                 }
                 nextPuPieceIndex = nextPieceObjIndex;
-                squaresMgr.MoveNextPieceFrame(nextPuPieceIndex);
+                SquaresMgr.MoveNextPieceFrame(nextPuPieceIndex);
             }
         }
 
@@ -330,11 +317,11 @@ namespace PuzzleMain
             if (sPieceObjArr[squareIndex].CompareTag(GIMMICK_TAG))
             {
                 //ダメージ判定
-                int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(squareIndex);
-                bool damage = gimmicksMgr.DamageCheck(ref sGimmickInfoArr[gimmickIndex].colorId, ref gimmickIndex, assault);
+                int gimmickIndex = GimmicksMgr.GetGimmickIndex_Square(squareIndex);
+                bool damage = GimmicksMgr.DamageCheck(ref sGimmickInfoArr[gimmickIndex].colorId, ref gimmickIndex, assault);
 
                 //ダメージ有の場合
-                if (damage) gimmicksMgr.DamageGimmick(ref gimmickIndex, squareIndex, stateAddName);
+                if (damage) GimmicksMgr.DamageGimmick(ref gimmickIndex, squareIndex, stateAddName);
             }
             //駒
             else
@@ -373,7 +360,7 @@ namespace PuzzleMain
         IEnumerator PutPieceToSquare(GameObject deletePiece)
         {
             //ターン数減少
-            turnMgr.TurnDecrease();
+            TurnMgr.TurnDecrease();
 
             //配置中フラグセット
             NOW_PUTTING_PIECES = true;
@@ -420,7 +407,7 @@ namespace PuzzleMain
             else
             {
                 //ターン終了処理開始
-                StartCoroutine(turnMgr.TurnEnd());
+                StartCoroutine(TurnMgr.TurnEnd());
             }
 
             //配置中フラグリセット
@@ -437,8 +424,8 @@ namespace PuzzleMain
         bool GetReversIndex(int putPieceIndex, ref int putPieceColorId, ref List<int[]> reversIndexList)
         {
             //同タグ番号取得
-            int sqrCountUp    = squaresMgr.GetLineNumber(putPieceIndex);    //置いた駒の上にあるマスの数
-            int sqrCountLeft  = squaresMgr.GetColumnNumber(putPieceIndex);  //置いた駒の左にあるマスの数
+            int sqrCountUp    = SquaresMgr.GetLineNumber(putPieceIndex);    //置いた駒の上にあるマスの数
+            int sqrCountLeft  = SquaresMgr.GetColumnNumber(putPieceIndex);  //置いた駒の左にあるマスの数
             int sqrCountDown  = BOARD_LINE_COUNT - sqrCountUp - 1;          //置いた駒の下にあるマスの数
             int sqrCountRight = BOARD_COLUMN_COUNT - sqrCountLeft - 1;      //置いた駒の右にあるマスの数
 
@@ -448,7 +435,7 @@ namespace PuzzleMain
             foreach (Directions directions in Enum.GetValues(typeof(Directions)))
             {
                 //各方向毎の処理回数設定
-                loopCounts[(int)directions] = squaresMgr.SetLoopCount(directions, ref sqrCountUp, ref sqrCountRight, ref sqrCountDown, ref sqrCountLeft);
+                loopCounts[(int)directions] = SquaresMgr.SetLoopCount(directions, ref sqrCountUp, ref sqrCountRight, ref sqrCountDown, ref sqrCountLeft);
 
                 //順番判定ギミックが存在するか？
                 dummyArr[(int)directions] = new int[] { (int)directions, GetOrderIndex(ref putPieceIndex, ref loopCounts[(int)directions], (int)directions) };
@@ -507,7 +494,7 @@ namespace PuzzleMain
             for (int i = 1; i <= loopCount; i++)
             {
                 //指定方向のインデックス番号取得
-                int refIndex = squaresMgr.GetDesignatedDirectionIndex(direction, putPieceIndex, i);
+                int refIndex = SquaresMgr.GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
                 if (sPieceObjArr[refIndex] == null) return NOT_NUM;
@@ -516,7 +503,7 @@ namespace PuzzleMain
                 if (sPieceObjArr[refIndex].CompareTag(GIMMICK_TAG))
                 {
                     //順番指定がある場合
-                    int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(refIndex);
+                    int gimmickIndex = GimmicksMgr.GetGimmickIndex_Square(refIndex);
                     if (sGimmickInfoArr[gimmickIndex].order != NOT_NUM)
                         return sGimmickInfoArr[gimmickIndex].order;
                 }
@@ -539,7 +526,7 @@ namespace PuzzleMain
             for (int i = 1; i <= loopCount; i++)
             {
                 //指定方向のインデックス番号取得
-                int refIndex = squaresMgr.GetDesignatedDirectionIndex(direction, putPieceIndex, i);
+                int refIndex = SquaresMgr.GetDesignatedDirectionIndex(direction, putPieceIndex, i);
 
                 //空マスの場合はnullを返す
                 if (sPieceObjArr[refIndex] == null) break;
@@ -548,9 +535,9 @@ namespace PuzzleMain
                 if (sPieceObjArr[refIndex].CompareTag(GIMMICK_TAG))
                 {
                     //ダメージを与えられるかの確認,ダメージが与えられない場合はnullを返す
-                    int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(refIndex);
+                    int gimmickIndex = GimmicksMgr.GetGimmickIndex_Square(refIndex);
                     if (!sGimmickInfoArr[gimmickIndex].destructible_Piece) break;
-                    if (!gimmicksMgr.DamageCheck(ref putPieceColorId, ref gimmickIndex)) break;
+                    if (!GimmicksMgr.DamageCheck(ref putPieceColorId, ref gimmickIndex)) break;
                     if (sGimmickInfoArr[gimmickIndex].order != NOT_NUM) orderCount++;    //順番判定を通過した場合はカウント
                     reversIndexList.Add(refIndex);
                 }
@@ -641,10 +628,10 @@ namespace PuzzleMain
                 foreach (int reversIndex in reversIndexArr)
                 {
                     //ギミックであればギミック破壊動作に移る
-                    int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(reversIndex);
+                    int gimmickIndex = GimmicksMgr.GetGimmickIndex_Square(reversIndex);
                     if (gimmickIndex >= 0)
                     {
-                        gimmicksMgr.DamageGimmick(ref gimmickIndex, reversIndex);
+                        GimmicksMgr.DamageGimmick(ref gimmickIndex, reversIndex);
                         yield return PIECE_REVERSAL_INTERVAL;
                         continue;
                     }
@@ -713,10 +700,10 @@ namespace PuzzleMain
         void PieceReverseCount(int colorId)
         {
             //駒カウントギミックにダメージ(反転駒)
-            StartCoroutine(gimmicksMgr.DamageCage(colorId));    //檻
+            StartCoroutine(GimmicksMgr.DamageCage(colorId));    //檻
 
             //目標減少確認
-            targetMgr.TargetDecreaseCheck(colorId);
+            TargetMgr.TargetDecreaseCheck(colorId);
         }
 
         //==========================================================//
@@ -771,7 +758,7 @@ namespace PuzzleMain
             yield return coroutine;
             
             //援護アイテム生成
-           　if (!useSupport) stItemsMgr.GenerateItems();
+           　if (!useSupport) SupportItemsMgr.GenerateItems();
 
             //駒削除
             foreach (int pieceIndex in sDestroyPiecesIndexList)
@@ -789,7 +776,7 @@ namespace PuzzleMain
             yield return StartCoroutine(StratFallingPieces());
 
             //ターン終了
-            StartCoroutine(turnMgr.TurnEnd(useSupport));
+            StartCoroutine(TurnMgr.TurnEnd(useSupport));
 
             //破壊中フラグリセット
             NOW_DESTROYING_PIECES = false;
@@ -813,7 +800,7 @@ namespace PuzzleMain
                 if (pieceTraArr[fallPieceIndex] != null)
                 {
                     Vector3 targetPos = PIECE_DEFAULT_POS;
-                    int gimmickIndex = gimmicksMgr.GetGimmickIndex_Square(fallPieceIndex);
+                    int gimmickIndex = GimmicksMgr.GetGimmickIndex_Square(fallPieceIndex);
                     if (gimmickIndex >= 0) targetPos = sGimmickInfoArr[gimmickIndex].defaultPos;
                     coroutineList.Add(StartCoroutine(ConstantSpeedMovement(pieceTraArr[fallPieceIndex], FALL_PIECE_MOVE_SPEED, targetPos, FALL_PIECE_ACCELE_RATE)));
                 }
@@ -844,7 +831,7 @@ namespace PuzzleMain
                 fallPiecesIndexList.Add(i);
 
                 //駒の上にある管理番号をすべて調査
-                int loopCount = squaresMgr.GetLineNumber(i);
+                int loopCount = SquaresMgr.GetLineNumber(i);
                 for (int n = 0; n <= loopCount; n++)
                 {
                     //自身よりn個上の番号が空でない場合
@@ -887,7 +874,7 @@ namespace PuzzleMain
             else if (pieceObj.CompareTag(GIMMICK_TAG))
             {
                 //ギミックの場合
-                int gimmickObjIndex = gimmicksMgr.GetGimmickIndex_Obj(pieceObj);
+                int gimmickObjIndex = GimmicksMgr.GetGimmickIndex_Obj(pieceObj);
                 if (sGimmickInfoArr[gimmickObjIndex].inSquare && !sGimmickInfoArr[gimmickObjIndex].freeFall_Piece)
                 {
                     return false;

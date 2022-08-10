@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 05d7b16c4b5944844bb1d1ceab47ba29
+guid: a8d55bab2f149ac4a98f34f5dec3a182
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5924152097671645703
-    second: background_3_0
+      213: -4346244404228752641
+    second: Arrow_Right
+  - first:
+      213: -6662812116773042688
+    second: Arrow_Right_White
+  - first:
+      213: -2292719611878453243
+    second: Arrow_Left
+  - first:
+      213: 5946551882310926714
+    second: Arrow_Left_White
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -130,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: background_3_0
+      name: Arrow_Right
       rect:
         serializedVersion: 2
-        x: 7
-        y: 0
-        width: 540
-        height: 960
+        x: 99
+        y: 510
+        width: 117
+        height: 117
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,8 +153,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 70a8a1102f0d63250800000000000000
-      internalID: 5924152097671645703
+      spriteID: ffa7ae2edb90fa3c0800000000000000
+      internalID: -4346244404228752641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Right_White
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 994
+        width: 117
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 006039e4eafe883a0800000000000000
+      internalID: -6662812116773042688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Left
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 994
+        width: 117
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 500d96c09af9e20e0800000000000000
+      internalID: -2292719611878453243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Left_White
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 994
+        width: 117
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a71c2974e65668250800000000000000
+      internalID: 5946551882310926714
       vertices: []
       indices: 
       edges: []

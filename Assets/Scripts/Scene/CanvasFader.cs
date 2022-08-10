@@ -1,4 +1,4 @@
-ï»¿//  CanvasFader.cs
+//  CanvasFader.cs
 //  http://kan-kikuchi.hatenablog.com/entry/SceneNavigator
 //
 //  Created by kan.kikuchi on 2017.05.14.
@@ -10,12 +10,12 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(CanvasGroup))]
 /// <summary>
-/// ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚’ãƒ•ã‚§ãƒ¼ãƒ‰ã™ã‚‹ã‚¯ãƒ©ã‚¹
+/// ƒLƒƒƒ“ƒoƒX‚ğƒtƒF[ƒh‚·‚éƒNƒ‰ƒX
 /// </summary>
 public class CanvasFader : MonoBehaviour
 {
 
-    //ãƒ•ã‚§ãƒ¼ãƒ‰ç”¨ã®ã‚­ãƒ£ãƒ³ãƒã‚¹ã¨ãã®ã‚¢ãƒ«ãƒ•ã‚¡å€¤
+    //ƒtƒF[ƒh—p‚ÌƒLƒƒƒ“ƒoƒX‚Æ‚»‚ÌƒAƒ‹ƒtƒ@’l
     private CanvasGroup _canvasGroupEntity;
     private CanvasGroup _canvasGroup
     {
@@ -44,33 +44,33 @@ public class CanvasFader : MonoBehaviour
         }
     }
 
-    //ãƒ•ã‚§ãƒ¼ãƒ‰ã®çŠ¶æ…‹
+    //ƒtƒF[ƒh‚Ìó‘Ô
     private enum FadeState
     {
         None, FadeIn, FadeOut
     }
     private FadeState _fadeState = FadeState.None;
 
-    //ãƒ•ã‚§ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹ã‹
+    //ƒtƒF[ƒh‚µ‚Ä‚¢‚é‚©
     public bool IsFading
     {
         get { return _fadeState != FadeState.None; }
     }
 
-    //ãƒ•ã‚§ãƒ¼ãƒ‰æ™‚é–“
+    //ƒtƒF[ƒhŠÔ
     [SerializeField]
     private float _duration;
     public float Duration { get { return _duration; } }
 
-    //ã‚¿ã‚¤ãƒ ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ç„¡è¦–ã™ã‚‹ã‹
+    //ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğ–³‹‚·‚é‚©
     [SerializeField]
     private bool _ignoreTimeScale = true;
 
-    //ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†å¾Œã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+    //ƒtƒF[ƒhI—¹Œã‚ÌƒR[ƒ‹ƒoƒbƒN
     private event Action _onFinished = null;
 
     //=================================================================================
-    //æ›´æ–°
+    //XV
     //=================================================================================
 
     private void Update()
@@ -92,7 +92,7 @@ public class CanvasFader : MonoBehaviour
 
         Alpha += fadeSpeed * (_fadeState == FadeState.FadeIn ? 1f : -1f);
 
-        //ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†åˆ¤å®š
+        //ƒtƒF[ƒhI—¹”»’è
         if (Alpha > 0 && Alpha < 1)
         {
             return;
@@ -108,11 +108,11 @@ public class CanvasFader : MonoBehaviour
     }
 
     //=================================================================================
-    //é–‹å§‹
+    //ŠJn
     //=================================================================================
 
     /// <summary>
-    /// å¯¾è±¡ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ•ã‚§ãƒ¼ãƒ‰ã‚’é–‹å§‹ã™ã‚‹
+    /// ‘ÎÛ‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒtƒF[ƒh‚ğŠJn‚·‚é
     /// </summary>
     public static void Begin(GameObject target, bool isFadeOut, float duration)
     {
@@ -128,7 +128,7 @@ public class CanvasFader : MonoBehaviour
     }
 
     /// <summary>
-    /// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚’é–‹å§‹ã™ã‚‹
+    /// ƒtƒF[ƒh‚ğŠJn‚·‚é
     /// </summary>
     public void Play(bool isFadeOut, float duration, bool ignoreTimeScale = true, Action onFinished = null)
     {
@@ -144,11 +144,11 @@ public class CanvasFader : MonoBehaviour
     }
 
     //=================================================================================
-    //åœæ­¢
+    //’â~
     //=================================================================================
 
     /// <summary>
-    /// ãƒ•ã‚§ãƒ¼ãƒ‰åœæ­¢
+    /// ƒtƒF[ƒh’â~
     /// </summary>
     public void Stop()
     {

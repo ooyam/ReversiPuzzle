@@ -8,16 +8,12 @@ using static PuzzleMain.PuzzleMain;
 
 public class ScreenTap : MonoBehaviour
 {
-    PiecesManager piecesMgr;        //PiecesManager
-    SupportItemsManager stItemsMgr; //SupportItemsManager
     Camera mainCamera;              //メインカメラ
     const float rayDistance = 10.0f;
 
     public void Initialize()
     {
         mainCamera = Camera.main;
-        piecesMgr  = sPuzzleMain.GetPiecesManager();
-        stItemsMgr = sPuzzleMain.GetSupportItemsManager();
     }
 
     void Update()
@@ -38,12 +34,12 @@ public class ScreenTap : MonoBehaviour
                         //駒,ギミック
                         case PIECE_TAG:
                         case GIMMICK_TAG:
-                            piecesMgr.TapObject(hitCollider.gameObject);
+                            PiecesMgr.TapObject(hitCollider.gameObject);
                             break;
 
                         //援護アイテム
                         case SUPPORT_ITEM_TAG:
-                            stItemsMgr.TapItem(hitCollider.gameObject);
+                            SupportItemsMgr.TapItem(hitCollider.gameObject);
                             break;
                     }
                 }

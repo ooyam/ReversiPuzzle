@@ -2,11 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PuzzleMain.PuzzleMain;
+using static Title.TitleMain;
 
 namespace Ui
 {
     public class ButtonController : MonoBehaviour
     {
+        //==========================================================//
+        //-----------------------タイトル画面-----------------------//
+        //==========================================================//
+
+        /// <summary>
+        /// スタート
+        /// </summary>
+        public void IsPushStart_Title()
+        {
+            TitleMgr.IsPushStart();
+        }
+
+        /// <summary>
+        /// もどる
+        /// </summary>
+        public void IsPushBack_Title()
+        {
+            TitleMgr.IsPushBack();
+        }
+
+        /// <summary>
+        /// 右矢印
+        /// </summary>
+        public void IsPushRightArrow_Title()
+        {
+            TitleMgr.IsPushRightArrow();
+        }
+
+        /// <summary>
+        /// 左矢印
+        /// </summary>
+        public void IsPushLeftArrow_Title()
+        {
+            TitleMgr.IsPushLeftArrow();
+        }
+
+        
         //==========================================================//
         //---------------------ゲームオーバー画面-------------------//
         //==========================================================//
@@ -16,7 +54,7 @@ namespace Ui
         /// </summary>
         public void IsPushSeeAbs_GameOver()
         {
-            sPuzzleMain.GetResultManager().IsPushSeeAbs();
+            ResultMgr.IsPushSeeAbs();
         }
 
         /// <summary>
@@ -24,7 +62,7 @@ namespace Ui
         /// </summary>
         public void IsPushGiveUp_GameOver()
         {
-            sPuzzleMain.GetResultManager().IsPushGiveUp();
+            ResultMgr.IsPushGiveUp();
         }
 
         /// <summary>
@@ -32,7 +70,7 @@ namespace Ui
         /// </summary>
         public void IsPushYes_GameOver()
         {
-            sPuzzleMain.GetResultManager().IsPushYes();
+            ResultMgr.IsPushYes();
         }
 
         /// <summary>
@@ -40,7 +78,7 @@ namespace Ui
         /// </summary>
         public void IsPushNo_GameOver()
         {
-            sPuzzleMain.GetResultManager().IsPushNo();
+            ResultMgr.IsPushNo();
         }
 
         /// <summary>
@@ -48,7 +86,23 @@ namespace Ui
         /// </summary>
         public void IsPushClose_GameOver()
         {
-            sPuzzleMain.GetResultManager().IsPushClose();
+            ResultMgr.IsPushClose();
+        }
+
+        /// <summary>
+        /// 再挑戦する
+        /// </summary>
+        public void IsPushTryAgain_GameOver()
+        {
+            ResultMgr.IsPushTryAgain();
+        }
+
+        /// <summary>
+        /// タイトルに戻る
+        /// </summary>
+        public void IsPushReturnTitle_GameOver()
+        {
+            ResultMgr.IsPushReturnTitle();
         }
     }
 }
