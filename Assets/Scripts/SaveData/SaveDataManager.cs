@@ -1,32 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using System.IO;
 
 public class SaveDataManager : MonoBehaviour
 {
-	public class PuzzleModeSaveDate
+	public class SaveDate
 	{
-		public int puzzleModeStageNum = -1;
-	}
-	public class ShootModeSaveData
-	{
-		public int shootModeStageNum = -1;
+		//保存内容
+		public int ClearStageNumber = 0;
 	}
 
-	PuzzleModeSaveDate puzzleModeSaveDate  = new PuzzleModeSaveDate();
-	ShootModeSaveData shootModeSaveDate    = new ShootModeSaveData();
-	public static SaveDataManager instance = null;
+	static SaveDate mSaveDate  = new SaveDate();
+	static SaveDataManager instance = null;
 
-	//各クリアステージ番号
-	[System.NonSerialized]
-	public int puzzleModeStageNum = -1;
-	[System.NonSerialized]
-	public int shootModeStageNum  = -1;
+	//クリアステージ番号
+	public static int ClearStageNum { get; private set; }
 
-	//ファイル名
-	string puzzleModeFileName = "/PuzzleModeSaveData.json";
-	string shootModeFileName  = "/ShootModeSaveData.json";
+	//保存ファイル名
+	static readonly string DIRECTORY_NAME = Application.persistentDataPath;
+	static readonly string FILE_PATH = DIRECTORY_NAME + "/SaveDate.json";
 
 	void Awake()
 	{
@@ -41,77 +35,43 @@ public class SaveDataManager : MonoBehaviour
 		}
 	}
 
-	//========================================================================
-	//パズルモードセーブデータ書き込み
-	//========================================================================
-	//ClearStageNum; クリアステージ番号
-	//========================================================================
-	public void WritePuzzleModeSaveData(int ClearStageNum)
+	/// <summary>
+	/// データ書き込み
+	/// </summary>
+	/// <param name="_clearStageNum">クリアステージ番号</param>
+	public static void DataSave(int _clearStageNum)
 	{
-		if(puzzleModeSaveDate.puzzleModeStageNum < ClearStageNum)
+		if (mSaveDate.ClearStageNumber < _clearStageNum)
 		{
-			puzzleModeSaveDate.puzzleModeStageNum = ClearStageNum;
+			mSaveDate.ClearStageNumber = _clearStageNum;
 
 			StreamWriter writer;
-			string jsonstr = JsonUtility.ToJson(puzzleModeSaveDate);
+			string jsonstr = JsonUtility.ToJson(mSaveDate);
 
-			writer = new StreamWriter(Application.persistentDataPath + puzzleModeFileName, false);
+			writer = new StreamWriter(FILE_PATH, false);
 			writer.Write(jsonstr);
 			writer.Flush();
 			writer.Close();
 		}
 	}
 
-	//========================================================================
-	//シュートモードセーブデータ書き込み
-	//========================================================================
-	//ClearStageNum; クリアステージ番号
-	//========================================================================
-	public void WriteShootModeSaveData(int ClearStageNum)
+	/// <summary>
+	/// データ読み込み
+	/// </summary>
+	public static void DataLoad()
 	{
-		if (shootModeSaveDate.shootModeStageNum < ClearStageNum)
-		{
-			shootModeSaveDate.shootModeStageNum = ClearStageNum;
-
-			StreamWriter writer;
-			string jsonstr = JsonUtility.ToJson(shootModeSaveDate);
-
-			writer = new StreamWriter(Application.persistentDataPath + shootModeFileName, false);
-			writer.Write(jsonstr);
-			writer.Flush();
-			writer.Close();
-		}
-	}
-
-	//========================================================================
-	//セーブデータ読み込み
-	//========================================================================
-	public void ReadSaveData()
-	{
-		//パズルモード
-		if (File.Exists(Application.persistentDataPath + puzzleModeFileName))
-		{
-			string datastr = "";
-			StreamReader reader;
-			reader = new StreamReader(Application.persistentDataPath + puzzleModeFileName);
-			datastr = reader.ReadToEnd();
-			reader.Close();
-			puzzleModeSaveDate = JsonUtility.FromJson<PuzzleModeSaveDate>(datastr);
-
-			puzzleModeStageNum = puzzleModeSaveDate.puzzleModeStageNum;
-		}
-
 		//シュートモード
-		if (File.Exists(Application.persistentDataPath + shootModeFileName))
+		if (File.Exists(FILE_PATH))
 		{
-			string datastr = "";
+			string dataStr;
 			StreamReader reader;
-			reader = new StreamReader(Application.persistentDataPath + shootModeFileName);
-			datastr = reader.ReadToEnd();
+			reader = new StreamReader(FILE_PATH);
+			dataStr = reader.ReadToEnd();
 			reader.Close();
-			shootModeSaveDate = JsonUtility.FromJson<ShootModeSaveData>(datastr);
+			mSaveDate = JsonUtility.FromJson<SaveDate>(dataStr);
 
-			shootModeStageNum = shootModeSaveDate.shootModeStageNum;
+			//データを変数に格納
+			ClearStageNum = mSaveDate.ClearStageNumber;
 		}
 	}
 }

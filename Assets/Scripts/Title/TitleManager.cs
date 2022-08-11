@@ -6,6 +6,7 @@ using static CommonDefine;
 using static Title.TitleMain;
 using static ObjectMove_UI.ObjectMove_UI;
 using static animation.AnimationManager;
+using static SaveDataManager;
 
 namespace Title
 {
@@ -229,7 +230,6 @@ namespace Title
         readonly float STAGE_BTN_POS_Y      = STAGE_BTN_LINE_COUNT / 2.0f * STAGE_BTN_OFFSET_Y;
         readonly int STAGE_MAX_PAGE_INDEX   = STAGE_PAGE_COUNT - 1;
         int mDisplayPage = 0;
-        int mClearStageNum = 223;
         Coroutine mPageMoveCor; 
 
         //ステージ選択オブジェクトの子オブジェクト
@@ -254,7 +254,7 @@ namespace Title
                 mStageSelScreenObj.SetActive(true);
 
                 //初期表示ページ指定
-                mDisplayPage = mClearStageNum / (STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT);
+                mDisplayPage = ClearStageNum / (STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT);
                 StagePageChange();
 
                 //以下生成処理をスキップ
@@ -300,14 +300,14 @@ namespace Title
                         //ステージ番号更新,解放ボタンの表示
                         stageNumber = i * STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT + a * STAGE_BTN_COLUMN_COUNT + b + 1;
                         stageBtntra.GetChild((int)StageBtnChild.Number).GetComponent<Text>().text = stageNumber.ToString();
-                        if (stageNumber <= mClearStageNum + 1)
+                        if (stageNumber <= ClearStageNum + 1)
                         {
                             stageBtntra.GetChild((int)StageBtnChild.Filter).gameObject.SetActive(false);
                             int n = stageNumber;
                             obj.GetComponent<Button>().onClick.AddListener(() => IsPushStageBtn(n));
 
                             //Clear表示
-                            if (stageNumber <= mClearStageNum)
+                            if (stageNumber <= ClearStageNum)
                                 stageBtntra.GetChild((int)StageBtnChild.Clear).gameObject.SetActive(true);
                         }
                     }
@@ -315,7 +315,7 @@ namespace Title
             }
 
             //初期表示ページ指定
-            mDisplayPage = mClearStageNum / (STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT);
+            mDisplayPage = ClearStageNum / (STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT);
             StagePageChange();
         }
 

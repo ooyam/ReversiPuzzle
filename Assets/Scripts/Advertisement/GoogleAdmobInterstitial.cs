@@ -10,9 +10,23 @@ public class GoogleAdmobInterstitial : MonoBehaviour
     private InterstitialAd interstitial;
     private bool showing;
 
-    void Start()
+    //広告の状態
+    public enum State
     {
-        showing = false;
+        None,
+        Loading,    //読み込み中
+        loaded,     //読み込み完了
+        loadFailed, //読み込み失敗
+        Showing,    //表示中
+        Closed,     //閉じた
+    }
+    public State AdState { get; private set; } = State.None;
+
+    /// <summary>
+    /// 広告読み込み開始
+    /// </summary>
+    public void AdInterstitialStart()
+    {
         // 広告読み込み
         RequestInterstitial();
     }
@@ -20,20 +34,25 @@ public class GoogleAdmobInterstitial : MonoBehaviour
     void Update()
     {
         // 広告表示
-        if (interstitial.IsLoaded() && !showing)
+        if (interstitial != null)
         {
-            interstitial.Show();
-            showing = true;
+            if (interstitial.IsLoaded() && !showing)
+            {
+                interstitial.Show();
+                showing = true;
+            }
         }
     }
 
-    // 広告読み込み処理
+    /// <summary>
+    /// 広告読み込み処理
+    /// </summary>
     private void RequestInterstitial()
     {
-        // ★リリース時に自分のIDに変更する
+        //広告ユニットID
 #if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-6016270395550592/3554910086"; //本番
-        //string adUnitId = "ca-app-pub-3940256099942544/1033173712"; //テスト
+        //string adUnitId = ""; //本番
+        string adUnitId = "ca-app-pub-3940256099942544/1033173712"; //テスト
 #else
         string adUnitId = "unexpected_platform";
 #endif
@@ -58,43 +77,57 @@ public class GoogleAdmobInterstitial : MonoBehaviour
 
         //広告読み込み
         interstitial.LoadAd(request);
+        AdState = State.Loading;
     }
 
-    // シーン遷移処理
-    private void LoadNextScene()
+    /// <summary>
+    /// 広告破壊
+    /// </summary>
+    public void OnDestroy()
     {
-        SceneNavigator.Instance.Change("TitleScene", 1.0f);
-    }
-
-    private void OnDestroy()
-    {
-        // オブジェクトの破棄
-        interstitial.Destroy();
+        if (interstitial != null)
+            interstitial.Destroy();
     }
 
     // ---以下、イベントハンドラー
 
-    // 広告の読み込み完了時
+    /// <summary>
+    /// 広告の読み込み完了時
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public void HandleOnAdLoaded(object sender, EventArgs args)
     {
+        AdState = State.loaded;
     }
 
-    // 広告の読み込み失敗時
+    /// <summary>
+    /// 広告の読み込み失敗時
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        // 次のシーンに遷移
-        LoadNextScene();
+        AdState = State.loadFailed;
     }
 
-    // 広告がデバイスの画面いっぱいに表示されたとき
+    /// <summary>
+    /// 広告が表示されたとき
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public void HandleOnAdOpened(object sender, EventArgs args)
     {
+        AdState = State.Showing;
     }
 
-    // 広告を閉じたとき
+    /// <summary>
+    /// 広告を閉じたとき
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public void HandleOnAdClosed(object sender, EventArgs args)
     {
-        // 次のシーンに遷移
-        LoadNextScene();
+        AdState = State.Closed;
     }
 }

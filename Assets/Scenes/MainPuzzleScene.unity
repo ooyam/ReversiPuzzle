@@ -2725,6 +2725,49 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &513798433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 513798435}
+  - component: {fileID: 513798434}
+  m_Layer: 0
+  m_Name: AdInterstitial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &513798434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513798433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab2add2f748e714db1d3b6f09bb974a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &513798435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513798433}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &514426880
 GameObject:
   m_ObjectHideFlags: 0
@@ -3357,15 +3400,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mManagers: {fileID: 1270919789}
-  mScreenTap: {fileID: 1270919794}
-  mSquaresManager: {fileID: 1270919795}
-  mPiecesManager: {fileID: 1270919792}
-  mGimmicksManager: {fileID: 1270919791}
-  mSupportItemsManager: {fileID: 1270919790}
-  mTargetManager: {fileID: 1270919797}
-  mTurnManager: {fileID: 1270919796}
-  mResultManager: {fileID: 1270919798}
-  mCanvasManager: {fileID: 1270919799}
 --- !u!4 &646406369
 Transform:
   m_ObjectHideFlags: 0
@@ -5222,6 +5256,9 @@ MonoBehaviour:
     type: 3}
   mAdRewardPre: {fileID: 7905235807579183953, guid: 1f653b11b6ee8b54ca5af3f9915078d4,
     type: 3}
+  mAdInterstitial: {fileID: 513798434}
+  mMessageWinNoBtnPre: {fileID: 5066245777439649354, guid: 6daa43f0231694446b414cc200c17f9c,
+    type: 3}
   mMessageWinPre: {fileID: 7527333422047644282, guid: 04a8c02b3f6c7e04ebdde2d369bad9cd,
     type: 3}
   mResultTra: {fileID: 198938818}
@@ -6716,7 +6753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1566141765
 MonoBehaviour:
   m_ObjectHideFlags: 0

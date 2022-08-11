@@ -282,7 +282,7 @@ public class PuzzleDefine : MonoBehaviour
             (int)Colors.Orange  //ûÚ
         };
         USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
-        STAGE_NUMBER    = 1;
+        STAGE_NUMBER    = 5;
         HIDE_SQUARE_ARR = new int[] {
             /*
             (int)Squares.A2,
@@ -300,17 +300,17 @@ public class PuzzleDefine : MonoBehaviour
         TURN_COUNT = 2;
 
         //(âº)
-        int[][] GIMMICKS_dummy     = new int[10][];
+        int[][] GIMMICKS_dummy     = new int[1][];
         GIMMICKS_dummy[0]  = new int[] { (int)Squares.B2, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[1]  = new int[] { (int)Squares.B3, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[2]  = new int[] { (int)Squares.B4, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[3]  = new int[] { (int)Squares.B5, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[4]  = new int[] { (int)Squares.B6, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[5]  = new int[] { (int)Squares.E5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[6]  = new int[] { (int)Squares.F5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[7]  = new int[] { (int)Squares.F6, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
-        GIMMICKS_dummy[8]  = new int[] { (int)Squares.A6, (int)Gimmicks.Cage,               (int)Colors.Green, NOT_NUM, 3,        3,        5,      NOT_NUM };
-        GIMMICKS_dummy[9]  = new int[] { (int)Squares.G7, (int)Gimmicks.Cage,               (int)Colors.Blue,  NOT_NUM, 2,        2,        10,      NOT_NUM };
+        //GIMMICKS_dummy[1]  = new int[] { (int)Squares.B3, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[2]  = new int[] { (int)Squares.B4, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[3]  = new int[] { (int)Squares.B5, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[4]  = new int[] { (int)Squares.B6, (int)Gimmicks.Balloon,            COLORLESS_ID,      NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[5]  = new int[] { (int)Squares.E5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[6]  = new int[] { (int)Squares.F5, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[7]  = new int[] { (int)Squares.F6, (int)Gimmicks.Frame_Color_Change, (int)Colors.Red,   0,       DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
+        //GIMMICKS_dummy[8]  = new int[] { (int)Squares.A6, (int)Gimmicks.Cage,               (int)Colors.Green, NOT_NUM, 3,        3,        5,      NOT_NUM };
+        //GIMMICKS_dummy[9]  = new int[] { (int)Squares.G7, (int)Gimmicks.Cage,               (int)Colors.Blue,  NOT_NUM, 2,        2,        10,      NOT_NUM };
         /*
         GIMMICKS_dummy[] = new int[] { (int)Squares.D2, (int)Gimmicks.Balloon_Color,      (int)Colors.Red,  NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
         GIMMICKS_dummy[] = new int[] { (int)Squares.D3, (int)Gimmicks.Balloon_Color,      (int)Colors.Red,  NOT_NUM, DEF_SIZE, DEF_SIZE, NOT_NUM, NOT_NUM };
@@ -353,17 +353,18 @@ public class PuzzleDefine : MonoBehaviour
         */
 
         //(âº)
-        int[][] dummy = new int[4][];
-        dummy[0] = new int[] { (int)Gimmicks.Balloon, COLORLESS_ID, 5 };
-        dummy[1] = new int[] { (int)Gimmicks.Cage, COLORLESS_ID, 2 };
-        dummy[2] = new int[] { (int)Gimmicks.Frame_Color_Change, COLORLESS_ID, 1 };
-        dummy[3] = new int[] { -1, (int)Colors.Blue, 15 };
+        int[][] dummy = new int[1][];
+        dummy[0] = new int[] { (int)Gimmicks.Balloon, COLORLESS_ID, 1 };
+        //dummy[1] = new int[] { (int)Gimmicks.Cage, COLORLESS_ID, 2 };
+        //dummy[2] = new int[] { (int)Gimmicks.Frame_Color_Change, COLORLESS_ID, 1 };
+        //dummy[3] = new int[] { -1, (int)Colors.Blue, 15 };
 
 
         //èâä˙ÉMÉ~ÉbÉNèÓïÒê›íË
         GIMMICKS_INFO_ARR = GIMMICKS_dummy;
         GIMMICKS_DEPLOY_COUNT = GIMMICKS_INFO_ARR.Length;
         List<int> usedGroupNum = new List<int>();
+        GIMMICKS_GROUP_COUNT = 0;
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)
         {
             if (gimmickInfo[GROUP] > NOT_NUM && !usedGroupNum.Contains(gimmickInfo[GROUP]))

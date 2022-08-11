@@ -27,15 +27,23 @@ namespace PuzzleMain
         [SerializeField]
         GameObject mAdRewardPre;
 
-        [Header("メッセージウィンドウ")]
+        [Header("インタースティシャル広告")]
+        [SerializeField]
+        GoogleAdmobInterstitial mAdInterstitial;
+
+        [Header("メッセージウィンドウ(ボタン無し)プレハブ")]
+        [SerializeField]
+        GameObject mMessageWinNoBtnPre;
+
+        [Header("メッセージウィンドウプレハブ")]
         [SerializeField]
         GameObject mMessageWinPre;
         const string BUTTON_TEXT_CLOSE = "閉じる";
         const string BUTTON_TEXT_CANCEL = "キャンセル";
         readonly Dictionary<string, float> BUTTON_WIDTH = new Dictionary<string, float>()
         {
-            {BUTTON_TEXT_CLOSE,  350.0f },
-            {BUTTON_TEXT_CANCEL, 450.0f }
+            { BUTTON_TEXT_CLOSE,  350.0f },
+            { BUTTON_TEXT_CANCEL, 450.0f }
         };
 
         [Header("Resultオブジェクト格納場所")]
@@ -70,6 +78,13 @@ namespace PuzzleMain
             ObjectDestroy();
             mDisplayObj = Instantiate(mGameClearPre);
             yield return StartCoroutine(ObjectAppearance());
+            yield return new WaitForSeconds(2.0f);
+
+            //インタースティシャル広告表示
+            StartCoroutine(CanvasMgr.SetFilter(true));
+            yield return StartCoroutine(ShowAdInterstitial());
+
+            //タイトルへ移管
             SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
         }
 
@@ -151,6 +166,103 @@ namespace PuzzleMain
         //------------------------広告表示--------------------------//
         //==========================================================//
 
+        const float LOADING_MAX_TIME = 30.0f;   //広告読み込み最大時間
+
+        readonly WaitForSeconds TEST_WAIT = new WaitForSeconds(3.0f);//テスト待機
+
+        //---インタースティシャル---//
+
+        const int SHOW_STAGE_NUM = 5;                                               //5ステージごとに表示を行う
+        readonly WaitForSeconds MESSAGE_DISPLAY_TIME = new WaitForSeconds(2.0f);    //メッセージ表示時間
+
+        /// <summary>
+        /// インタースティシャル広告表示
+        /// </summary>
+        IEnumerator ShowAdInterstitial()
+        {
+            if (STAGE_NUMBER % SHOW_STAGE_NUM != 0) yield break;
+
+            //読み込み中メッセージ表示
+            ObjectDestroy();
+            mDisplayObj = Instantiate(mMessageWinNoBtnPre);
+            StartCoroutine(ObjectAppearance(false));
+            Transform winTra = mDisplayObj.transform.GetChild(0);
+            mMessageMsgText = winTra.GetChild(0).GetComponent<Text>();
+            mMessageMsgText.text = "広告を読み込んでいます\nしばらくお待ちください\n\n";
+
+            //待機中オブジェクト表示
+            GameObject waitObj = winTra.GetChild(1).gameObject;
+            waitObj.SetActive(true);
+
+            //読み込み開始
+            mAdInterstitial.AdInterstitialStart();
+
+            bool end = false;
+            float waitTime = 0.0f;
+            while (!end)
+            {
+                switch (mAdInterstitial.AdState)
+                {
+                    //広告表示
+                    case GoogleAdmobInterstitial.State.Showing:
+                        ObjectDestroy();
+                        end = true;
+                        break;
+
+                    //読み込み失敗
+                    case GoogleAdmobInterstitial.State.loadFailed:
+
+                        //広告破壊
+                        mAdInterstitial.OnDestroy();
+
+                        //メッセージ切替
+                        mMessageMsgText.text = "広告の取得に失敗しました\nタイトルに戻ります";
+                        waitObj.SetActive(false);
+                        yield return MESSAGE_DISPLAY_TIME;
+
+                        //処理終了
+                        yield break;
+
+                    //閉じた
+                    case GoogleAdmobInterstitial.State.Closed:
+
+                        //メッセージ破壊
+                        ObjectDestroy();
+
+                        //広告破壊
+                        mAdInterstitial.OnDestroy();
+
+                        //処理終了
+                        yield break;
+                }
+
+                //待機時間の上限を超えた場合
+                if (waitTime > LOADING_MAX_TIME)
+                {
+                    //広告破壊
+                    mAdInterstitial.OnDestroy();
+
+                    //メッセージ表示
+                    mMessageMsgText.text = "広告の取得に失敗しました\nタイトルに戻ります";
+                    waitObj.SetActive(false);
+                    yield return MESSAGE_DISPLAY_TIME;
+
+                    //処理終了
+                    yield break;
+                }
+
+                if (end) break;
+                yield return FIXED_UPDATE;
+                waitTime += ONE_FRAME_TIMES;
+            }
+
+            //広告表示が終了するまで待機
+            yield return new WaitUntil(() => mAdInterstitial.AdState == GoogleAdmobInterstitial.State.Showing);
+        }
+
+
+        //---------リワード---------//
+
         /// <summary>
         /// リワード広告表示状態
         /// </summary>
@@ -199,6 +311,7 @@ namespace PuzzleMain
         IEnumerator StatusMonitoringRewardAds()
         {
             //状態監視
+            float waitTime = 0.0f;
             bool end = false;
             while (true)
             {
@@ -207,7 +320,6 @@ namespace PuzzleMain
                     //読み込み完了
                     case AdRewardState.Loaded:
                         //広告開始
-                        yield return new WaitForSeconds(3.0f);//テスト待機
                         end = !mAdReward.ShowRewardAd();
                         break;
 
@@ -222,14 +334,19 @@ namespace PuzzleMain
                         StartCoroutine(TurnMgr.TurnRecovery_AdReward());
                         end = true;
                         break;
+                }
 
-                        //case AdRewardState.Loading:     //読み込み中
-                        //case AdRewardState.AdOpen:      //広告表示
-                        //case AdRewardState.AdClosed:    //広告終了
+                //待機時間の上限を超えた場合
+                if (waitTime > LOADING_MAX_TIME)
+                {
+                    //読み込み失敗
+                    mRewardState = AdRewardState.FailedToLoad;
+                    end = true;
                 }
 
                 if (end) break;
                 yield return FIXED_UPDATE;
+                waitTime += ONE_FRAME_TIMES;
             }
 
             //メッセージ表示
@@ -260,18 +377,10 @@ namespace PuzzleMain
                     msg = "広告をキャンセルしました";
                     break;
 
-                //読み込み完了(表示失敗)
-                case AdRewardState.Loaded:
-                    msg = "広告の表示に失敗しました\nもう一度お試しください";
-                    break;
-
-                //読み込み失敗
-                case AdRewardState.FailedToLoad:
-                    msg = "広告の取得に失敗しました\nもう一度お試しください";
-                    break;
-
-                //広告表示失敗
-                case AdRewardState.FailedToOpen:
+                //表示失敗
+                case AdRewardState.Loaded:          //読み込み完了(表示失敗)
+                case AdRewardState.FailedToLoad:    //読み込み失敗
+                case AdRewardState.FailedToOpen:    //広告表示失敗
                     msg = "広告の表示に失敗しました\nもう一度お試しください";
                     break;
 

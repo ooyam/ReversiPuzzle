@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PuzzleMain.Ui;
 using Ui;
+using static SaveDataManager;
 using static PuzzleDefine;
 
 namespace PuzzleMain
@@ -114,6 +115,8 @@ namespace PuzzleMain
         /// </summary>
         public void GameClear()
         {
+            //セーブ
+            DataSave(STAGE_NUMBER);
             GAME_CLEAR = true;
             StartCoroutine(ResultMgr.GenerateGameClearObj());
         }
@@ -144,6 +147,9 @@ namespace PuzzleMain
             TurnMgr         = mManagers.GetComponent<TurnManager>();
             ResultMgr       = mManagers.GetComponent<ResultManager>();
             CanvasMgr       = mManagers.GetComponent<CanvasManager>();
+
+            //フラグリセット
+            FlagReset();
 
             //ギミックのデータベース読み込み
             GetGimmicksData();
