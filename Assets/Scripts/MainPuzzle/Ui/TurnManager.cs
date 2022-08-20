@@ -26,7 +26,6 @@ namespace PuzzleMain.Ui
         Text mNumberText;
 
         const int RED_LINE = 5;     //ウィンドウを切り替えるターン
-        const int TURN_MAX = 99;    //ターン最大数
         readonly WaitForSeconds RECOVERY_DELAY_TIME = new WaitForSeconds(0.3f);   //ターン回復の間隔
 
         //==========================================================//
@@ -38,7 +37,6 @@ namespace PuzzleMain.Ui
         /// </summary>
         public void Initialize()
         {
-            if (TURN_MAX < TURN_COUNT) TURN_COUNT = TURN_MAX;
             mNumberText.text = TURN_COUNT.ToString();
             if (TURN_COUNT <= RED_LINE) WindowChange(true);
         }
@@ -48,8 +46,7 @@ namespace PuzzleMain.Ui
         /// </summary>
         public void TurnDecrease()
         {
-            TURN_COUNT--;
-            if (0 > TURN_COUNT) TURN_COUNT = 0;
+            TurnSet(TURN_COUNT - 1);
             mNumberText.text = TURN_COUNT.ToString();
             if (TURN_COUNT <= RED_LINE) WindowChange(true);
         }
@@ -59,14 +56,10 @@ namespace PuzzleMain.Ui
         /// </summary>
         public IEnumerator TurnRecovery_AdReward()
         {
-            //フィルター解除
-            CanvasMgr.SetFilter(false);
-
             //回復
             for (int i = 0; i < REWARD_RECOVERY_COUNT; i++)
             {
-                TURN_COUNT++;
-                if (TURN_MAX < TURN_COUNT) TURN_COUNT = TURN_MAX;
+                TurnSet(TURN_COUNT + 1);
                 mNumberText.text = TURN_COUNT.ToString();
                 if (TURN_COUNT > RED_LINE) WindowChange(false);
                 yield return RECOVERY_DELAY_TIME;

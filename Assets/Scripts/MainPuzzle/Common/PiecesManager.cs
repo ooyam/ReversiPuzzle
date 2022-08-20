@@ -43,7 +43,7 @@ namespace PuzzleMain
             for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
                 //駒として管理するギミック
-                if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
+                if (GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[i][GIMMICK]].In_Square)
                 {
                     SetGimmicksInfomation(i);
                     notPlaceIndex.Add(GIMMICKS_INFO_ARR[i][SQUARE]);
@@ -54,7 +54,7 @@ namespace PuzzleMain
             for (int i = 0; i < SQUARES_COUNT; i++)
             {
                 if (!sSquareObjArr[i].activeSelf) continue; //非表示マスは処理を飛ばす
-                if (notPlaceIndex.Contains(i))   continue; //ギミックマスは処理を飛ばす
+                if (notPlaceIndex.Contains(i)) continue;    //ギミックマスは処理を飛ばす
 
                 int pieceGeneIndex = GetRandomPieceColor();
                 GeneratePiece(pieceGeneIndex, i, true);

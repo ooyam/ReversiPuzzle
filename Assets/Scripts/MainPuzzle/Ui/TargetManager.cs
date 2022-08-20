@@ -96,7 +96,9 @@ namespace PuzzleMain.Ui
                 else
                 {
                     //ÉMÉ~ÉbÉN
-                    if (TARGETS_INFO_ARR[i][TARGET_INFO_OBJ] == _gimmickId)
+                    if (TARGETS_INFO_ARR[i][TARGET_INFO_OBJ] == _gimmickId &&
+                        (TARGETS_INFO_ARR[i][TARGET_INFO_COLOR] == _colorId ||
+                         TARGETS_INFO_ARR[i][TARGET_INFO_COLOR] == COLORLESS_ID))
                     {
                         TargetDecrease(i);
                     }

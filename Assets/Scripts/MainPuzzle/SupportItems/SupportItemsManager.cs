@@ -393,7 +393,7 @@ namespace PuzzleMain
             mItemsInfoArr[itemNum].tra.localPosition = setPos;
 
             //ÉAÉjÉÅçƒê∂
-            int type = USE_COLOR_TYPE_ARR[UnityEngine.Random.Range(0, FIREWORK_TYPE_COUNT)];
+            int type = UnityEngine.Random.Range(0, FIREWORK_TYPE_COUNT);
             yield return StartCoroutine(AnimationStart(mItemsInfoArr[itemNum].ani, STATE_NAME_SUPPORT + type.ToString()));
             SetItemsActive(itemNum, false);
         }

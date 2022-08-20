@@ -325,6 +325,10 @@ namespace Title
         /// <param name="_stageNum"></param>
         void IsPushStageBtn(int _stageNum)
         {
+            //ステージ決定
+            GameManager.SelectStage = _stageNum;
+
+            //シーン移管
             SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
         }
 

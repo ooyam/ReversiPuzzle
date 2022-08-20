@@ -80,7 +80,7 @@ namespace PuzzleMain
             //駒として管理するギミック
             for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
-                if (GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[i][GIMMICK]].in_square)
+                if (GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[i][GIMMICK]].In_Square)
                 {
                     GeneraeGimmick(i);
                 }
@@ -244,7 +244,7 @@ namespace PuzzleMain
             {
                 //破壊リストに追加
                 sDestroyPiecesIndexList.Add(squareIndex);
-                TargetMgr.TargetDecreaseCheck(INT_NULL, gimmInfo.id);
+                TargetMgr.TargetDecreaseCheck(gimmInfo.colorId, gimmInfo.id);
             }
         }
 
@@ -629,7 +629,7 @@ namespace PuzzleMain
                     yield return coroutine;
 
                     //目標確認
-                    TargetMgr.TargetDecreaseCheck(INT_NULL, frameInfoListArr[groupId][0].id);
+                    TargetMgr.TargetDecreaseCheck(frameInfoListArr[groupId][0].colorId, frameInfoListArr[groupId][0].id);
 
                     //ギミック破壊
                     foreach (GameObject obj in frameObjListArr[groupId])
@@ -802,7 +802,7 @@ namespace PuzzleMain
                 Destroy(cageObjArr[desIndex]);
 
                 //目標確認
-                TargetMgr.TargetDecreaseCheck(INT_NULL, (int)Gimmicks.Cage);
+                TargetMgr.TargetDecreaseCheck(COLORLESS_ID, (int)Gimmicks.Cage);
 
                 //管理配列リセット
                 cageObjArr[desIndex] = null;           //檻オブジェクトリスト

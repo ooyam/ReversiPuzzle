@@ -64,22 +64,22 @@ public class GimmickInformation : MonoBehaviour
     public void InformationSetting(int _index)
     {
         ComponentSetting();
-        var gimmickData     = GIMMICKS_DATA.param[GIMMICKS_INFO_ARR[_index][GIMMICK]];
-        settingIndex        = _index;
-        startSquareId       = GIMMICKS_INFO_ARR[_index][SQUARE];
-        nowSquareId         = startSquareId;
-        groupId             = GIMMICKS_INFO_ARR[_index][GROUP];
-        id                  = gimmickData.id;
-        colorId             = GIMMICKS_INFO_ARR[_index][COLOR];
-        remainingTimes      = gimmickData.damage_times;
-        remainingQuantity   = GIMMICKS_INFO_ARR[_index][QUANTITY];
-        order               = GIMMICKS_INFO_ARR[_index][ORDER];
-        freeFall            = gimmickData.free_fall;
-        destructible        = !gimmickData.continuous;
-        assaultOnly         = gimmickData.assault_only;
-        inSquare            = gimmickData.in_square;
-        defaultPos          = new Vector3(gimmickData.position_x, gimmickData.position_y, (inSquare) ? Z_PIECE : Z_GIMMICK);
-        defaultScale        = new Vector3(gimmickData.scale_x, gimmickData.scale_y, 1.0f);
+        var gimmickData = GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[_index][GIMMICK]];
+        settingIndex = _index;
+        startSquareId = GIMMICKS_INFO_ARR[_index][SQUARE];
+        nowSquareId = startSquareId;
+        groupId = GIMMICKS_INFO_ARR[_index][GROUP];
+        id = gimmickData.Id;
+        colorId = GIMMICKS_INFO_ARR[_index][COLOR];
+        remainingTimes = gimmickData.Damage_Times;
+        remainingQuantity = GIMMICKS_INFO_ARR[_index][QUANTITY];
+        order = GIMMICKS_INFO_ARR[_index][ORDER];
+        freeFall = gimmickData.Free_Fall;
+        destructible = !gimmickData.Continuous;
+        assaultOnly = gimmickData.Assault_Only;
+        inSquare = gimmickData.In_Square;
+        defaultPos = new Vector3(gimmickData.Position_X, gimmickData.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
+        defaultScale = new Vector3(gimmickData.Scale_X, gimmickData.Scale_Y, 1.0f);
 
         switch (id)
         {

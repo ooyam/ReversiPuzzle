@@ -39,7 +39,10 @@ namespace PuzzleMain
 
             //使用しないマスを非表示
             foreach (int i in HIDE_SQUARE_ARR)
-            { sSquareObjArr[i].SetActive(false); }
+            {
+                if (i < 0 || i >= SQUARES_COUNT) continue;
+                sSquareObjArr[i].SetActive(false);
+            }
 
             //待機駒の箱取得
             sNextPiecesCount = mNextPieceBoxesTra.childCount;

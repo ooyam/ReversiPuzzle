@@ -12,11 +12,6 @@ namespace PuzzleMain
 {
     public class PuzzleMain : MonoBehaviour
     {
-        [Header("Managers")]
-        [SerializeField]
-        GameObject mManagers;
-
-#if !DO_COMPLIE
         [Header("ScreenTap")]
         [SerializeField]
         ScreenTap mScreenTap;
@@ -52,7 +47,7 @@ namespace PuzzleMain
         [Header("CanvasManager")]
         [SerializeField]
         CanvasManager mCanvasManager;
-#endif
+
 
         //--------Manager--------//
         public static ScreenTap             ScreenTap       { get; private set; }
@@ -127,32 +122,21 @@ namespace PuzzleMain
         void PuzzuleInitialize()
         {
             //Manager取得
-#if !DO_COMPLIE
-            ScreenTap = mScreenTap;
-            SquaresMgr = mSquaresManager;
-            PiecesMgr = mPiecesManager;
-            GimmicksMgr = mGimmicksManager;
+            ScreenTap       = mScreenTap;
+            SquaresMgr      = mSquaresManager;
+            PiecesMgr       = mPiecesManager;
+            GimmicksMgr     = mGimmicksManager;
             SupportItemsMgr = mSupportItemsManager;
-            TargetMgr = mTargetManager;
-            TurnMgr = mTurnManager;
-            ResultMgr = mResultManager;
-            CanvasMgr = mCanvasManager;
-#endif
-            ScreenTap       = mManagers.GetComponent<ScreenTap>();
-            SquaresMgr      = mManagers.GetComponent<SquaresManager>();
-            PiecesMgr       = mManagers.GetComponent<PiecesManager>();
-            GimmicksMgr     = mManagers.GetComponent<GimmicksManager>();
-            SupportItemsMgr = mManagers.GetComponent<SupportItemsManager>();
-            TargetMgr       = mManagers.GetComponent<TargetManager>();
-            TurnMgr         = mManagers.GetComponent<TurnManager>();
-            ResultMgr       = mManagers.GetComponent<ResultManager>();
-            CanvasMgr       = mManagers.GetComponent<CanvasManager>();
+            TargetMgr       = mTargetManager;
+            TurnMgr         = mTurnManager;
+            ResultMgr       = mResultManager;
+            CanvasMgr       = mCanvasManager;
 
             //フラグリセット
             FlagReset();
 
-            //ギミックのデータベース読み込み
-            GetGimmicksData();
+            //リソースデータ読み込み
+            LoadResourcesData();
 
             //ステージ設定
             StageSetting();
@@ -178,24 +162,5 @@ namespace PuzzleMain
             //TurnManagerの初期化
             TurnMgr.Initialize();
         }
-
-#if !DO_COMPLIE
-        /// <summary>
-        /// ゲームステートフラグセット
-        /// </summary>
-        /// <param name="_gameState">ステート</param>
-        public static void FlagSet(GameState _gameState)
-        {
-            GAME_STATE = _gameState;
-        }
-
-        /// <summary>
-        /// ゲームステートフラグリセット
-        /// </summary>
-        public static void FlagReset()
-        {
-            FlagSet(GameState.NONE);
-        }
-#endif
     }
 }

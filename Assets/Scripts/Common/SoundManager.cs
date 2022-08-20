@@ -1,111 +1,50 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CommonDefine;
 
-namespace SoundFunction
+namespace Sound
 {
     public class SoundManager : MonoBehaviour
     {
-        //---------------------------------
-        //共通
-        //---------------------------------
-        [Header("共通")]
-        [Header("BGM")]
-        [SerializeField]
-        AudioClip[] bgm;
-        [Header("Yesタップ")]
-        [SerializeField]
-        AudioClip yesTap;
-        [Header("noタップ")]
-        [SerializeField]
-        AudioClip noTap;
-        [Header("ゲームオーバー")]
-        [SerializeField]
-        AudioClip[] gameOver;
-        [Header("ゲームクリア")]
-        [SerializeField]
-        AudioClip gameClear;
+        //音源ファイル格納ディレクトリ
+        const string CLIP_DIR = "SoundClip/";
+        const string SE_DIR = CLIP_DIR + "SE/";
+        const string BGM_DIR = CLIP_DIR + "BGM/";
 
-        //---------------------------------
-        //パズルモード
-        //---------------------------------
-        [Space(20)]
-        [Header("パズルモード")]
-        [Header("ハムスター移動")]
-        [SerializeField]
-        AudioClip panelChange;
-        [Header("収穫")]
-        [SerializeField]
-        AudioClip[] harvest;  //通常:0  列(横):1  行(縦):2
-        [Header("咀嚼")]
-        [SerializeField]
-        AudioClip eat;
+        //クリップファイル名
+        public const string BGM_TITLE = "bgm_title";
+        public const string SE_BTN_YES = "button_yes";
 
-        //---------------------------------
-        //シュートモード
-        //---------------------------------
-        [Space(20)]
-        [Header("シュートモード")]
-        [Header("スタート歩き")]
-        [SerializeField]
-        AudioClip startWalk;
-        [Header("引っ張り")]
-        [SerializeField]
-        AudioClip pull;
-        [Header("投擲")]
-        [SerializeField]
-        AudioClip bloackThrow;
-        [Header("跳ね返り")]
-        [SerializeField]
-        AudioClip rebound;
-        [Header("ブロック接触")]
-        [SerializeField]
-        AudioClip connect;
-        [Header("接触削除開始")]
-        [SerializeField]
-        AudioClip connectDelete;
-        [Header("自由落下開始")]
-        [SerializeField]
-        AudioClip freeFall;
-        [Header("収穫")]
-        [SerializeField]
-        AudioClip harvestShoot;
-        [Header("スペシャルタップ")]
-        [SerializeField]
-        AudioClip specialTap;
-        [Header("スペシャル歩き")]
-        [SerializeField]
-        AudioClip specialWalk;
-        [Header("スペシャル収穫")]
-        [SerializeField]
-        AudioClip specialHarvest;
-        [Header("フィーバー開始")]
-        [SerializeField]
-        AudioClip feverStart;
-        [Header("フィーバーBGM")]
-        [SerializeField]
-        AudioClip feverBGM;
-        [Header("フィーバー収穫")]
-        [SerializeField]
-        AudioClip feverHarvest;
-        [Header("nextブロック交換")]
-        [SerializeField]
-        AudioClip blockCange;
+        //音量
+        const float BGM_VOLUME = 1.0f;
+        const float SE_VOLUME = 1.0f;
+        const float BGM_FADE_SPEED = 0.02f;
 
-        AudioSource audio_SE;  //SE_AudioSource    
-        AudioSource audio_BGM; //BGM_AudioSource
-        [System.NonSerialized]
-        public int bgmIndex;
+        //SE同時再生最大数
+        const int SE_PLAY_MAX = 70;
 
-        public static SoundManager instance = null;
+        //AudioSource
+        static AudioSource[] mSE_AudioArr;
+        static AudioSource mBGM_Audio;
+
+        static SoundManager instance = null;
         void Awake()
         {
             if (instance == null)
             {
                 instance = this;
                 DontDestroyOnLoad(this.gameObject);
-                audio_SE = GetComponent<AudioSource>();
-                audio_BGM = transform.GetChild(0).gameObject.GetComponent<AudioSource>();
+
+                //BGM用AudioSourceの取得
+                mBGM_Audio = GetComponent<AudioSource>();
+
+                //SE用AudioSourceの追加
+                mSE_AudioArr = new AudioSource[SE_PLAY_MAX];
+                for (int i = 0; i < SE_PLAY_MAX; i++)
+                {
+                    mSE_AudioArr[i] = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
+                }
             }
             else
             {
@@ -116,186 +55,119 @@ namespace SoundFunction
         //=============================================
         //BGM
         //=============================================
-        //BGM開始
-        public void BGM_Start(int seIndex)
+
+        /// <summary>
+        /// BGM開始(フェード有)
+        /// </summary>
+        /// <param name="_BGMName">クリップ名</param>
+        public static void BGM_FadeStart(string _BGMName)
         {
-            bgmIndex = seIndex;
-            audio_BGM.clip = bgm[seIndex];
-            audio_BGM.Play();
-            if (EnvironmentalSetting.bgm)
+            mBGM_Audio.clip = (AudioClip)Resources.Load(BGM_DIR + _BGMName);
+            mBGM_Audio.Play();
+            if (Preferences.Bgm)
             {
-                float volume = (seIndex == 0) ? 0.2f : 0.5f;
-                audio_BGM.volume = 0.0f;
-                StartCoroutine(BGM_Volume_Fade(volume));
+                mBGM_Audio.volume = 0.0f;
+                instance.StartCoroutine(BGM_SetVolumeFade(BGM_VOLUME));
             }
         }
-        //BGM再開
-        public void BGM_Restart()
+
+        /// <summary>
+        /// BGM再開(フェード有)
+        /// </summary>
+        public static void BGM_FadeRestart()
         {
-            if (EnvironmentalSetting.bgm)
+            if (Preferences.Bgm)
             {
-                float volume = (bgmIndex == 0) ? 0.2f : 0.5f;
-                audio_BGM.volume = 0.0f;
-                StartCoroutine(BGM_Volume_Fade(volume));
+                mBGM_Audio.volume = 0.0f;
+                instance.StartCoroutine(BGM_SetVolumeFade(BGM_VOLUME));
             }
         }
-        //BGM音量フェード
-        public IEnumerator BGM_Volume_Fade(float volume)
+
+        /// <summary>
+        /// BGM終了(フェード有)
+        /// </summary>
+        /// <param name="_BGMName">クリップ名</param>
+        public static IEnumerator BGM_FadeStop()
         {
-            float oneFlameTime = 0.02f;
-            if (audio_BGM.volume < volume)
+            yield return instance.StartCoroutine(BGM_SetVolumeFade(0.0f));
+        }
+
+        /// <summary>
+        /// BGM終了(フェード無)
+        /// </summary>
+        /// <param name="_BGMName">クリップ名</param>
+        public static void BGM_Stop()
+        {
+            mBGM_Audio.Stop();
+        }
+
+        /// <summary>
+        /// BGM音量フェード
+        /// </summary>
+        /// <param name="_volume"></param>
+        static IEnumerator BGM_SetVolumeFade(float _volume)
+        {
+            if (mBGM_Audio.volume < _volume)
             {
                 //フェードイン
-                while (EnvironmentalSetting.bgm)
+                while (Preferences.Bgm)
                 {
-                    audio_BGM.volume += oneFlameTime;
-                    yield return new WaitForSecondsRealtime(oneFlameTime);
-                    if (audio_BGM.volume >= volume - oneFlameTime)
-                    {
-                        audio_BGM.volume = volume;
-                        break;
-                    }
+                    BGM_SetVolume(mBGM_Audio.volume + BGM_FADE_SPEED);
+                    yield return FIXED_UPDATE;
+                    if (mBGM_Audio.volume >= _volume) break;
                 }
             }
             else
             {
                 //フェードアウト
-                while (EnvironmentalSetting.bgm)
+                while (Preferences.Bgm)
                 {
-                    audio_BGM.volume -= oneFlameTime;
-                    yield return new WaitForSecondsRealtime(oneFlameTime);
-                    if (audio_BGM.volume <= volume + oneFlameTime)
-                    {
-                        audio_BGM.volume = volume;
-                        break;
-                    }
+                    BGM_SetVolume(mBGM_Audio.volume - BGM_FADE_SPEED);
+                    yield return FIXED_UPDATE;
+                    if (mBGM_Audio.volume <= _volume) break;
                 }
             }
+
+            if (Preferences.Bgm) BGM_SetVolume(_volume);
+            else BGM_SetVolume(0.0f);
         }
-        //BGM音量設定
-        public void BGM_Volume(float volume)
-        { audio_BGM.volume = volume; }
 
-
-        //=============================================
-        //共通
-        //=============================================
-
-        //SEを止める
-        public void SE_Stop()
-        { audio_SE.Stop(); }
-
-        //SE音量設定
-        public void SE_Volume(float volume)
-        { audio_SE.volume = volume; }
-
-        //Yes
-        public void YesTapSE()
-        { audio_SE.PlayOneShot(yesTap); }
-
-        //No
-        public void NoTapSE()
-        { audio_SE.PlayOneShot(noTap); }
-
-        //ゲームオーバー
-        public void GameOverSE(int seIndex)
-        { audio_SE.PlayOneShot(gameOver[seIndex]); }
-
-        //ゲームクリア
-        public void GameClearSE()
-        { audio_SE.PlayOneShot(gameClear); }
-
-
-        //=============================================
-        //パズルモード
-        //=============================================
-
-        //パネル移動
-        public void PanelChangeSE()
-        { audio_SE.PlayOneShot(panelChange); }
-
-        //パネル揃った
-        public void HarvestSE(int seIndex)
-        { audio_SE.PlayOneShot(harvest[seIndex]); }
-
-        //食べる
-        public void EatSE()
-        { audio_SE.PlayOneShot(eat); }
-
-
-        //=============================================
-        //シュートモード
-        //=============================================
-
-        //スタート
-        public void StartWalkSE_Shoot()
+        /// <summary>
+        /// BGM音量フェード
+        /// </summary>
+        /// <param name="_volume"></param>
+        static void BGM_SetVolume(float _volume)
         {
-            audio_SE.clip = startWalk;
-            audio_SE.Play();
+            mBGM_Audio.volume = _volume;
         }
 
-        //引っ張り
-        public void PullSE_Shoot()
-        { audio_SE.PlayOneShot(pull); }
+        //=============================================
+        //SE
+        //=============================================
 
-        //投擲
-        public void ThrowSE_Shoot()
-        { audio_SE.PlayOneShot(bloackThrow); }
-
-        //跳ね返り
-        public void ReboundSE_Shoot()
-        { audio_SE.PlayOneShot(rebound); }
-
-        //ブロック接触
-        public void ConnectSE_Shoot()
-        { audio_SE.PlayOneShot(connect); }
-
-        //接触削除開始
-        public void ConnectDeleteSE_Shoot()
-        { audio_SE.PlayOneShot(connectDelete); }
-
-        //自由落下開始
-        public void FeeFallSE_Shoot()
-        { audio_SE.PlayOneShot(freeFall); }
-
-        //収穫
-        public void HarvestSE_Shoot_Shoot()
-        { audio_SE.PlayOneShot(harvestShoot); }
-
-        //スペシャルタップ
-        public void SpecialTapSE_Shoot()
-        { audio_SE.PlayOneShot(specialTap); }
-
-        //スペシャル歩く
-        public void SpecialWalkSE_Shoot()
+        /// <summary>
+        /// SE再生
+        /// </summary>
+        /// <param name="_SEName">クリップ名</param>
+        public static void SE_Onshot(string _SEName)
         {
-            audio_SE.clip = specialWalk;
-            audio_SE.Play();
+            for (int i = 0; i < SE_PLAY_MAX; i++)
+            {
+                if (mSE_AudioArr[i].isPlaying) continue;
+                mSE_AudioArr[i].volume = SE_VOLUME;
+                mSE_AudioArr[i].PlayOneShot((AudioClip)Resources.Load(SE_DIR + _SEName));
+            }
         }
 
-        //スペシャル収穫
-        public void SpecialHarvestSE_Shoot()
-        { audio_SE.PlayOneShot(specialHarvest); }
-
-        //フィーバー開始
-        public void FeverStartSE_Shoot()
-        { audio_SE.PlayOneShot(feverStart); }
-
-        //フィーバーBGM
-        public IEnumerator FeverBGM_Shoot()
+        /// <summary>
+        /// SEを止める
+        /// </summary>
+        public static void SE_Stop()
         {
-            yield return StartCoroutine(BGM_Volume_Fade(0.0f));
-            audio_BGM.clip = feverBGM;
-            audio_BGM.Play();
-            yield return StartCoroutine(BGM_Volume_Fade(0.5f));
+            for (int i = 0; i < SE_PLAY_MAX; i++)
+            {
+                mSE_AudioArr[i].Stop();
+            }
         }
-
-        //フィーバー収穫
-        public void FeverHarvestSE_Shoot()
-        { audio_SE.PlayOneShot(feverHarvest); }
-
-        //nextブロック交換
-        public void BlockCangeSE_Shoot()
-        { audio_SE.PlayOneShot(blockCange); }
     }
 }
