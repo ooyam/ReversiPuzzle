@@ -6,6 +6,7 @@ using static CommonDefine;
 using static Title.TitleMain;
 using static ObjectMove_UI.ObjectMove_UI;
 using static animation.AnimationManager;
+using static Sound.SoundManager;
 using static SaveDataManager;
 
 namespace Title
@@ -84,6 +85,9 @@ namespace Title
             //ステージ選択画面生成,非表示
             StageSelectDisplay();
             mStageSelScreenObj.SetActive(false);
+
+            //BGM再生
+            BGM_FadeStart(BGM_Type.Title);
         }
 
 
@@ -300,11 +304,15 @@ namespace Title
                         //ステージ番号更新,解放ボタンの表示
                         stageNumber = i * STAGE_BTN_COLUMN_COUNT * STAGE_BTN_LINE_COUNT + a * STAGE_BTN_COLUMN_COUNT + b + 1;
                         stageBtntra.GetChild((int)StageBtnChild.Number).GetComponent<Text>().text = stageNumber.ToString();
+
+                        //ボタン判定の設定
+                        int n = stageNumber;
+                        obj.GetComponent<Button>().onClick.AddListener(() => IsPushStageBtn(n));
+
+                        //選択可能なステージをアクティブ状態にする
                         if (stageNumber <= ClearStageNum + 1)
                         {
                             stageBtntra.GetChild((int)StageBtnChild.Filter).gameObject.SetActive(false);
-                            int n = stageNumber;
-                            obj.GetComponent<Button>().onClick.AddListener(() => IsPushStageBtn(n));
 
                             //Clear表示
                             if (stageNumber <= ClearStageNum)
@@ -325,8 +333,21 @@ namespace Title
         /// <param name="_stageNum"></param>
         void IsPushStageBtn(int _stageNum)
         {
+            if (ClearStageNum + 1 < _stageNum)
+            {
+                //未開放ステージ
+                SE_Onshot(SE_Type.BtnNo);
+                return;
+            }
+
             //ステージ決定
             GameManager.SelectStage = _stageNum;
+
+            //SE再生
+            SE_Onshot(SE_Type.StageSelect);
+
+            //BGMフェードアウト
+            StartCoroutine(BGM_FadeStop());
 
             //シーン移管
             SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
@@ -364,6 +385,9 @@ namespace Title
             Destroy(mTitleScreenObj);
             sTitleState = TitleState.StageSelect;
             StageSelectDisplay();
+
+            //SE再生
+            SE_Onshot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -375,6 +399,9 @@ namespace Title
             mStageSelScreenObj.SetActive(false);
             sTitleState = TitleState.None;
             TitleDisplay();
+
+            //SE再生
+            SE_Onshot(SE_Type.BtnNo);
         }
 
         /// <summary>
@@ -384,6 +411,9 @@ namespace Title
         {
             mDisplayPage++;
             StagePageChange();
+
+            //SE再生
+            SE_Onshot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -393,6 +423,9 @@ namespace Title
         {
             mDisplayPage--;
             StagePageChange();
+
+            //SE再生
+            SE_Onshot(SE_Type.BtnYes);
         }
     }
 }

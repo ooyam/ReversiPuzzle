@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PuzzleMain.Ui;
+using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static animation.AnimationManager;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -110,6 +111,9 @@ namespace PuzzleMain
             //フラグセット
             NOW_SUPPORT_ITEM_READY = true;
 
+            //SE再生
+            SE_Onshot(SE_Type.SupportItemSelect);
+
             //指定アイテムを準備状態へ
             mWaitItemReadyUse[_itemNum] = true;
             StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_READY));
@@ -156,6 +160,9 @@ namespace PuzzleMain
 
             if (_active)
             {
+                //SE再生
+                SE_Onshot(SE_Type.SupportItemAppearance);
+
                 //表示
                 mWaitItemObjArr[_itemNum].SetActive(true);
                 StartCoroutine(AnimationStart(mWaitItemAniArr[_itemNum], STATE_NAME_ACTIVE));

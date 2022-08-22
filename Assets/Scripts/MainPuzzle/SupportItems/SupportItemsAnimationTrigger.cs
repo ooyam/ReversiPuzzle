@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PuzzleMain.PuzzleMain;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -41,6 +42,25 @@ namespace PuzzleMain
         void RocketColumnSupportTrigger(int _supportNum)
         {
             SupportItemsMgr.RocketColumnSupport(_supportNum);
+        }
+
+        /// <summary>
+        /// SEçƒê∂
+        /// </summary>
+        void SupportItemSePlay(SE_Type _seType)
+        {
+            switch (_seType)
+            {
+                //òAë±çƒê∂
+                case SE_Type.Duck:
+                    SE_ContinuousPlay(_seType);
+                    break;
+
+                //íPî≠çƒê∂
+                default:
+                    SE_Onshot(_seType);
+                    break;
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
-#define DO_COMPLIE
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using PuzzleMain.Ui;
 using Ui;
+using static Sound.SoundManager;
 using static SaveDataManager;
 using static PuzzleDefine;
 
@@ -103,6 +103,12 @@ namespace PuzzleMain
         {
             GAME_OVER = true;
             StartCoroutine(ResultMgr.GenerateGameOverObj());
+
+            //BGM終了
+            StartCoroutine(BGM_FadeStop());
+
+            //SE再生
+            SE_Onshot(SE_Type.GameOver);
         }
 
         /// <summary>
@@ -114,6 +120,12 @@ namespace PuzzleMain
             DataSave(STAGE_NUMBER);
             GAME_CLEAR = true;
             StartCoroutine(ResultMgr.GenerateGameClearObj());
+
+            //BGM終了
+            StartCoroutine(BGM_FadeStop());
+
+            //SE再生
+            SE_Onshot(SE_Type.GameClear);
         }
 
         /// <summary>
@@ -161,6 +173,10 @@ namespace PuzzleMain
 
             //TurnManagerの初期化
             TurnMgr.Initialize();
+
+            //BGM開始
+            int bgmInt = UnityEngine.Random.Range((int)BGM_Type.Stage1, (int)BGM_Type.Count);
+            BGM_FadeStart((BGM_Type)Enum.ToObject(typeof(BGM_Type), bgmInt));
         }
     }
 }

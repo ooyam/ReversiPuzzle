@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6926345203008355533}
   - component: {fileID: 2894257167441593590}
   - component: {fileID: -393376297865680511}
+  - component: {fileID: 397160609077036224}
   m_Layer: 0
   m_Name: Hamster
   m_TagString: Gimmick
@@ -166,3 +167,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &397160609077036224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3217500645130671765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d82337f97f5912e4d9394f33aa6fc022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

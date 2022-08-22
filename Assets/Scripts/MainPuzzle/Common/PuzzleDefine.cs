@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static CommonDefine;
 
 public class PuzzleDefine : MonoBehaviour
 {
@@ -105,7 +106,6 @@ public class PuzzleDefine : MonoBehaviour
     public const int    BOARD_COLUMN_COUNT      = 8;                                        //ボード列数
     public const int    BOARD_LINE_COUNT        = 8;                                        //ボード行数
     public const int    SQUARES_COUNT           = BOARD_LINE_COUNT * BOARD_COLUMN_COUNT;    //ボード総数
-    public const int    INT_NULL                = -99;                                      //nullの代用定数(int型でnullを代入したい場合に使用)
     public const float  SQUARE_DISTANCE         = 1.46f;                                    //マスの距離
     public const float  SQUARE_DISTANCE_HALF    = SQUARE_DISTANCE / 2.0f;                   //半マスの距離
     public const float  PIECE_DEFAULT_SCALE     = 0.65f;                                    //駒のスケール

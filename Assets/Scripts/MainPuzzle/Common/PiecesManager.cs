@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PuzzleMain.Ui;
+using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static ObjectMove_2D.ObjectMove_2D;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -124,10 +125,13 @@ namespace PuzzleMain
         /// <param name="squareId">配置マス管理番号</param>
         void PutPiece(int squareId)
         {
+            //SE再生
+            SE_Onshot(SE_Type.PiecePut);
+
             //盤面の駒削除,管理配列差し替え
             DeletePiece(squareId);
             sPieceObjArr[squareId]  = nextPieceObjArr[nextPuPieceIndex];
-            pieceTraArr[squareId]  = nextPieceTraArr[nextPuPieceIndex];
+            pieceTraArr[squareId]   = nextPieceTraArr[nextPuPieceIndex];
             sPieceInfoArr[squareId] = sPieceObjArr[squareId].GetComponent<PieceInformation>();
             sPieceInfoArr[squareId].InformationSetting(squareId, false);
 
@@ -282,7 +286,7 @@ namespace PuzzleMain
                 {
                     StartCoroutine(SupportItemsMgr.UseItems(pieceObjIndex));
                 }
-                //駒反転(反転フラグ確認)
+                //駒反転フラグ確認
                 else if (sPieceInfoArr[pieceObjIndex].invertable)
                 {
                     StartCoroutine(PutPieceToSquare(tapObj));
@@ -359,6 +363,9 @@ namespace PuzzleMain
         /// <param name="deletePiece">削除駒</param>
         IEnumerator PutPieceToSquare(GameObject deletePiece)
         {
+            //移動SE再生
+            SE_Onshot(SE_Type.PieceMove);
+
             //ターン数減少
             TurnMgr.TurnDecrease();
 
@@ -685,6 +692,9 @@ namespace PuzzleMain
             //元駒削除,新駒生成
             DeletePiece(reversPieceIndex);
             GeneratePiece(generateColorId, reversPieceIndex);
+
+            //SE再生
+            SE_Onshot(SE_Type.PiecePut);
 
             //駒90°回転,縮小
             pieceTraArr[reversPieceIndex].localScale    = new Vector3(REVERSE_PIECE_CHANGE_SCALE, REVERSE_PIECE_CHANGE_SCALE, 0.0f);

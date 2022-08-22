@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1698977411550663000}
   - component: {fileID: -7239113154062657637}
   - component: {fileID: 193412100921642157}
+  - component: {fileID: -8137726000363976355}
   m_Layer: 0
   m_Name: Balloon_2_Yellow
   m_TagString: Gimmick
@@ -166,6 +167,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &-8137726000363976355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183272810836873537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d82337f97f5912e4d9394f33aa6fc022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4312538897108962511
 GameObject:
   m_ObjectHideFlags: 0

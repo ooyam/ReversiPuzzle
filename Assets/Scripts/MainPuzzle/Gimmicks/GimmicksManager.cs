@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PuzzleMain.Ui;
+using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static animation.AnimationManager;
 using static ObjectMove_2D.ObjectMove_2D;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -626,6 +627,11 @@ namespace PuzzleMain
                     Coroutine coroutine = null;
                     foreach (GimmickInformation gimmickInfo in frameInfoListArr[groupId])
                     { coroutine = StartCoroutine(AnimationStart(gimmickInfo.ani, STATE_NAME_BURST)); }
+
+                    //SE再生
+                    SE_Onshot(SE_Type.FrameBurst);
+
+                    //破壊演出待機
                     yield return coroutine;
 
                     //目標確認
@@ -887,9 +893,15 @@ namespace PuzzleMain
             }
             gimInfo.tra.rotation = Quaternion.Euler(degreeX, 0.0f, degreeZ);
 
+            //SE開始
+            AudioSource audio = SE_Onshot(SE_Type.ThiefRun);
+
             //移動
             yield return StartCoroutine(ConstantSpeedMovement(gimInfo.tra, THIEF_ATTACK_MOVE_SPEED, movePos));
             gimInfo.tra.rotation = DEFAULT_QUEST;
+
+            //SE停止
+            SE_Stop(audio);
 
             //攻撃前左右確認アニメーション
             attackNumber++;

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -550743492452799730}
   - component: {fileID: 1561223662460383249}
   - component: {fileID: 1399866627147406162}
+  - component: {fileID: -5356235209075042388}
   m_Layer: 0
   m_Name: Jewelry_0_Blue
   m_TagString: Gimmick
@@ -167,6 +168,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &-5356235209075042388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4011911233645673750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d82337f97f5912e4d9394f33aa6fc022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8714427638622284105
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static ObjectMove_2D.ObjectMove_2D;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -133,6 +135,9 @@ namespace PuzzleMain
         /// <returns></returns>v
         public void MoveNextPieceFrame(int _nextPuPieceIndex)
         {
+            //SEçƒê∂
+            SE_Onshot(SE_Type.PieceSelect);
+
             //à⁄ìÆ
             mNextPieceFrameTra.SetParent(sNextPieceBoxTraArr[_nextPuPieceIndex], false);
         }

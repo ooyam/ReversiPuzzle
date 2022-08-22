@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 

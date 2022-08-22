@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d9b8e187402e74d996e6b011a5b018, type: 3}
+  m_Name: BGM_Data
+  m_EditorClassIdentifier: 
+  SheetName: Assets/Data/Excel/SoundsData.xls
+  WorksheetName: BGM_Data
+  dataArray:
+  - bgm_type: 0
+    clipname: bgm_title
+    volume: 0.1
+  - bgm_type: 1
+    clipname: bgm_stage_1
+    volume: 0.1
+  - bgm_type: 2
+    clipname: bgm_stage_2
+    volume: 0.1
+  - bgm_type: 3
+    clipname: bgm_stage_3
+    volume: 0.1
+  - bgm_type: 4
+    clipname: bgm_stage_4
+    volume: 0.1
