@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ui;
+using Option;
 using static SaveDataManager;
 
 namespace Title
@@ -12,15 +14,24 @@ namespace Title
         {
             None,           //タイトル画面
             StageSelect,    //ステージ選択画面
-            Option,         //オプション画面
         }
 
         [Header("TitleManager")]
         [SerializeField]
         TitleManager mTitleManager;
 
+        [Header("OptionManager")]
+        [SerializeField]
+        OptionManager mOptionManager;
+
+        [Header("CanvasManager")]
+        [SerializeField]
+        CanvasManager mCanvasManager;
+
         //----スタティック変数----//
-        public static TitleManager TitleMgr { get; private set; }
+        public static TitleManager  TitleMgr  { get; private set; }
+        public static OptionManager OptionMgr { get; private set; }
+        public static CanvasManager CanvasMgr { get; private set; }
         public static TitleState sTitleState;
         //-----------------------//
 
@@ -32,10 +43,15 @@ namespace Title
             //セーブデータ読み込み
             DataLoad();
             sTitleState = TitleState.None;
-            TitleMgr = mTitleManager;
+            TitleMgr  = mTitleManager;
+            OptionMgr = mOptionManager;
+            CanvasMgr = mCanvasManager;
 
             //タイトル初期化
             TitleMgr.Initialize();
+
+            //オプション初期化
+            OptionMgr.Initialize();
         }
     }
 }

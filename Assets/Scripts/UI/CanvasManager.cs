@@ -36,6 +36,7 @@ namespace Ui
             //目標アルファ値と現在のアルファ値が同じの場合動作させない
             if (on)
             {
+                mFilterImg.gameObject.SetActive(true);
                 if (nowColor.a == FILTER_ON_COLOR.a) yield break;
                 yield return StartCoroutine(ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOnColorArr));
             }
@@ -43,6 +44,7 @@ namespace Ui
             {
                 if (nowColor.a == FILTER_OFF_COLOR.a) yield break;
                 yield return StartCoroutine(ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOffColorArr));
+                mFilterImg.gameObject.SetActive(false);
             }
         }
     }

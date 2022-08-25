@@ -78,7 +78,7 @@ namespace PuzzleMain
             ObjectDestroy();
             mDisplayObj = Instantiate(mGameClearPre);
             yield return StartCoroutine(ObjectAppearance());
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(3.0f);
 
             //インタースティシャル広告表示
             StartCoroutine(CanvasMgr.SetFilter(true));

@@ -682,10 +682,10 @@ namespace PuzzleMain
         /// <param name="cageInfoArrList">檻の情報配列</param>
         void GenerateCage(ref List<int[]> cageInfoArrList)
         {
-            int cageCount    = cageInfoArrList.Count;
-            cageObjArr       = new GameObject[cageCount];               //檻オブジェクトリスト
-            cageInfoArr      = new GimmickInformation[cageCount];       //檻オブジェクト情報リスト
-            cageSquareIdArr = new int[cageCount];                       //檻配置マスリスト
+            int cageCount   = cageInfoArrList.Count;
+            cageObjArr      = new GameObject[cageCount];            //檻オブジェクトリスト
+            cageInfoArr     = new GimmickInformation[cageCount];    //檻オブジェクト情報リスト
+            cageSquareIdArr = new int[cageCount];                   //檻配置マスリスト
             for (int i = 0; i < cageCount; i++)
             {
                 int[] cageInfo = cageInfoArrList[i];

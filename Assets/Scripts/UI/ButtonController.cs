@@ -12,97 +12,36 @@ namespace Ui
         //-----------------------タイトル画面-----------------------//
         //==========================================================//
 
-        /// <summary>
-        /// スタート
-        /// </summary>
-        public void IsPushStart_Title()
-        {
-            TitleMgr.IsPushStart();
-        }
+        public void IsPushStart_Title()      => TitleMgr.IsPushStart();         //スタート
+        public void IsPushBack_Title()       => TitleMgr.IsPushBack();          //もどる
+        public void IsPushRightArrow_Title() => TitleMgr.IsPushRightArrow();    //右矢印
+        public void IsPushLeftArrow_Title()  => TitleMgr.IsPushLeftArrow();     //左矢印
 
-        /// <summary>
-        /// もどる
-        /// </summary>
-        public void IsPushBack_Title()
-        {
-            TitleMgr.IsPushBack();
-        }
 
-        /// <summary>
-        /// 右矢印
-        /// </summary>
-        public void IsPushRightArrow_Title()
-        {
-            TitleMgr.IsPushRightArrow();
-        }
+        //==========================================================//
+        //---------------------オプション画面-----------------------//
+        //==========================================================//
 
-        /// <summary>
-        /// 左矢印
-        /// </summary>
-        public void IsPushLeftArrow_Title()
-        {
-            TitleMgr.IsPushLeftArrow();
-        }
+        public void IsPushOption_Option()   => OptionMgr.IsPushOption();    //オプション
+        public void IsPushBGM_Option()      => OptionMgr.IsPushBGM();       //BGM_ON・OFF
+        public void IsPushSE_Option()       => OptionMgr.IsPushSE();        //SE_ON・OFF
+        public void IsPushCredit_Option()   => OptionMgr.IsPushCredit();    //クレジット
+        public void IsPushQuitGame_Option() => OptionMgr.IsPushQuitGame();  //ゲームをやめる
+        public void IsPushYes_Option()      => OptionMgr.IsPushYes();       //はい
+        public void IsPushNo_Option()       => OptionMgr.IsPushNo();        //いいえ
+        public void IsPushClose_Option()    => OptionMgr.IsPushClose();     //閉じる
 
-        
+
         //==========================================================//
         //---------------------ゲームオーバー画面-------------------//
         //==========================================================//
 
-        /// <summary>
-        /// 広告を見る
-        /// </summary>
-        public void IsPushSeeAbs_GameOver()
-        {
-            ResultMgr.IsPushSeeAbs();
-        }
-
-        /// <summary>
-        /// あきらめる
-        /// </summary>
-        public void IsPushGiveUp_GameOver()
-        {
-            ResultMgr.IsPushGiveUp();
-        }
-
-        /// <summary>
-        /// はい
-        /// </summary>
-        public void IsPushYes_GameOver()
-        {
-            ResultMgr.IsPushYes();
-        }
-
-        /// <summary>
-        /// いいえ
-        /// </summary>
-        public void IsPushNo_GameOver()
-        {
-            ResultMgr.IsPushNo();
-        }
-
-        /// <summary>
-        /// 閉じる
-        /// </summary>
-        public void IsPushClose_GameOver()
-        {
-            ResultMgr.IsPushClose();
-        }
-
-        /// <summary>
-        /// 再挑戦する
-        /// </summary>
-        public void IsPushTryAgain_GameOver()
-        {
-            ResultMgr.IsPushTryAgain();
-        }
-
-        /// <summary>
-        /// タイトルに戻る
-        /// </summary>
-        public void IsPushReturnTitle_GameOver()
-        {
-            ResultMgr.IsPushReturnTitle();
-        }
+        public void IsPushSeeAbs_GameOver()      => ResultMgr.IsPushSeeAbs();       //広告を見る
+        public void IsPushGiveUp_GameOver()      => ResultMgr.IsPushGiveUp();       //あきらめる
+        public void IsPushYes_GameOver()         => ResultMgr.IsPushYes();          //はい
+        public void IsPushNo_GameOver()          => ResultMgr.IsPushNo();           //いいえ
+        public void IsPushClose_GameOver()       => ResultMgr.IsPushClose();        //閉じる
+        public void IsPushTryAgain_GameOver()    => ResultMgr.IsPushTryAgain();     //再挑戦する
+        public void IsPushReturnTitle_GameOver() => ResultMgr.IsPushReturnTitle();  //タイトルに戻る
     }
 }
