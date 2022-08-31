@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using PuzzleMain.Ui;
 using Ui;
+using Option;
 using static Sound.SoundManager;
 using static SaveDataManager;
 using static PuzzleDefine;
@@ -48,6 +49,10 @@ namespace PuzzleMain
         [SerializeField]
         CanvasManager mCanvasManager;
 
+        [Header("OptionManager")]
+        [SerializeField]
+        OptionManager mOptionManager;
+
 
         //--------Manager--------//
         public static ScreenTap             ScreenTap       { get; private set; }
@@ -59,6 +64,7 @@ namespace PuzzleMain
         public static TurnManager           TurnMgr         { get; private set; }
         public static ResultManager         ResultMgr       { get; private set; }
         public static CanvasManager         CanvasMgr       { get; private set; }
+        public static OptionManager         OptionMgr       { get; private set; }
         //------------------------//
 
         //----スタティック変数----//
@@ -143,6 +149,7 @@ namespace PuzzleMain
             TurnMgr         = mTurnManager;
             ResultMgr       = mResultManager;
             CanvasMgr       = mCanvasManager;
+            OptionMgr       = mOptionManager;
 
             //フラグリセット
             FlagReset();
@@ -173,6 +180,9 @@ namespace PuzzleMain
 
             //TurnManagerの初期化
             TurnMgr.Initialize();
+
+            //OptionManagerの初期化
+            mOptionManager.Initialize();
 
             //BGM開始
             int bgmInt = UnityEngine.Random.Range((int)BGM_Type.Stage1, (int)BGM_Type.Count);

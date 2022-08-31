@@ -19,7 +19,7 @@ MonoBehaviour:
     turn: 50
     use_color: 000000000100000002000000030000000400000005000000
     hide_sqr: 9dffffff
-    tutorial_gimmick: -99
+    tutorialtype: 14
     tagets_1: ffffffff000000001e000000
     tagets_2: ffffffff010000001e000000
     tagets_3: ffffffff020000001e000000
@@ -60,7 +60,7 @@ MonoBehaviour:
     turn: 30
     use_color: 000000000100000002000000030000000400000005000000
     hide_sqr: 9dffffff
-    tutorial_gimmick: 0
+    tutorialtype: 3
     tagets_1: 00000000ffffffff04000000
     tagets_2: 9dffffff
     tagets_3: 9dffffff
@@ -101,7 +101,7 @@ MonoBehaviour:
     turn: 25
     use_color: 0000000001000000
     hide_sqr: 9dffffff
-    tutorial_gimmick: 1
+    tutorialtype: 4
     tagets_1: 010000000000000002000000
     tagets_2: 010000000100000002000000
     tagets_3: 9dffffff
@@ -142,7 +142,7 @@ MonoBehaviour:
     turn: 20
     use_color: 01000000020000000300000004000000
     hide_sqr: 9dffffff
-    tutorial_gimmick: 2
+    tutorialtype: 5
     tagets_1: 02000000ffffffff04000000
     tagets_2: 9dffffff
     tagets_3: 9dffffff
@@ -183,7 +183,7 @@ MonoBehaviour:
     turn: 30
     use_color: 00000000010000000200000003000000
     hide_sqr: 9dffffff
-    tutorial_gimmick: 3
+    tutorialtype: 6
     tagets_1: 03000000ffffffff06000000
     tagets_2: 9dffffff
     tagets_3: 9dffffff
@@ -224,7 +224,7 @@ MonoBehaviour:
     turn: 20
     use_color: 000000000100000002000000
     hide_sqr: 030000000b000000130000001b000000230000002b000000330000003b000000
-    tutorial_gimmick: -99
+    tutorialtype: 14
     tagets_1: 00000000ffffffff08000000
     tagets_2: ffffffff000000000a000000
     tagets_3: ffffffff010000000a000000
@@ -238,6 +238,334 @@ MonoBehaviour:
     gimmicks_6: 1900000000000000ffffffffffffffff0100000001000000ffffffffffffffff
     gimmicks_7: 2100000000000000ffffffffffffffff0100000001000000ffffffffffffffff
     gimmicks_8: 2900000000000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 7
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 04000000ffffffff01000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b00000004000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 8
+    turn: 20
+    use_color: 000000000100000002000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 060000000000000001000000
+    tagets_2: 05000000ffffffff01000000
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1a0000000600000000000000000000000100000001000000ffffffffffffffff
+    gimmicks_2: 210000000600000000000000000000000100000001000000ffffffffffffffff
+    gimmicks_3: 220000000600000000000000000000000100000001000000ffffffffffffffff
+    gimmicks_4: 1c00000005000000ffffffff010000000100000001000000ffffffffffffffff
+    gimmicks_5: 2400000005000000ffffffff010000000100000001000000ffffffffffffffff
+    gimmicks_6: 2c00000005000000ffffffff010000000100000001000000ffffffffffffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 9
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 08000000ffffffff01000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b00000008000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 10
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 0b0000000000000001000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b0000000b00000000000000ffffffff02000000020000000a000000ffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 11
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 0c000000ffffffff03000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b0000000c000000ffffffffffffffff0100000001000000ffffffff00000000
+    gimmicks_2: 2b0000000c000000ffffffffffffffff0100000001000000ffffffff01000000
+    gimmicks_3: 230000000c000000ffffffffffffffff0100000001000000ffffffff02000000
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 12
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 0d0000000000000001000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b0000000d000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 13
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 0e0000000000000001000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b0000000e000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
+    gimmicks_9: 9dffffff
+    gimmicks_10: 9dffffff
+    gimmicks_11: 9dffffff
+    gimmicks_12: 9dffffff
+    gimmicks_13: 9dffffff
+    gimmicks_14: 9dffffff
+    gimmicks_15: 9dffffff
+    gimmicks_16: 9dffffff
+    gimmicks_17: 9dffffff
+    gimmicks_18: 9dffffff
+    gimmicks_19: 9dffffff
+    gimmicks_20: 9dffffff
+    gimmicks_21: 9dffffff
+    gimmicks_22: 9dffffff
+    gimmicks_23: 9dffffff
+    gimmicks_24: 9dffffff
+    gimmicks_25: 9dffffff
+    gimmicks_26: 9dffffff
+    gimmicks_27: 9dffffff
+    gimmicks_28: 9dffffff
+    gimmicks_29: 9dffffff
+    gimmicks_30: 9dffffff
+    gimmicks_31: 9dffffff
+  - id: 14
+    turn: 20
+    use_color: 000000000100000002000000030000000400000005000000
+    hide_sqr: 9dffffff
+    tutorialtype: 14
+    tagets_1: 110000000000000001000000
+    tagets_2: 9dffffff
+    tagets_3: 9dffffff
+    tagets_4: 9dffffff
+    tagets_5: 9dffffff
+    gimmicks_1: 1b00000011000000ffffffffffffffff0100000001000000ffffffffffffffff
+    gimmicks_2: 9dffffff
+    gimmicks_3: 9dffffff
+    gimmicks_4: 9dffffff
+    gimmicks_5: 9dffffff
+    gimmicks_6: 9dffffff
+    gimmicks_7: 9dffffff
+    gimmicks_8: 9dffffff
     gimmicks_9: 9dffffff
     gimmicks_10: 9dffffff
     gimmicks_11: 9dffffff

@@ -20,6 +20,15 @@ TextureImporter:
   - first:
       213: -2574449355943416012
     second: Button_LightGreen
+  - first:
+      213: 2527607607167286074
+    second: Button_Violet
+  - first:
+      213: -1727787259211401930
+    second: Button_Blue
+  - first:
+      213: -7707917330291737424
+    second: Button_DarkBlue
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -233,7 +242,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 39
-        y: 231
+        y: 230
         width: 362
         height: 144
       alignment: 0
@@ -258,7 +267,7 @@ TextureImporter:
         width: 362
         height: 144
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 66, y: 72, z: 66, w: 72}
       outline: []
       physicsShape: []
@@ -266,6 +275,69 @@ TextureImporter:
       bones: []
       spriteID: 43f62c663f7b54cd0800000000000000
       internalID: -2574449355943416012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_Violet
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 418
+        width: 362
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 66, y: 72, z: 66, w: 72}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3bf7c41abdd31320800000000000000
+      internalID: 2527607607167286074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_Blue
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 230
+        width: 362
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 66, y: 72, z: 66, w: 72}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 635324754aaa508e0800000000000000
+      internalID: -1727787259211401930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_DarkBlue
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 230
+        width: 362
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 66, y: 72, z: 66, w: 72}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bc32e1c60af70590800000000000000
+      internalID: -7707917330291737424
       vertices: []
       indices: 
       edges: []

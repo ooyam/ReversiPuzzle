@@ -73,20 +73,20 @@ namespace Sound
         const float BGM_FADE_OUT_TIME = 0.5f;
 
         //SE同時再生最大数
-        const int SE_PLAY_MAX = 40;
+        const int SE_PLAY_MAX = 30;
 
         //AudioSource
         static AudioSource mBGM_Audio;
         static AudioSource[] mSE_AudioArr;
 
         //データ
-        static BGM_DataData[] mBGM_DataArr;
-        static SE_DataData[] mSE_DataArr;
+        static Dictionary<BGM_Type, BGM_DataData> mBGM_InfoDic;
+        static Dictionary<SE_Type, SE_DataData> mSE_InfoDic;
         static Dictionary<BGM_Type, AudioClip> mBGM_ClipDic;
         static Dictionary<SE_Type, AudioClip> mSE_ClipDic;
 
-        //再生中のBGM番号
-        static int mNowPlayBgm;
+        //再生中のBGM
+        static BGM_Type mNowPlayBgm;
 
         //BGMフェード中のコルーチン
         static Coroutine mBGM_FadeCor;
@@ -112,18 +112,26 @@ namespace Sound
                 //データの取得
                 BGM_Data bgmData = Resources.Load(BGM_DATA_OBJ) as BGM_Data;
                 SE_Data seData = Resources.Load(SE_DATA_OBJ) as SE_Data;
-                mBGM_DataArr = bgmData.dataArray;
-                mSE_DataArr = seData.dataArray;
+                BGM_DataData[] bgmDataArr = bgmData.dataArray;
+                SE_DataData[]  seDataArr = seData.dataArray;
 
-                //BGMクリップ取得
+                //BGMクリップ,情報取得
+                mBGM_InfoDic = new Dictionary<BGM_Type, BGM_DataData>();
                 mBGM_ClipDic = new Dictionary<BGM_Type, AudioClip>();
-                for (int i = 0; i < mBGM_DataArr.Length; i++)
-                { mBGM_ClipDic.Add(mBGM_DataArr[i].BGM_TYPE, (AudioClip)Resources.Load(BGM_DIR + mBGM_DataArr[i].Clipname)); }
+                for (int i = 0; i < bgmDataArr.Length; i++)
+                {
+                    mBGM_InfoDic.Add(bgmDataArr[i].BGM_TYPE, bgmDataArr[i]);
+                    mBGM_ClipDic.Add(bgmDataArr[i].BGM_TYPE, (AudioClip)Resources.Load(BGM_DIR + bgmDataArr[i].Clipname));
+                }
 
-                //SEクリップ取得
+                //SEクリップ,情報取得
+                mSE_InfoDic = new Dictionary<SE_Type, SE_DataData>();
                 mSE_ClipDic = new Dictionary<SE_Type, AudioClip>();
-                for (int i = 0; i < mSE_DataArr.Length; i++)
-                { mSE_ClipDic.Add(mSE_DataArr[i].SE_TYPE, (AudioClip)Resources.Load(SE_DIR + mSE_DataArr[i].Clipname)); }
+                for (int i = 0; i < seDataArr.Length; i++)
+                {
+                    mSE_InfoDic.Add(seDataArr[i].SE_TYPE, seDataArr[i]);
+                    mSE_ClipDic.Add(seDataArr[i].SE_TYPE, (AudioClip)Resources.Load(SE_DIR + seDataArr[i].Clipname));
+                }
             }
             else
             {
@@ -142,27 +150,17 @@ namespace Sound
         public static void BGM_FadeStart(BGM_Type _bgmType)
         {
             //データ取得
-            float volume = 0.0f;
-            for (int i = 0; i < mBGM_DataArr.Length; i++)
-            {
-                var bgm = mBGM_DataArr[i];
-                if (bgm.BGM_TYPE != _bgmType) continue;
+            mNowPlayBgm = _bgmType;
 
-                //音量,クリップ設定,再生
-                volume = bgm.Volume;
-                mNowPlayBgm = i;
-
-                //他BGMがフェード中の場合はコルーチン停止
-                BGM_FadeBreak();
-                break;
-            }
+            //他BGMがフェード中の場合はコルーチン停止
+            BGM_FadeBreak();
 
             mBGM_Audio.clip = mBGM_ClipDic[_bgmType];
             mBGM_Audio.Play();
             if (Preferences.Bgm)
             {
                 mBGM_Audio.volume = 0.0f;
-                mBGM_FadeCor = instance.StartCoroutine(BGM_SetVolumeFade(volume));
+                mBGM_FadeCor = instance.StartCoroutine(BGM_SetVolumeFade(mBGM_InfoDic[_bgmType].Volume));
             }
         }
 
@@ -176,7 +174,7 @@ namespace Sound
                 //他BGMがフェード中の場合はコルーチン停止
                 BGM_FadeBreak();
                 mBGM_Audio.volume = 0.0f;
-                mBGM_FadeCor = instance.StartCoroutine(BGM_SetVolumeFade(mBGM_DataArr[mNowPlayBgm].Volume));
+                mBGM_FadeCor = instance.StartCoroutine(BGM_SetVolumeFade(mBGM_InfoDic[mNowPlayBgm].Volume));
             }
         }
 
@@ -196,7 +194,7 @@ namespace Sound
         /// <param name="_BGMName">クリップ名</param>
         public static void BGM_Stop()
         {
-            mBGM_Audio.Stop();
+            BGM_SetVolume(0.0f);
         }
 
         /// <summary>
@@ -279,21 +277,6 @@ namespace Sound
         }
 
         /// <summary>
-        /// SEデータ取得
-        /// </summary>
-        /// <param name="_seType"></param>
-        /// <returns>_seTypeに応じたデータクラス</returns>
-        static SE_DataData SE_GetData(SE_Type _seType)
-        {
-            for (int i = 0; i < mSE_DataArr.Length; i++)
-            {
-                if (mSE_DataArr[i].SE_TYPE == _seType)
-                    return mSE_DataArr[i];
-            }
-            return null;
-        }
-
-        /// <summary>
         /// SE再生
         /// </summary>
         /// <param name="_seType">SEの種類</param>
@@ -306,12 +289,8 @@ namespace Sound
             AudioSource audio = SE_GetAudioSource();
             if (audio == null) return null;
 
-            //データ取得
-            SE_DataData seData = SE_GetData(_seType);
-            if (seData == null) return null;
-
             //音量,クリップ設定,再生
-            audio.volume = seData.Volume;
+            audio.volume = mSE_InfoDic[_seType].Volume;
             audio.PlayOneShot(mSE_ClipDic[_seType]);
             return audio;
         }
@@ -329,12 +308,8 @@ namespace Sound
             AudioSource audio = SE_GetAudioSource();
             if (audio == null) return null;
 
-            //データ取得
-            SE_DataData seData = SE_GetData(_seType);
-            if (seData == null) return null;
-
             //再生開始
-            instance.StartCoroutine(SE_ContinuousPlayStart(audio, seData));
+            instance.StartCoroutine(SE_ContinuousPlayStart(audio, mSE_InfoDic[_seType]));
             return audio;
         }
 

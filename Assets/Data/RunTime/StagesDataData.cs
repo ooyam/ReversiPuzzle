@@ -25,8 +25,8 @@ public class StagesDataData
   public int[] Hide_Sqr { get {return hide_sqr; } set { this.hide_sqr = value;} }
   
   [SerializeField]
-  int tutorial_gimmick;
-  public int Tutorial_Gimmick { get {return tutorial_gimmick; } set { this.tutorial_gimmick = value;} }
+  Option.OptionManager.TutorialType tutorialtype;
+  public Option.OptionManager.TutorialType TUTORIALTYPE { get {return tutorialtype; } set { this.tutorialtype = value;} }
   
   [SerializeField]
   int[] tagets_1 = new int[0];

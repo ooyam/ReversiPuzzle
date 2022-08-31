@@ -229,7 +229,6 @@ namespace Title
         const int STAGE_BTN_COLUMN_COUNT    = 5;
         const int STAGE_BTN_LINE_COUNT      = 10;
         const int STAGE_PAGE_COUNT          = 5;
-        const float STAGE_PAGE_MOVE_SPEED   = 0.3f;
         readonly float STAGE_BTN_POS_X      = (STAGE_BTN_COLUMN_COUNT - 1) / 2.0f * -STAGE_BTN_OFFSET_X;
         readonly float STAGE_BTN_POS_Y      = STAGE_BTN_LINE_COUNT / 2.0f * STAGE_BTN_OFFSET_Y;
         readonly int STAGE_MAX_PAGE_INDEX   = STAGE_PAGE_COUNT - 1;
@@ -364,7 +363,7 @@ namespace Title
             //ページ移動
             Vector2 targetPos = new Vector2(mDisplayPage * -PLAY_SCREEN_WIDTH, 0.0f);
             if (mPageMoveCor != null) StopCoroutine(mPageMoveCor);
-            mPageMoveCor = StartCoroutine(DecelerationMovement(mStageSelChildTra[(int)StageSelChild.Stages], STAGE_PAGE_MOVE_SPEED, targetPos));
+            mPageMoveCor = StartCoroutine(DecelerationMovement(mStageSelChildTra[(int)StageSelChild.Stages], PAGE_MOVE_SPEED, targetPos));
 
             //矢印表示状態変更
             mStageSelChildObj[(int)StageSelChild.RightArrow].SetActive(mDisplayPage < STAGE_MAX_PAGE_INDEX);

@@ -85,7 +85,7 @@ namespace PuzzleMain
             yield return StartCoroutine(ShowAdInterstitial());
 
             //ƒ^ƒCƒgƒ‹‚ÖˆÚŠÇ
-            SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
+            ReturnTitle();
         }
 
         /// <summary>

@@ -232,6 +232,7 @@ public class PuzzleDefine : MonoBehaviour
     public static bool NOW_SUPPORT_ITEM_USE         = false;  //援護アイテム使用中?
     public static bool NOW_SUPPORT_ITEM_READY       = false;  //援護アイテム準備中?
     public static bool NOW_TURN_END_PROCESSING      = false;  //ターン終了処理中？
+    public static bool NOW_OPTION_VIEW              = false;  //オプション表示中？
 
     //ステージ別設定項目
     public static int     STAGE_NUMBER          { get; private set; }   //ステージ番号
@@ -268,6 +269,28 @@ public class PuzzleDefine : MonoBehaviour
         NOW_SUPPORT_ITEM_USE        = false;
         NOW_SUPPORT_ITEM_READY      = false;
         NOW_TURN_END_PROCESSING     = false;
+        NOW_OPTION_VIEW             = false;
+    }
+
+    /// <summary>
+    /// 操作可能確認
+    /// </summary>
+    /// <returns></returns>
+    public static bool IsOperable()
+    {
+        if (GAME_CLEAR)                 return false;  //ゲームクリア
+        if (GAME_OVER)                  return false;  //ゲームオーバー
+        if (NOW_PUTTING_PIECES)         return false;  //駒配置中
+        if (NOW_REVERSING_PIECES)       return false;  //駒反転中
+        if (NOW_DESTROYING_PIECES)      return false;  //駒破壊中
+        if (NOW_FALLING_PIECES)         return false;  //駒落下中
+        if (NOW_GIMMICK_DESTROY_WAIT)   return false;  //ギミック破壊待機中
+        if (NOW_GIMMICK_STATE_CHANGE)   return false;  //ギミック状態変化中
+        if (NOW_SUPPORT_ITEM_USE)       return false;  //援護アイテム使用中
+        if (NOW_TURN_END_PROCESSING)    return false;  //ターン終了処理中
+        if (NOW_OPTION_VIEW)            return false;  //オプション表示中
+
+        return true;
     }
 
     /// <summary>

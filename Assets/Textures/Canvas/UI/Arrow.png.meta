@@ -14,6 +14,9 @@ TextureImporter:
   - first:
       213: 5946551882310926714
     second: Arrow_Left_White
+  - first:
+      213: 4428292855295335941
+    second: Arrow_Red
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -189,7 +192,7 @@ TextureImporter:
         width: 117
         height: 117
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -210,7 +213,7 @@ TextureImporter:
         width: 117
         height: 117
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -218,6 +221,27 @@ TextureImporter:
       bones: []
       spriteID: a71c2974e65668250800000000000000
       internalID: 5946551882310926714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Red
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 981
+        width: 117
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50e5749c3e4747d30800000000000000
+      internalID: 4428292855295335941
       vertices: []
       indices: 
       edges: []
