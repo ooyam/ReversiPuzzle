@@ -89,6 +89,9 @@ namespace PuzzleMain
 
             //攻撃を行う駒リスト
             attackPiecesList = new List<int>();
+
+            //番号札順番リセット
+            sNumberTagNextOrder = 0;
         }
 
 
@@ -576,7 +579,7 @@ namespace PuzzleMain
         /// <summary>
         /// 枠破壊確認・実行
         /// </summary>
-        IEnumerator DestroyFrame()
+        public IEnumerator DestroyFrame()
         {
             if (frameSquareIdListArr == null) yield break;
 
@@ -629,7 +632,7 @@ namespace PuzzleMain
                     { coroutine = StartCoroutine(AnimationStart(gimmickInfo.ani, STATE_NAME_BURST)); }
 
                     //SE再生
-                    SE_Onshot(SE_Type.FrameBurst);
+                    SE_OneShot(SE_Type.FrameBurst);
 
                     //破壊演出待機
                     yield return coroutine;
@@ -808,7 +811,7 @@ namespace PuzzleMain
                 Destroy(cageObjArr[desIndex]);
 
                 //目標確認
-                TargetMgr.TargetDecreaseCheck(COLORLESS_ID, (int)Gimmicks.Cage);
+                TargetMgr.TargetDecreaseCheck(cageInfoArr[desIndex].colorId, (int)Gimmicks.Cage);
 
                 //管理配列リセット
                 cageObjArr[desIndex] = null;           //檻オブジェクトリスト
@@ -894,7 +897,7 @@ namespace PuzzleMain
             gimInfo.tra.rotation = Quaternion.Euler(degreeX, 0.0f, degreeZ);
 
             //SE開始
-            AudioSource audio = SE_Onshot(SE_Type.ThiefRun);
+            AudioSource audio = SE_OneShot(SE_Type.ThiefRun);
 
             //移動
             yield return StartCoroutine(ConstantSpeedMovement(gimInfo.tra, THIEF_ATTACK_MOVE_SPEED, movePos));
@@ -927,9 +930,15 @@ namespace PuzzleMain
             }
             gimInfo.tra.rotation = Quaternion.Euler(degreeX, 0.0f, degreeZ);
 
+            //SE開始
+            audio = SE_OneShot(SE_Type.ThiefRun);
+
             //移動
             yield return StartCoroutine(ConstantSpeedMovement(gimInfo.tra, THIEF_ATTACK_MOVE_SPEED, gimInfo.defaultPos));
             gimInfo.tra.rotation = DEFAULT_QUEST;
+
+            //SE停止
+            SE_Stop(audio);
 
             //待機アニメーション
             AnimationPlay(gimInfo.ani);

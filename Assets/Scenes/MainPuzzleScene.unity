@@ -6192,6 +6192,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 850570568}
     m_Modifications:
+    - target: {fileID: 816616458487277379, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 991875266291632696, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151634250052603846, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1526744140907142130, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1549519675736122413, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1781735549447554016, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
         type: 3}
       propertyPath: m_IsActive
@@ -6207,6 +6232,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: IsPushLeftArrow_Option
       objectReference: {fileID: 0}
+    - target: {fileID: 3957459517931849318, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4316910609749190243, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4670117759327965210, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6216,6 +6251,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: IsPushRightArrow_Option
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830605183616627756, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4989214656818160537, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
         type: 3}
@@ -6327,12 +6367,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5603652948661686427, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6611842561056452787, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538014030445160677, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8143583741802866393, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8534030635531372007, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8562985252026489761, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8623910416388661422, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
         type: 3}
       propertyPath: m_IsActive
       value: 0

@@ -112,7 +112,7 @@ namespace PuzzleMain
             NOW_SUPPORT_ITEM_READY = true;
 
             //SE再生
-            SE_Onshot(SE_Type.SupportItemSelect);
+            SE_OneShot(SE_Type.SupportItemSelect);
 
             //指定アイテムを準備状態へ
             mWaitItemReadyUse[_itemNum] = true;
@@ -161,7 +161,7 @@ namespace PuzzleMain
             if (_active)
             {
                 //SE再生
-                SE_Onshot(SE_Type.SupportItemAppearance);
+                SE_OneShot(SE_Type.SupportItemAppearance);
 
                 //表示
                 mWaitItemObjArr[_itemNum].SetActive(true);
@@ -250,11 +250,30 @@ namespace PuzzleMain
         /// <returns></returns>
         int GetGenerateItemNumber(bool _line, bool _column, int _dirCount, int _pieceCount)
         {
-            if (_line && _column)                          return (int)SupportItems.Star;           //星生成
-            if (_column)                                   return (int)SupportItems.RocketColumn;   //ロケット(縦)生成
-            if (_line)                                     return (int)SupportItems.RocketLine;     //ロケット(横)生成
-            if (_dirCount >= FIREWORK_USE_DIR_PIECE_COUNT) return (int)SupportItems.Firework;       //花火
-            if (_pieceCount >= DUCK_USE_DEL_PIECE_COUNT)   return (int)SupportItems.Duck;           //アヒル生成
+            //星生成
+            int checkNum = (int)SupportItems.Star;
+            if (!mWaitItemObjArr[checkNum].activeSelf && _line && _column)
+                return checkNum;
+
+            //ロケット(縦)生成
+            checkNum = (int)SupportItems.RocketColumn;
+            if (!mWaitItemObjArr[checkNum].activeSelf && _column)
+                return checkNum;
+
+            //ロケット(横)生成
+            checkNum = (int)SupportItems.RocketLine;
+            if (!mWaitItemObjArr[checkNum].activeSelf && _line)
+                return checkNum;
+
+            //花火
+            checkNum = (int)SupportItems.Firework;
+            if (!mWaitItemObjArr[checkNum].activeSelf && _dirCount >= FIREWORK_USE_DIR_PIECE_COUNT)
+                return checkNum;
+
+            //アヒル生成
+            checkNum = (int)SupportItems.Duck;
+            if (!mWaitItemObjArr[checkNum].activeSelf && _pieceCount >= DUCK_USE_DEL_PIECE_COUNT)
+                return checkNum;
 
             //生成無し
             return INT_NULL;

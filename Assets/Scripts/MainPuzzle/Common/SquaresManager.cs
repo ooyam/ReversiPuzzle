@@ -136,7 +136,7 @@ namespace PuzzleMain
         public void MoveNextPieceFrame(int _nextPuPieceIndex)
         {
             //SEçƒê∂
-            SE_Onshot(SE_Type.PieceSelect);
+            SE_OneShot(SE_Type.PieceSelect);
 
             //à⁄ìÆ
             mNextPieceFrameTra.SetParent(sNextPieceBoxTraArr[_nextPuPieceIndex], false);

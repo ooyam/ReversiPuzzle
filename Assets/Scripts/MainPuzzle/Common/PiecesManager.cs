@@ -126,7 +126,7 @@ namespace PuzzleMain
         void PutPiece(int squareId)
         {
             //SE再生
-            SE_Onshot(SE_Type.PiecePut);
+            SE_OneShot(SE_Type.PiecePut);
 
             //盤面の駒削除,管理配列差し替え
             DeletePiece(squareId);
@@ -364,7 +364,7 @@ namespace PuzzleMain
         IEnumerator PutPieceToSquare(GameObject deletePiece)
         {
             //移動SE再生
-            SE_Onshot(SE_Type.PieceMove);
+            SE_OneShot(SE_Type.PieceMove);
 
             //ターン数減少
             TurnMgr.TurnDecrease();
@@ -668,6 +668,9 @@ namespace PuzzleMain
             //反転終了待機
             yield return coroutine;
 
+            //色枠破壊確認
+            yield return StartCoroutine(GimmicksMgr.DestroyFrame());
+
             //反転駒の破壊
             StartCoroutine(StartDestroyingPieces());
 
@@ -694,7 +697,7 @@ namespace PuzzleMain
             GeneratePiece(generateColorId, reversPieceIndex);
 
             //SE再生
-            SE_Onshot(SE_Type.PiecePut);
+            SE_OneShot(SE_Type.PiecePut);
 
             //駒90°回転,縮小
             pieceTraArr[reversPieceIndex].localScale    = new Vector3(REVERSE_PIECE_CHANGE_SCALE, REVERSE_PIECE_CHANGE_SCALE, 0.0f);

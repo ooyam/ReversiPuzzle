@@ -10,6 +10,10 @@ namespace PuzzleMain
     {
         //自身のギミック情報
         GimmickInformation mGimmickInfo;
+
+        //再生中のAudioSource
+        AudioSource mAudio;
+
         void Start()
         {
             mGimmickInfo = this.GetComponent<GimmickInformation>();
@@ -33,14 +37,22 @@ namespace PuzzleMain
             {
                 //連続再生
                 case SE_Type.HamsterBurst:
-                    SE_ContinuousPlay(_seType);
+                    mAudio = SE_ContinuousPlay(_seType);
                     break;
 
                 //単発再生
                 default:
-                    SE_Onshot(_seType);
+                    mAudio = SE_OneShot(_seType);
                     break;
             }
+        }
+
+        /// <summary>
+        /// SE停止
+        /// </summary>
+        void GimmickSeStop()
+        {
+            SE_Stop(mAudio);
         }
     }
 }

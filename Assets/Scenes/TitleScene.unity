@@ -1084,6 +1084,13 @@ MonoBehaviour:
   mSwitchBtnSpr:
   - {fileID: -1494352897237206093, guid: cab2b8fbb041ba04abf0f9b601d21605, type: 3}
   - {fileID: 5207117429831932417, guid: cab2b8fbb041ba04abf0f9b601d21605, type: 3}
+  mTutorialBtnParentTra: {fileID: 0}
+  mTutorialScreenParentTra: {fileID: 0}
+  mArrowObjArr:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1978933776
 MonoBehaviour:
   m_ObjectHideFlags: 0

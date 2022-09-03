@@ -114,7 +114,7 @@ namespace PuzzleMain
             StartCoroutine(BGM_FadeStop());
 
             //SEçƒê∂
-            SE_Onshot(SE_Type.GameOver);
+            SE_OneShot(SE_Type.GameOver);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace PuzzleMain
             StartCoroutine(BGM_FadeStop());
 
             //SEçƒê∂
-            SE_Onshot(SE_Type.GameClear);
+            SE_OneShot(SE_Type.GameClear);
         }
 
         /// <summary>

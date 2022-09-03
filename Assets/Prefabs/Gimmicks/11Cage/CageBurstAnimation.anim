@@ -1863,6 +1863,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 24
     messageOptions: 0
+  - time: 3.15
+    functionName: GimmickSeStop
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 24
+    messageOptions: 0
   - time: 3.1666667
     functionName: GimmickSePlay
     data: 

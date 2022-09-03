@@ -281,7 +281,7 @@ namespace Sound
         /// </summary>
         /// <param name="_seType">SEの種類</param>
         /// <returns>クリップを設定したAudioSource</returns>
-        public static AudioSource SE_Onshot(SE_Type _seType)
+        public static AudioSource SE_OneShot(SE_Type _seType)
         {
             if (!Preferences.Se) return null;
 
@@ -354,6 +354,7 @@ namespace Sound
         {
             for (int i = 0; i < SE_PLAY_MAX; i++)
             {
+                if (!mSE_AudioArr[i].isPlaying) continue;
                 SE_Stop(mSE_AudioArr[i]);
             }
         }

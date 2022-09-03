@@ -58,7 +58,7 @@ namespace PuzzleMain
 
                 //íPî≠çƒê∂
                 default:
-                    SE_Onshot(_seType);
+                    SE_OneShot(_seType);
                     break;
             }
         }

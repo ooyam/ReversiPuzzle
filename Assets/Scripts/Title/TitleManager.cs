@@ -335,7 +335,7 @@ namespace Title
             if (ClearStageNum + 1 < _stageNum)
             {
                 //未開放ステージ
-                SE_Onshot(SE_Type.BtnNo);
+                SE_OneShot(SE_Type.BtnNo);
                 return;
             }
 
@@ -343,7 +343,7 @@ namespace Title
             GameManager.SelectStage = _stageNum;
 
             //SE再生
-            SE_Onshot(SE_Type.StageSelect);
+            SE_OneShot(SE_Type.StageSelect);
 
             //BGMフェードアウト
             StartCoroutine(BGM_FadeStop());
@@ -386,7 +386,7 @@ namespace Title
             StageSelectDisplay();
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Title
             TitleDisplay();
 
             //SE再生
-            SE_Onshot(SE_Type.BtnNo);
+            SE_OneShot(SE_Type.BtnNo);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace Title
             StagePageChange();
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -424,7 +424,7 @@ namespace Title
             StagePageChange();
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
         }
     }
 }

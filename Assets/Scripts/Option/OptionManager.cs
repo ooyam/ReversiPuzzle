@@ -200,7 +200,7 @@ namespace Option
             SetFilter(true);
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             StartCoroutine(ObjectAppearance(OptionState.None));
         }
 
@@ -214,14 +214,14 @@ namespace Option
             if (Bgm)
             {
                 //BGM開始
-                SE_Onshot(SE_Type.BtnYes);
+                SE_OneShot(SE_Type.BtnYes);
                 BGM_FadeRestart();
                 mBgmBtnImg.sprite = mSwitchBtnSpr[(int)SwitchBtnType.On];
             }
             else
             {
                 //BGMストップ
-                SE_Onshot(SE_Type.BtnNo);
+                SE_OneShot(SE_Type.BtnNo);
                 BGM_Stop();
                 mBgmBtnImg.sprite = mSwitchBtnSpr[(int)SwitchBtnType.Off];
             }
@@ -234,10 +234,18 @@ namespace Option
         {
             //SE切替
             Se = !Se;
-            mSeBtnImg.sprite = Se ? mSwitchBtnSpr[(int)SwitchBtnType.On] : mSwitchBtnSpr[(int)SwitchBtnType.Off];
-
-            //切替SE
-            if (Se) SE_Onshot(SE_Type.BtnYes);
+            if (Se)
+            {
+                //ON
+                mSeBtnImg.sprite = mSwitchBtnSpr[(int)SwitchBtnType.On];
+                SE_OneShot(SE_Type.BtnYes);
+            }
+            else
+            {
+                //OFF
+                mSeBtnImg.sprite = mSwitchBtnSpr[(int)SwitchBtnType.Off];
+                SE_StopAll();
+            }
         }
 
         /// <summary>
@@ -246,7 +254,7 @@ namespace Option
         public void IsPushCredit()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             StartCoroutine(ObjectAppearance(OptionState.Credit));
         }
 
@@ -256,7 +264,7 @@ namespace Option
         public void IsPushQuitGame()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             SetConfirmText(ConfirmType.QiteGame);
             StartCoroutine(ObjectAppearance(OptionState.Confirm, false));
         }
@@ -267,7 +275,7 @@ namespace Option
         public void IsPushYes()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             
             //シーン移管
             switch (mConfirmType)
@@ -297,7 +305,7 @@ namespace Option
         public void IsPushNo()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnNo);
+            SE_OneShot(SE_Type.BtnNo);
             StartCoroutine(ObjectAppearance(OptionState.None));
         }
 
@@ -330,7 +338,7 @@ namespace Option
             }
 
             //SE再生
-            SE_Onshot(SE_Type.BtnNo);
+            SE_OneShot(SE_Type.BtnNo);
         }
 
         /// <summary>
@@ -339,7 +347,7 @@ namespace Option
         public void IsPushTutorial()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             StartCoroutine(ObjectAppearance(OptionState.TutorialSel));
 
             //ページ初期化
@@ -353,7 +361,7 @@ namespace Option
         public void IsPushRedo()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             SetConfirmText(ConfirmType.Redo);
             StartCoroutine(ObjectAppearance(OptionState.Confirm, false));
         }
@@ -364,7 +372,7 @@ namespace Option
         public void IsPushReturnTitle()
         {
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
             SetConfirmText(ConfirmType.ReturnTitle);
             StartCoroutine(ObjectAppearance(OptionState.Confirm, false));
         }
@@ -378,13 +386,13 @@ namespace Option
             if ((int)mTutorialOpenedType < (int)_type)
             {
                 //SE再生
-                SE_Onshot(SE_Type.BtnNo);
+                SE_OneShot(SE_Type.BtnNo);
             }
             //解放済
             else
             {
                 //SE再生
-                SE_Onshot(SE_Type.BtnYes);
+                SE_OneShot(SE_Type.BtnYes);
                 SetTutorialView(_type);
                 StartCoroutine(ObjectAppearance(OptionState.TutorialView));
 
@@ -415,7 +423,7 @@ namespace Option
             }
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -439,7 +447,7 @@ namespace Option
             }
 
             //SE再生
-            SE_Onshot(SE_Type.BtnYes);
+            SE_OneShot(SE_Type.BtnYes);
         }
 
 
