@@ -29,6 +29,9 @@ TextureImporter:
   - first:
       213: -7707917330291737424
     second: Button_DarkBlue
+  - first:
+      213: -9112927591779324202
+    second: Button_Pink
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -330,7 +333,7 @@ TextureImporter:
         width: 362
         height: 144
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 66, y: 72, z: 66, w: 72}
       outline: []
       physicsShape: []
@@ -338,6 +341,27 @@ TextureImporter:
       bones: []
       spriteID: 0bc32e1c60af70590800000000000000
       internalID: -7707917330291737424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_Pink
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 418
+        width: 362
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 66, y: 72, z: 66, w: 72}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6de232c33a0688180800000000000000
+      internalID: -9112927591779324202
       vertices: []
       indices: 
       edges: []

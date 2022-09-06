@@ -6,7 +6,7 @@ using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static animation.AnimationManager;
-using static ObjectMove_2D.ObjectMove_2D;
+using static ObjectMove.ObjectMove_2D;
 using static Sound.SoundManager;
 
 namespace PuzzleMain
@@ -258,7 +258,7 @@ namespace PuzzleMain
         public IEnumerator ChangeGimmickState()
         {
             //ギミック状態変化中フラグセット
-            NOW_GIMMICK_STATE_CHANGE = true;
+            FlagOn(PuzzleFlag.NowGimmickStateChange);
 
             //コルーチンリスト
             List<Coroutine> coroutineList = new List<Coroutine>();
@@ -377,7 +377,7 @@ namespace PuzzleMain
             { yield return c; }
 
             //ギミック状態変化中フラグリセット
-            NOW_GIMMICK_STATE_CHANGE = false;
+            FlagOff(PuzzleFlag.NowGimmickStateChange);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace PuzzleMain
         public IEnumerator DestroyGimmicks_TurnEnd()
         {
             //ギミック破壊待機中フラグセット
-            NOW_GIMMICK_DESTROY_WAIT = true;
+            FlagOn(PuzzleFlag.NowGimmickDestroyWait);
 
             //ギミック破壊
             Coroutine[] coroutines = new Coroutine[]
@@ -410,7 +410,7 @@ namespace PuzzleMain
             { yield return c; }
 
             //ギミック破壊待機中フラグリセット
-            NOW_GIMMICK_DESTROY_WAIT = false;
+            FlagOff(PuzzleFlag.NowGimmickDestroyWait);
         }
 
         /// <summary>

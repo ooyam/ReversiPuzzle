@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,16 +9,34 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
     //選択ステージ番号
     public static int SelectStage { get; set; }
+
+    /// <summary>
+    /// シーン移管終了時の処理
+    /// </summary>
+    public static void SceneChangeEnd()
+    {
+        //パズルシーンに移管した場合
+        if (SceneManager.GetActiveScene().name == CommonDefine.PUZZLE_SCENE_NAME)
+        {
+            //準備中フラグのリセット
+            PuzzleDefine.FlagOff(PuzzleDefine.PuzzleFlag.GamePreparation);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape)) QuitGame();
+    }
 
     /// <summary>
     /// ゲーム終了

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ui;
 using Option;
-using static SaveDataManager;
 
 namespace Title
 {
@@ -41,7 +40,7 @@ namespace Title
         void Awake()
         {
             //セーブデータ読み込み
-            DataLoad();
+            SaveDataManager.DataLoad();
             sTitleState = TitleState.None;
             TitleMgr  = mTitleManager;
             OptionMgr = mOptionManager;

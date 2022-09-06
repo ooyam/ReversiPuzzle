@@ -5,7 +5,7 @@ using System;
 using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
-using static ObjectMove_2D.ObjectMove_2D;
+using static ObjectMove.ObjectMove_2D;
 using static Sound.SoundManager;
 
 namespace PuzzleMain
@@ -115,7 +115,9 @@ namespace PuzzleMain
         public IEnumerator SquareColorChange(Color _afterColor, int _squareId, bool _fade)
         {
             if (!_fade) mSquareSpriRenArr[_squareId].color = _afterColor;
-            else yield return StartCoroutine(SpriteRendererPaletteChange(mSquareSpriRenArr[_squareId], SQUARE_CHANGE_SPEED, new Color[] { mSquareSpriRenArr[_squareId].color, _afterColor }));
+            else yield return StartCoroutine(SpriteRendererPaletteChange(
+                mSquareSpriRenArr[_squareId], SQUARE_CHANGE_SPEED,
+                new Color[] { mSquareSpriRenArr[_squareId].color, _afterColor }));
         }
 
         /// <summary>

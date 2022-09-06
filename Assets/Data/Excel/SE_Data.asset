@@ -97,7 +97,7 @@ MonoBehaviour:
     playspan: 0
   - se_type: 16
     clipname: jewelry_burst
-    volume: 0.5
+    volume: 0.3
     playtimes: 0
     playspan: 0
   - se_type: 17
@@ -117,7 +117,7 @@ MonoBehaviour:
     playspan: 0
   - se_type: 20
     clipname: flower_burst
-    volume: 0.5
+    volume: 0.3
     playtimes: 0
     playspan: 0
   - se_type: 21
@@ -127,14 +127,14 @@ MonoBehaviour:
     playspan: 0
   - se_type: 22
     clipname: hamster_damage
-    volume: 0.5
+    volume: 0.2
     playtimes: 0
     playspan: 0
   - se_type: 23
     clipname: hamster_burst
-    volume: 0.5
-    playtimes: 5
-    playspan: 0.3
+    volume: 0.3
+    playtimes: 4
+    playspan: 0.2
   - se_type: 24
     clipname: cage_Ignite
     volume: 0.5
@@ -167,11 +167,11 @@ MonoBehaviour:
     playspan: 0
   - se_type: 30
     clipname: tornado_attack
-    volume: 0.5
+    volume: 0.3
     playtimes: 0
     playspan: 0
   - se_type: 31
     clipname: tornado_burst
-    volume: 0.5
+    volume: 0.4
     playtimes: 0
     playspan: 0

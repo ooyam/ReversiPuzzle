@@ -6,7 +6,6 @@ using PuzzleMain.Ui;
 using Ui;
 using Option;
 using static Sound.SoundManager;
-using static SaveDataManager;
 using static PuzzleDefine;
 
 namespace PuzzleMain
@@ -107,7 +106,7 @@ namespace PuzzleMain
         /// </summary>
         public void GameOver()
         {
-            GAME_OVER = true;
+            FlagOn(PuzzleFlag.GameOver);
             StartCoroutine(ResultMgr.GenerateGameOverObj());
 
             //BGM終了
@@ -123,8 +122,9 @@ namespace PuzzleMain
         public void GameClear()
         {
             //セーブ
-            DataSave(STAGE_NUMBER);
-            GAME_CLEAR = true;
+            SaveDataManager.SetClearStageNum(STAGE_NUMBER);
+            SaveDataManager.DataSave();
+            FlagOn(PuzzleFlag.GameClear);
             StartCoroutine(ResultMgr.GenerateGameClearObj());
 
             //BGM終了
@@ -154,6 +154,9 @@ namespace PuzzleMain
             //フラグリセット
             FlagReset();
 
+            //準備中フラグセット
+            FlagOn(PuzzleFlag.GamePreparation);
+
             //リソースデータ読み込み
             LoadResourcesData();
 
@@ -182,11 +185,26 @@ namespace PuzzleMain
             TurnMgr.Initialize();
 
             //OptionManagerの初期化
-            mOptionManager.Initialize();
+            OptionMgr.Initialize();
 
             //BGM開始
             int bgmInt = UnityEngine.Random.Range((int)BGM_Type.Stage1, (int)BGM_Type.Count);
             BGM_FadeStart((BGM_Type)Enum.ToObject(typeof(BGM_Type), bgmInt));
+
+            //初期化終了処理
+            StartCoroutine(InitializeEnd());
+        }
+
+        /// <summary>
+        /// 初期化終了処理
+        /// </summary>
+        public IEnumerator InitializeEnd()
+        {
+            //準備完了(シーンフェード終了)まで待機
+            yield return new WaitWhile(() => GetFlag(PuzzleFlag.GamePreparation));
+
+            //強制チュートリアル開始
+            OptionMgr.ForcedTutorial();
         }
     }
 }

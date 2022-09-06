@@ -266,7 +266,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u76EE\u6A19\u306B\u8A2D\u5B9A\u3055\u308C\u305F\u8272\u306E<color=#ff4c4c>\u99D2</color>\u3084\u3001<color=#00885a>\u969C\u5BB3\u7269</color>\u3092\u3059\u3079\u3066\u7834\u58CA\u3059\u308B\u3068\u3001<color=#c71585>\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2</color>\u3067\u3059\u3002"
+  m_Text: "\u76EE\u6A19\u306B\u8A2D\u5B9A\u3055\u308C\u305F\u8272\u306E\u99D2\u3084\u3001\u969C\u5BB3\u7269\u3092<color=#ff6666>\u3059\u3079\u3066\u7834\u58CA</color>\u3059\u308B\u3068\u3001<color=#c71585>\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2</color>\u3067\u3059\u3002"
 --- !u!1 &2574204738590037601
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,9 +333,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4659617981423430386, guid: 59a66a868be8d0d4c8917ac38ac8216a,
+  m_Sprite: {fileID: -1257769187640015746, guid: 5b59f4691dff5c642a7730c90fc8cdb7,
     type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -844,7 +844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2160, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 700, y: 1150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5593631292278368093
@@ -963,7 +963,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "<color=#ff4c4c>\u99D2</color>\u30921\u3064\u7F6E\u304F\u3054\u3068\u306B\u30011\u30BF\u30FC\u30F3\u304C\u7D4C\u904E\u3057\u307E\u3059\u3002\r\r\r\n\u30BF\u30FC\u30F3\u6570\u5185\u306B\u76EE\u6A19\u3092\u9054\u6210\u3067\u304D\u306A\u3051\u308C\u3070\u3001<color=#6a1917>\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC</color>\u3067\u3059\u3002"
+  m_Text: "\u99D2\u30921\u3064\u7F6E\u304F\u3054\u3068\u306B\u3001<color=#ff6666>1\u30BF\u30FC\u30F3</color>\u304C\u7D4C\u904E\u3057\u307E\u3059\u3002\r\r\r\n\u30BF\u30FC\u30F3\u6570\u5185\u306B\u76EE\u6A19\u3092\u9054\u6210\u3067\u304D\u306A\u3051\u308C\u3070\u3001<color=#6a1917>\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC</color>\u3067\u3059\u3002"
 --- !u!1 &6591910827505884000
 GameObject:
   m_ObjectHideFlags: 0

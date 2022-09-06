@@ -95,7 +95,7 @@ namespace PuzzleMain
         {
             StartCoroutine(CanvasMgr.SetFilter(true));
             ObjectDestroy();
-            mDisplayObj = Instantiate(mGameOverPreArr[(TURN_RECOVERED) ? 1 : 0]);
+            mDisplayObj = Instantiate(mGameOverPreArr[GetFlag(PuzzleFlag.TurnRecovered) ? 1 : 0]);
             yield return StartCoroutine(ObjectAppearance());
         }
 
@@ -431,7 +431,7 @@ namespace PuzzleMain
 
             //フラグのリセット
             FlagReset();
-            TURN_RECOVERED = true;
+            FlagOn(PuzzleFlag.TurnRecovered);
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace PuzzleMain
         /// <returns></returns>
         void TryAgain()
         {
-            SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
+            SceneFader.SceneChangeFade(PUZZLE_SCENE_NAME);
         }
 
         /// <summary>
@@ -449,7 +449,7 @@ namespace PuzzleMain
         /// <returns></returns>
         void ReturnTitle()
         {
-            SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
+            SceneFader.SceneChangeFade(TITLE_SCENE_NAME);
         }
 
 

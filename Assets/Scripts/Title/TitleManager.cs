@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static CommonDefine;
 using static Title.TitleMain;
-using static ObjectMove_UI.ObjectMove_UI;
+using static ObjectMove.ObjectMove_UI;
 using static animation.AnimationManager;
 using static Sound.SoundManager;
 using static SaveDataManager;
@@ -349,7 +349,7 @@ namespace Title
             StartCoroutine(BGM_FadeStop());
 
             //ÉVÅ[Éìà⁄ä«
-            SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
+            SceneFader.SceneChangeFade(PUZZLE_SCENE_NAME);
         }
 
         /// <summary>

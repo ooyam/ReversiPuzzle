@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CommonDefine : MonoBehaviour
+public class CommonDefine
 {
     public const string TITLE_SCENE_NAME     = "TitleScene";        //タイトルシーン名
     public const string PUZZLE_SCENE_NAME    = "MainPuzzleScene";   //パズルシーン名

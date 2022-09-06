@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static CommonDefine;
 
-namespace ObjectMove_2D
+namespace ObjectMove
 {
     public class ObjectMove_2D : MonoBehaviour
     {

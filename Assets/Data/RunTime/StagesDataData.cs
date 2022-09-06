@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Option;
 
 ///
 /// !!! Machine generated code !!!
@@ -17,16 +18,16 @@ public class StagesDataData
   public int Turn { get {return turn; } set { this.turn = value;} }
   
   [SerializeField]
-  int[] use_color = new int[0];
-  public int[] Use_Color { get {return use_color; } set { this.use_color = value;} }
+  int[] usecolor = new int[0];
+  public int[] UseColor { get {return usecolor; } set { this.usecolor = value;} }
   
   [SerializeField]
-  int[] hide_sqr = new int[0];
-  public int[] Hide_Sqr { get {return hide_sqr; } set { this.hide_sqr = value;} }
+  int[] hidesqr = new int[0];
+  public int[] HideSqr { get {return hidesqr; } set { this.hidesqr = value;} }
   
   [SerializeField]
-  Option.OptionManager.TutorialType tutorialtype;
-  public Option.OptionManager.TutorialType TUTORIALTYPE { get {return tutorialtype; } set { this.tutorialtype = value;} }
+  OptionManager.TutorialType tutorialtype;
+  public OptionManager.TutorialType TutorialType { get {return tutorialtype; } set { this.tutorialtype = value;} }
   
   [SerializeField]
   int[] tagets_1 = new int[0];

@@ -5,7 +5,7 @@ using System;
 using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
-using static ObjectMove_2D.ObjectMove_2D;
+using static ObjectMove.ObjectMove_2D;
 using static Sound.SoundManager;
 
 namespace PuzzleMain
@@ -272,7 +272,7 @@ namespace PuzzleMain
         public void TapObject(GameObject tapObj)
         {
             //援護アイテム準備中以外はギミックをタップできない
-            if (tapObj.CompareTag(GIMMICK_TAG) && !NOW_SUPPORT_ITEM_READY) return;
+            if (tapObj.CompareTag(GIMMICK_TAG) && !GetFlag(PuzzleFlag.NowSupportItemReady)) return;
 
             //オブジェクト番号取得
             int pieceObjIndex = Array.IndexOf(sPieceObjArr, tapObj);
@@ -282,7 +282,7 @@ namespace PuzzleMain
             if (pieceObjIndex >= 0)
             {
                 //援護アイテム準備中の場合
-                if (NOW_SUPPORT_ITEM_READY)
+                if (GetFlag(PuzzleFlag.NowSupportItemReady))
                 {
                     StartCoroutine(SupportItemsMgr.UseItems(pieceObjIndex));
                 }
@@ -296,7 +296,7 @@ namespace PuzzleMain
             else if (nextPieceObjIndex >= 0)
             {
                 //援護アイテム準備中の場合は解除
-                if (NOW_SUPPORT_ITEM_READY)
+                if (GetFlag(PuzzleFlag.NowSupportItemReady))
                 {
                     SupportItemsMgr.ResetWaitItemReady();
                 }
@@ -370,7 +370,7 @@ namespace PuzzleMain
             TurnMgr.TurnDecrease();
 
             //配置中フラグセット
-            NOW_PUTTING_PIECES = true;
+            FlagOn(PuzzleFlag.NowPuttingPieces);
 
             //削除する駒のマスに指定中の待機駒をセットする
             int putIndex = Array.IndexOf(sPieceObjArr, deletePiece);
@@ -418,7 +418,7 @@ namespace PuzzleMain
             }
 
             //配置中フラグリセット
-            NOW_PUTTING_PIECES = false;
+            FlagOff(PuzzleFlag.NowPuttingPieces);
         }
 
         /// <summary>
@@ -591,7 +591,7 @@ namespace PuzzleMain
         IEnumerator StratReversingPiece(int putPieceColorId, int reversIndex)
         {
             //反転中フラグセット
-            NOW_REVERSING_PIECES = true;
+            FlagOn(PuzzleFlag.NowReversingPieces);
 
             //ギミック
             if (sPieceObjArr[reversIndex].CompareTag(GIMMICK_TAG))
@@ -613,7 +613,7 @@ namespace PuzzleMain
             StartCoroutine(StartDestroyingPiece(reversIndex));
 
             //反転中フラグリセット
-            NOW_REVERSING_PIECES = false;
+            FlagOff(PuzzleFlag.NowReversingPieces);
         }
 
         /// <summary>
@@ -625,7 +625,7 @@ namespace PuzzleMain
         IEnumerator StratReversingPieces(int putPieceColorId, List<int[]> reversIndexList)
         {
             //反転中フラグセット
-            NOW_REVERSING_PIECES = true;
+            FlagOn(PuzzleFlag.NowReversingPieces);
 
             //反転開始
             Coroutine coroutine = null;
@@ -675,7 +675,7 @@ namespace PuzzleMain
             StartCoroutine(StartDestroyingPieces());
 
             //反転中フラグリセット
-            NOW_REVERSING_PIECES = false;
+            FlagOff(PuzzleFlag.NowReversingPieces);
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace PuzzleMain
         public IEnumerator StartDestroyingPiece(int destroyIndex)
         {
             //破壊中フラグセット
-            NOW_DESTROYING_PIECES = true;
+            FlagOn(PuzzleFlag.NowDestroyingPieces);
 
             //駒縮小
             if (sPieceObjArr[destroyIndex].CompareTag(PIECE_TAG))
@@ -749,7 +749,7 @@ namespace PuzzleMain
             yield return StartCoroutine(StratFallingPieces());
 
             //破壊中フラグリセット
-            NOW_DESTROYING_PIECES = false;
+            FlagOff(PuzzleFlag.NowDestroyingPieces);
         }
 
         /// <summary>
@@ -759,7 +759,7 @@ namespace PuzzleMain
         public IEnumerator StartDestroyingPieces(bool useSupport = false)
         {
             //破壊中フラグセット
-            NOW_DESTROYING_PIECES = true;
+            FlagOn(PuzzleFlag.NowDestroyingPieces);
 
             //駒縮小
             Coroutine coroutine = null;
@@ -792,7 +792,7 @@ namespace PuzzleMain
             StartCoroutine(TurnMgr.TurnEnd(useSupport));
 
             //破壊中フラグリセット
-            NOW_DESTROYING_PIECES = false;
+            FlagOff(PuzzleFlag.NowDestroyingPieces);
         }
 
         /// <summary>
@@ -801,7 +801,7 @@ namespace PuzzleMain
         public IEnumerator StratFallingPieces()
         {
             //駒落下中フラグセット
-            NOW_FALLING_PIECES = true;
+            FlagOn(PuzzleFlag.NowFallingPieces);
 
             //全駒管理番号の更新,落下駒リストの取得
             List<int> fallPiecesIndexList = SettingOfFallingPieces();
@@ -822,7 +822,7 @@ namespace PuzzleMain
             { yield return coroutine; }
 
             //駒落下中フラグリセット
-            NOW_FALLING_PIECES = false;
+            FlagOff(PuzzleFlag.NowFallingPieces);
         }
 
         /// <summary>

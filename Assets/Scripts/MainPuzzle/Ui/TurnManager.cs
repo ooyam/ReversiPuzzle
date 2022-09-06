@@ -99,7 +99,7 @@ namespace PuzzleMain.Ui
         public IEnumerator TurnEnd(bool supportItem = false)
         {
             //ターン終了処理中フラグセット
-            NOW_TURN_END_PROCESSING = true;
+            FlagOn(PuzzleFlag.NowTurnEndProcessing);
 
             //特定ギミック破壊判定開始
             yield return StartCoroutine(GimmicksMgr.DestroyGimmicks_TurnEnd());
@@ -124,10 +124,10 @@ namespace PuzzleMain.Ui
             TargetMgr.TargetCheck();
 
             //ターン数確認
-            if (!GAME_CLEAR) TurnCountCheck();
+            if (!GetFlag(PuzzleFlag.GameClear)) TurnCountCheck();
 
             //ターン終了処理中フラグリセット
-            NOW_TURN_END_PROCESSING = false;
+            FlagOff(PuzzleFlag.NowTurnEndProcessing);
         }
     }
 }

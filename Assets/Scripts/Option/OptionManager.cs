@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using static Preferences;
 using static CommonDefine;
 using static PuzzleDefine;
 using static Sound.SoundManager;
 using static animation.AnimationManager;
-using static ObjectMove_UI.ObjectMove_UI;
+using static ObjectMove.ObjectMove_UI;
 
 namespace Option
 {
@@ -86,13 +85,15 @@ namespace Option
         [Header("チュートリアル格納オブジェクト")]
         [SerializeField]
         RectTransform mTutorialScreenParentTra;
-        GameObject[] mTutorialObjArr = new GameObject[(int)TutorialType.Count];
-        RectTransform[] mTutorialPagesTraArr = new RectTransform[(int)TutorialType.Count];
-        int[] mTutorialMaxPageArr = new int[(int)TutorialType.Count];
+        readonly GameObject[] mTutorialObjArr = new GameObject[(int)TutorialType.Count];
+        readonly RectTransform[] mTutorialPagesTraArr = new RectTransform[(int)TutorialType.Count];
+        readonly int[] mTutorialMaxPageArr = new int[(int)TutorialType.Count];
 
         //チュートリアルタイプ
         public enum TutorialType
         {
+            None = -1,   //データベース無し指定用
+
             //---共通--//
 
             GameDescription,    //ゲームの説明
@@ -103,10 +104,10 @@ namespace Option
 
             Balloon,    //風船
             Jewelry,    //宝石
-            Wall,       //壁
+            Wall,       //石壁
             Flower,     //種→蕾→お花
             Frame,      //色枠
-            Hamster,    //ハムスター
+            Hamster,    //オラフ
             Cage,       //鉄格子
             NumberTag,  //番号札
             Thief,      //泥棒
@@ -117,8 +118,8 @@ namespace Option
         }
         TutorialType mTutorialType;
 
-        //解放したチュートリアル
-        TutorialType mTutorialOpenedType = TutorialType.Hamster;
+        //強制表示チュートリアル
+        public static TutorialType ForcedTutorialType { get; set; }
 
         [Header("矢印オブジェクト")]
         [SerializeField]
@@ -169,8 +170,8 @@ namespace Option
                         mTutorialMaxPageArr[i] = pagesTra.childCount;
 
                         //チュートリアルボタン設定
-                        GameObject btnObj =
-                            mTutorialBtnParentTra.GetChild(i).GetChild(i > (int)mTutorialOpenedType ? 1 : 0).gameObject;    //0:解放状態,1:未開放
+                        int childIndex = (i <= (int)TutorialType.SupportItem || SaveDataManager.ViewedTutorialNum >= i) ? 0 : 1; //0:解放状態,1:未開放
+                        GameObject btnObj = mTutorialBtnParentTra.GetChild(i).GetChild(childIndex).gameObject;
                         btnObj.SetActive(true);
                         TutorialType type = (TutorialType)Enum.ToObject(typeof(TutorialType), i);
                         btnObj.GetComponent<Button>().onClick.AddListener(() => IsPushTutorialSelect(type));
@@ -179,8 +180,75 @@ namespace Option
             }
 
             //BGM・SE表示切替
-            mBgmBtnImg.sprite = mSwitchBtnSpr[Bgm ? (int)SwitchBtnType.On : (int)SwitchBtnType.Off];
-            mSeBtnImg.sprite = mSwitchBtnSpr[Se ? (int)SwitchBtnType.On : (int)SwitchBtnType.Off];
+            mBgmBtnImg.sprite = mSwitchBtnSpr[Preferences.Bgm ? (int)SwitchBtnType.On : (int)SwitchBtnType.Off];
+            mSeBtnImg.sprite = mSwitchBtnSpr[Preferences.Se ? (int)SwitchBtnType.On : (int)SwitchBtnType.Off];
+        }
+
+
+        //===============================================//
+        //---------------チュートリアル関係--------------//
+        //===============================================//
+
+        /// <summary>
+        /// 強制チュートリアル
+        /// </summary>
+        public void ForcedTutorial()
+        {
+            if (ForcedTutorialType == TutorialType.None) return;
+            if ((int)ForcedTutorialType <= SaveDataManager.ViewedTutorialNum) return;
+
+            //強制チュートリアル中フラグセット
+            FlagOn(PuzzleFlag.NowForcedTutorial);
+
+            //フィルター表示
+            SetFilter(true);
+
+            //チュートリアル表示
+            TutorialDisplay(ForcedTutorialType);
+        }
+
+        /// <summary>
+        /// 強制チュートリアル終了
+        /// </summary>
+        void ForcedTutorialEnd()
+        {
+            //データ保存
+            SaveDataManager.SetViewedTutorialNum((int)ForcedTutorialType);
+            SaveDataManager.DataSave();
+
+            //ゲーム説明の場合
+            if (ForcedTutorialType == TutorialType.GameDescription)
+            {
+                //続けて基本操作を表示
+                ForcedTutorialType = TutorialType.BasicOperation;
+                TutorialDisplay(ForcedTutorialType);
+            }
+            //その他
+            else
+            {
+                //フィルター非表示
+                SetFilter(false);
+
+                //オプション画面全非表示
+                ObjInactive();
+
+                //強制チュートリアル中フラグセット
+                FlagOff(PuzzleFlag.NowForcedTutorial);
+            }
+        }
+
+        /// <summary>
+        /// チュートリアル表示
+        /// </summary>
+        /// <param name="_type">チュートリアルタイプ</param>
+        void TutorialDisplay(TutorialType _type)
+        {
+            SetTutorialView(_type);
+            StartCoroutine(ObjectAppearance(OptionState.TutorialView));
+
+            //ページ初期化
+            mTutorialViewPage = 0;
+            TutorialViewPageChange();
         }
 
 
@@ -193,8 +261,15 @@ namespace Option
         /// </summary>
         public void IsPushOption()
         {
-            //パズルシーンで操作禁止の場合
-            if (mOptionType == OptionType.Puzzle && !IsOperable()) return;
+            //パズルシーン
+            if (mOptionType == OptionType.Puzzle)
+            {
+                //操作禁止
+                if (!IsOperable()) return;
+
+                //オプション表示フラグセット
+                FlagOn(PuzzleFlag.NowOptionView);
+            }
 
             //フィルター表示
             SetFilter(true);
@@ -210,8 +285,8 @@ namespace Option
         public void IsPushBGM()
         {
             //BGM切替
-            Bgm = !Bgm;
-            if (Bgm)
+            Preferences.Bgm = !Preferences.Bgm;
+            if (Preferences.Bgm)
             {
                 //BGM開始
                 SE_OneShot(SE_Type.BtnYes);
@@ -233,8 +308,8 @@ namespace Option
         public void IsPushSE()
         {
             //SE切替
-            Se = !Se;
-            if (Se)
+            Preferences.Se = !Preferences.Se;
+            if (Preferences.Se)
             {
                 //ON
                 mSeBtnImg.sprite = mSwitchBtnSpr[(int)SwitchBtnType.On];
@@ -283,13 +358,13 @@ namespace Option
                 //やり直し
                 case ConfirmType.Redo:
                     StartCoroutine(BGM_FadeStop()); //BGMフェードアウト
-                    SceneNavigator.Instance.Change(PUZZLE_SCENE_NAME);
+                    SceneFader.SceneChangeFade(PUZZLE_SCENE_NAME);
                     break;
 
                 //タイトルへ戻る
                 case ConfirmType.ReturnTitle:
                     StartCoroutine(BGM_FadeStop()); //BGMフェードアウト
-                    SceneNavigator.Instance.Change(TITLE_SCENE_NAME);
+                    SceneFader.SceneChangeFade(TITLE_SCENE_NAME);
                     break;
 
                 //ゲーム終了
@@ -318,8 +393,7 @@ namespace Option
             {
                 //通常表示
                 case OptionState.None:
-                    SetFilter(false);   //フィルター解除
-                    ObjInactive();      //オプション終了
+                    OptionEnd();
                     break;
 
                 //クレジット表示,チュートリアル(選択)
@@ -330,7 +404,8 @@ namespace Option
 
                 //チュートリアル(説明)
                 case OptionState.TutorialView:
-                    StartCoroutine(ObjectAppearance(OptionState.TutorialSel)); //チュートリアル(選択)へ
+                    if (GetFlag(PuzzleFlag.NowForcedTutorial)) ForcedTutorialEnd();     //強制チュートリアル終了
+                    else  StartCoroutine(ObjectAppearance(OptionState.TutorialSel));    //チュートリアル(選択)へ
                     break;
 
                 //入ることはないはずだが念のため
@@ -383,7 +458,7 @@ namespace Option
         void IsPushTutorialSelect(TutorialType _type)
         {
             //未開放
-            if ((int)mTutorialOpenedType < (int)_type)
+            if (SaveDataManager.ViewedTutorialNum < (int)_type)
             {
                 //SE再生
                 SE_OneShot(SE_Type.BtnNo);
@@ -393,12 +468,7 @@ namespace Option
             {
                 //SE再生
                 SE_OneShot(SE_Type.BtnYes);
-                SetTutorialView(_type);
-                StartCoroutine(ObjectAppearance(OptionState.TutorialView));
-
-                //ページ初期化
-                mTutorialViewPage = 0;
-                TutorialViewPageChange();
+                TutorialDisplay(_type);
             }
         }
 
@@ -449,7 +519,6 @@ namespace Option
             //SE再生
             SE_OneShot(SE_Type.BtnYes);
         }
-
 
         //==================================================//
         //---------------------表示関係---------------------//
@@ -522,7 +591,6 @@ namespace Option
                 //パズルシーン
                 case OptionType.Puzzle:
                     StartCoroutine(PuzzleMain.PuzzleMain.CanvasMgr.SetFilter(on));
-                    NOW_OPTION_VIEW = on;
                     break;
             }
         }
@@ -559,6 +627,22 @@ namespace Option
             //矢印表示状態変更
             mArrowObjArr[(int)ArrowType.ViewRight].SetActive(mTutorialViewPage < mTutorialMaxPageArr[(int)mTutorialType] - 1);
             mArrowObjArr[(int)ArrowType.ViewLeft].SetActive(mTutorialViewPage > 0);
+        }
+
+        /// <summary>
+        /// オプション終了
+        /// </summary>
+        void OptionEnd()
+        {
+            //フィルター解除
+            SetFilter(false);
+
+            //オプション画面全非表示
+            ObjInactive();
+
+            //パズルシーンの場合はオプション表示フラグリセット
+            if (mOptionType == OptionType.Puzzle)
+                FlagOff(PuzzleFlag.NowOptionView);
         }
     }
 }

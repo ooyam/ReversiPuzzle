@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Option;
 using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
@@ -109,7 +110,7 @@ namespace PuzzleMain
         public void SetWaitItemReady(int _itemNum)
         {
             //フラグセット
-            NOW_SUPPORT_ITEM_READY = true;
+            FlagOn(PuzzleFlag.NowSupportItemReady);
 
             //SE再生
             SE_OneShot(SE_Type.SupportItemSelect);
@@ -135,7 +136,7 @@ namespace PuzzleMain
         public void ResetWaitItemReady()
         {
             //フラグリセット
-            NOW_SUPPORT_ITEM_READY = false;
+            FlagOff(PuzzleFlag.NowSupportItemReady);
 
             //セット中のアイテムがない場合は処理をスキップ
             if (mReadyItemNumber < 0) return;
@@ -180,6 +181,9 @@ namespace PuzzleMain
         /// </summary>
         public void GenerateItems()
         {
+            //チュートリアル前
+            if ((int)OptionManager.TutorialType.SupportItem > SaveDataManager.ViewedTutorialNum) return;
+
             //破壊オブジェクトが空の場合
             if (sDestroyPiecesIndexList.Count == 0) return;
 
@@ -296,7 +300,7 @@ namespace PuzzleMain
         public IEnumerator UseItems(int _tapSquare)
         {
             //アイテム使用フラグセット
-            NOW_SUPPORT_ITEM_USE = true;
+            FlagOn(PuzzleFlag.NowSupportItemUse);
 
             //アイテム番号保持
             int itemNum = mReadyItemNumber;
@@ -354,7 +358,7 @@ namespace PuzzleMain
             mStarSupportedSquaresList = new List<int>();
 
             //アイテム使用フラグリセット
-            NOW_SUPPORT_ITEM_USE = false;
+            FlagOff(PuzzleFlag.NowSupportItemUse);
         }
 
 

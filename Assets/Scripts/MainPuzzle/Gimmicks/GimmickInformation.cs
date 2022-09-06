@@ -42,10 +42,10 @@ public class GimmickInformation : MonoBehaviour
     /// </summary>
     void ComponentSetting()
     {
-        ani     = this.GetComponent<Animator>();
-        tra     = this.transform;
-        spriRen = this.GetComponent<SpriteRenderer>();
-        obj     = this.gameObject;
+        ani     = GetComponent<Animator>();
+        tra     = transform;
+        spriRen = GetComponent<SpriteRenderer>();
+        obj     = gameObject;
 
         int childCount = tra.childCount;
         objChild     = new GameObject[childCount];
@@ -64,22 +64,22 @@ public class GimmickInformation : MonoBehaviour
     public void InformationSetting(int _index)
     {
         ComponentSetting();
-        var gimmickData = GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[_index][GIMMICK]];
-        settingIndex = _index;
-        startSquareId = GIMMICKS_INFO_ARR[_index][SQUARE];
-        nowSquareId = startSquareId;
-        groupId = GIMMICKS_INFO_ARR[_index][GROUP];
-        id = gimmickData.Id;
-        colorId = GIMMICKS_INFO_ARR[_index][COLOR];
-        remainingTimes = gimmickData.Damage_Times;
-        remainingQuantity = GIMMICKS_INFO_ARR[_index][QUANTITY];
-        order = GIMMICKS_INFO_ARR[_index][ORDER];
-        freeFall = gimmickData.Free_Fall;
-        destructible = !gimmickData.Continuous;
-        assaultOnly = gimmickData.Assault_Only;
-        inSquare = gimmickData.In_Square;
-        defaultPos = new Vector3(gimmickData.Position_X, gimmickData.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
-        defaultScale = new Vector3(gimmickData.Scale_X, gimmickData.Scale_Y, 1.0f);
+        var gimmickData     = GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[_index][GIMMICK]];
+        settingIndex        = _index;
+        startSquareId       = GIMMICKS_INFO_ARR[_index][SQUARE];
+        nowSquareId         = startSquareId;
+        groupId             = GIMMICKS_INFO_ARR[_index][GROUP];
+        id                  = gimmickData.Id;
+        colorId             = GIMMICKS_INFO_ARR[_index][COLOR];
+        remainingTimes      = gimmickData.Damage_Times;
+        remainingQuantity   = GIMMICKS_INFO_ARR[_index][QUANTITY];
+        order               = GIMMICKS_INFO_ARR[_index][ORDER];
+        freeFall            = gimmickData.Free_Fall;
+        destructible        = !gimmickData.Continuous;
+        assaultOnly         = gimmickData.Assault_Only;
+        inSquare            = gimmickData.In_Square;
+        defaultPos          = new Vector3(gimmickData.Position_X, gimmickData.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
+        defaultScale        = new Vector3(gimmickData.Scale_X, gimmickData.Scale_Y, 1.0f);
 
         switch (id)
         {

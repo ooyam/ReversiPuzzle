@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static ObjectMove_UI.ObjectMove_UI;
+using ObjectMove;
 
 namespace Ui
 {
@@ -12,17 +12,11 @@ namespace Ui
         [SerializeField]
         Image mFilterImg;
 
-        readonly Color32 FILTER_ON_COLOR  = new Color32(0, 0, 0, 144);
-        readonly Color32 FILTER_OFF_COLOR = Color.clear;
-        Color32[] mFadeOnColorArr;
-        Color32[] mFadeOffColorArr;
+        static readonly Color32 FILTER_ON_COLOR  = new Color32(0, 0, 0, 144);
+        static readonly Color32 FILTER_OFF_COLOR = Color.clear;
+        readonly Color32[] mFadeOnColorArr = new Color32[] { FILTER_OFF_COLOR, FILTER_ON_COLOR };
+        readonly Color32[] mFadeOffColorArr = new Color32[] { FILTER_ON_COLOR, FILTER_OFF_COLOR };
         const float COLOR_CHANGE_SPEED = 0.3f;
-
-        private void Start()
-        {
-            mFadeOnColorArr  = new Color32[] { FILTER_OFF_COLOR, FILTER_ON_COLOR };
-            mFadeOffColorArr = new Color32[] { FILTER_ON_COLOR, FILTER_OFF_COLOR };
-        }
 
         /// <summary>
         /// フィルターをかける
@@ -38,12 +32,12 @@ namespace Ui
             {
                 mFilterImg.gameObject.SetActive(true);
                 if (nowColor.a == FILTER_ON_COLOR.a) yield break;
-                yield return StartCoroutine(ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOnColorArr));
+                yield return StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOnColorArr));
             }
             else
             {
                 if (nowColor.a == FILTER_OFF_COLOR.a) yield break;
-                yield return StartCoroutine(ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOffColorArr));
+                yield return StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilterImg, COLOR_CHANGE_SPEED, mFadeOffColorArr));
                 mFilterImg.gameObject.SetActive(false);
             }
         }

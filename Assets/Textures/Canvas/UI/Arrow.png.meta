@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: 4428292855295335941
     second: Arrow_Red
+  - first:
+      213: -7017944715137372645
+    second: Arrow_Red_Right
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -242,6 +245,27 @@ TextureImporter:
       bones: []
       spriteID: 50e5749c3e4747d30800000000000000
       internalID: 4428292855295335941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow_Red_Right
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 982
+        width: 117
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e28e8d6704b9e90800000000000000
+      internalID: -7017944715137372645
       vertices: []
       indices: 
       edges: []

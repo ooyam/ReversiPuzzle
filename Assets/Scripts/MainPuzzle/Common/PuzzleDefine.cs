@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using static CommonDefine;
+using Option;
 
 public class PuzzleDefine : MonoBehaviour
 {
@@ -218,21 +218,28 @@ public class PuzzleDefine : MonoBehaviour
 
     //----------------ステージ別スタティック変数----------------//
 
-    //フラグ
-    public static bool GAME_START                   = false;  //ゲーム開始？
-    public static bool GAME_OVER                    = false;  //ゲームオーバー？
-    public static bool GAME_CLEAR                   = false;  //ゲームクリア？
-    public static bool TURN_RECOVERED               = false;  //ターン回復済？(一度ゲームーバーした)
-    public static bool NOW_PUTTING_PIECES           = false;  //駒配置中？
-    public static bool NOW_REVERSING_PIECES         = false;  //駒反転中？
-    public static bool NOW_DESTROYING_PIECES        = false;  //駒破壊中？
-    public static bool NOW_FALLING_PIECES           = false;  //駒落下中？
-    public static bool NOW_GIMMICK_DESTROY_WAIT     = false;  //ギミック破壊待機中？
-    public static bool NOW_GIMMICK_STATE_CHANGE     = false;  //ギミック状態変化中？
-    public static bool NOW_SUPPORT_ITEM_USE         = false;  //援護アイテム使用中?
-    public static bool NOW_SUPPORT_ITEM_READY       = false;  //援護アイテム準備中?
-    public static bool NOW_TURN_END_PROCESSING      = false;  //ターン終了処理中？
-    public static bool NOW_OPTION_VIEW              = false;  //オプション表示中？
+    //パズルシーンフラグ
+    public enum PuzzleFlag
+    {
+        GamePreparation,        //ゲーム準備中？
+        GameOver,               //ゲームオーバー？
+        GameClear,              //ゲームクリア？
+        TurnRecovered,          //ターン回復済？(一度ゲームーバーした)
+        NowPuttingPieces,       //駒配置中？
+        NowReversingPieces,     //駒反転中？
+        NowDestroyingPieces,    //駒破壊中？
+        NowFallingPieces,       //駒落下中？
+        NowGimmickDestroyWait,  //ギミック破壊待機中？
+        NowGimmickStateChange,  //ギミック状態変化中？
+        NowSupportItemUse,      //援護アイテム使用中?
+        NowSupportItemReady,    //援護アイテム準備中?
+        NowTurnEndProcessing,   //ターン終了処理中？
+        NowOptionView,          //オプション表示中？
+        NowForcedTutorial,      //強制チュートリアル中？
+
+        Length   //フラグ配列サイズ
+    }
+    static readonly bool[] PuzzleFlags = new bool[(int)PuzzleFlag.Length];
 
     //ステージ別設定項目
     public static int     STAGE_NUMBER          { get; private set; }   //ステージ番号
@@ -252,24 +259,30 @@ public class PuzzleDefine : MonoBehaviour
     //=================================================//
 
     /// <summary>
+    /// フラグ取得
+    /// </summary>
+    /// <param name="_flag">フラグタイプ</param>
+    public static bool GetFlag(PuzzleFlag _flag) => PuzzleFlags[(int)_flag];
+
+    /// <summary>
+    /// フラグON
+    /// </summary>
+    /// <param name="_flag">フラグタイプ</param>
+    public static void FlagOn(PuzzleFlag _flag) => PuzzleFlags[(int)_flag] = true;
+
+    /// <summary>
+    /// フラグOFF
+    /// </summary>
+    /// <param name="_flag">フラグタイプ</param>
+    public static void FlagOff(PuzzleFlag _flag) => PuzzleFlags[(int)_flag] = false;
+
+    /// <summary>
     /// フラグリセット
     /// </summary>
     public static void FlagReset()
     {
-        GAME_START                  = false;
-        GAME_OVER                   = false;
-        GAME_CLEAR                  = false;
-        TURN_RECOVERED              = false;
-        NOW_PUTTING_PIECES          = false;
-        NOW_REVERSING_PIECES        = false;
-        NOW_DESTROYING_PIECES       = false;
-        NOW_FALLING_PIECES          = false;
-        NOW_GIMMICK_DESTROY_WAIT    = false;
-        NOW_GIMMICK_STATE_CHANGE    = false;
-        NOW_SUPPORT_ITEM_USE        = false;
-        NOW_SUPPORT_ITEM_READY      = false;
-        NOW_TURN_END_PROCESSING     = false;
-        NOW_OPTION_VIEW             = false;
+        for (int i = 0; i < (int)PuzzleFlag.Length; i++)
+        { PuzzleFlags[i] = false; }
     }
 
     /// <summary>
@@ -278,17 +291,17 @@ public class PuzzleDefine : MonoBehaviour
     /// <returns></returns>
     public static bool IsOperable()
     {
-        if (GAME_CLEAR)                 return false;  //ゲームクリア
-        if (GAME_OVER)                  return false;  //ゲームオーバー
-        if (NOW_PUTTING_PIECES)         return false;  //駒配置中
-        if (NOW_REVERSING_PIECES)       return false;  //駒反転中
-        if (NOW_DESTROYING_PIECES)      return false;  //駒破壊中
-        if (NOW_FALLING_PIECES)         return false;  //駒落下中
-        if (NOW_GIMMICK_DESTROY_WAIT)   return false;  //ギミック破壊待機中
-        if (NOW_GIMMICK_STATE_CHANGE)   return false;  //ギミック状態変化中
-        if (NOW_SUPPORT_ITEM_USE)       return false;  //援護アイテム使用中
-        if (NOW_TURN_END_PROCESSING)    return false;  //ターン終了処理中
-        if (NOW_OPTION_VIEW)            return false;  //オプション表示中
+        for (int i = 0; i < (int)PuzzleFlag.Length; i++)
+        {
+            switch (i)
+            {
+                //操作に関係のないフラグは無視
+                case (int)PuzzleFlag.TurnRecovered:         //ターン回復済？(一度ゲームーバーした)
+                case (int)PuzzleFlag.NowSupportItemReady:   //援護アイテム準備中？
+                    continue;
+            }
+            if (PuzzleFlags[i]) return false;
+        }
 
         return true;
     }
@@ -314,14 +327,17 @@ public class PuzzleDefine : MonoBehaviour
         var stageData = STAGES_DATA.dataArray[STAGE_NUMBER - 1];
 
         //使用色
-        USE_COLOR_TYPE_ARR = stageData.Use_Color;
+        USE_COLOR_TYPE_ARR = stageData.UseColor;
         USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
 
         //非表示マス
-        HIDE_SQUARE_ARR = stageData.Hide_Sqr;
+        HIDE_SQUARE_ARR = stageData.HideSqr;
 
         //ターン数
         TurnSet(stageData.Turn);
+
+        //強制表示するチュートリアルタイプ
+        OptionManager.ForcedTutorialType = stageData.TutorialType;
 
         //配置ギミック取得用リスト,定数設定
         const int gimInfoLength = (int)GimmickInfoIndex.Length;
@@ -340,9 +356,18 @@ public class PuzzleDefine : MonoBehaviour
             //配置ギミック情報取得
             if (pro.Name.Contains(gimInfoName))
             {
-                int[] gimInfoArr = pro.GetValue(stageData) as int[];
-                if (gimInfoArr.Length == gimInfoLength)
-                    gimmicksList.Add(gimInfoArr);
+                //変数名に{gimInfoName}が含まれているものを取得
+                if (!(pro.GetValue(stageData) is int[] gimInfoArr)) continue;
+                if (gimInfoArr[0] < 0) continue;
+
+                //固定長配列に修正
+                int[] infoArr = new int[gimInfoLength];
+                for (int i = 0; i < gimInfoLength; i++)
+                {
+                    if (gimInfoArr.Length > i) infoArr[i] = gimInfoArr[i];
+                    else infoArr[i] = NOT_NUM;
+                }
+                gimmicksList.Add(infoArr);
             }
 
             //目標情報取得
