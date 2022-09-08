@@ -72,7 +72,7 @@ MonoBehaviour:
     playspan: 0.3
   - se_type: 11
     clipname: firework
-    volume: 0.5
+    volume: 0.8
     playtimes: 0
     playspan: 0
   - se_type: 12

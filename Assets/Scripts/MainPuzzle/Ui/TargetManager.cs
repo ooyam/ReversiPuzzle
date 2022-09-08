@@ -68,7 +68,7 @@ namespace PuzzleMain.Ui
 
                 //•\Ž¦
                 posX += span;
-                targetTraArr[i].SetParent(mTexturesBoxTra);
+                targetTraArr[i].SetParent(mTexturesBoxTra, false);
                 targetTraArr[i].localPosition = new Vector2(posX, 0.0f);
                 int count = TARGETS_INFO_ARR[i][TARGET_INFO_COUNT];
                 if (count > TARGET_COUNT_MAX) count = TARGET_COUNT_MAX;
