@@ -58,38 +58,60 @@ public class GimmickInformation : MonoBehaviour
     }
 
     /// <summary>
+    /// 共通設定
+    /// </summary>
+    /// <param name="_index">  ステージ毎の設定番号 </param>
+    /// <param name="_typeId">  ギミック番号</param>
+    /// <param name="_colorId"> 色番号</param>
+    /// <param name="_squareId">現在のマス番号</param>
+    /// <param name="_groupId"> グループ番号</param>
+    /// <param name="_quantity">残りダメージ回数</param>
+    /// <param name="_order">   指定番号</param>
+    void CommonInfoSetting(int _index, int _typeId, int _colorId, int _squareId = NOT_NUM, int _groupId = NOT_NUM, int _quantity = NOT_NUM, int _order = NOT_NUM)
+    {
+        var data            = GIMMICKS_DATA.dataArray[_typeId];
+        settingIndex        = _index;
+        startSquareId       = _squareId;
+        nowSquareId         = startSquareId;
+        groupId             = _groupId;
+        id                  = data.Id;
+        colorId             = _colorId;
+        remainingTimes      = data.Damage_Times;
+        remainingQuantity   = _quantity;
+        order               = _order;
+        freeFall            = data.Free_Fall;
+        destructible        = !data.Continuous;
+        assaultOnly         = data.Assault_Only;
+        inSquare            = data.In_Square;
+        defaultPos          = new Vector3(data.Position_X, data.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
+        defaultScale        = new Vector3(data.Scale_X, data.Scale_Y, 1.0f);
+    }
+
+    /// <summary>
     /// ギミック情報の設定
     /// </summary>
     /// <param name="_index">ステージ毎のギミック管理番号</param>
     public void InformationSetting(int _index)
     {
         ComponentSetting();
-        var gimmickData     = GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[_index][GIMMICK]];
-        settingIndex        = _index;
-        startSquareId       = GIMMICKS_INFO_ARR[_index][SQUARE];
-        nowSquareId         = startSquareId;
-        groupId             = GIMMICKS_INFO_ARR[_index][GROUP];
-        id                  = gimmickData.Id;
-        colorId             = GIMMICKS_INFO_ARR[_index][COLOR];
-        remainingTimes      = gimmickData.Damage_Times;
-        remainingQuantity   = GIMMICKS_INFO_ARR[_index][QUANTITY];
-        order               = GIMMICKS_INFO_ARR[_index][ORDER];
-        freeFall            = gimmickData.Free_Fall;
-        destructible        = !gimmickData.Continuous;
-        assaultOnly         = gimmickData.Assault_Only;
-        inSquare            = gimmickData.In_Square;
-        defaultPos          = new Vector3(gimmickData.Position_X, gimmickData.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
-        defaultScale        = new Vector3(gimmickData.Scale_X, gimmickData.Scale_Y, 1.0f);
+        CommonInfoSetting(
+            _index,                                         //ステージ毎の設定番号
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_TYPE],       //ギミック番号
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_COLOR],      //色番号
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_SQUARE],     //現在のマス番号
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_GROUP],      //グループ番号
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_QUANTITY],   //残りダメージ回数
+            GIMMICKS_INFO_ARR[_index][SET_GMCK_ORDER]);     //指定番号
 
         switch (id)
         {
             //ギミック内側の駒を操作禁止にするギミック
             case (int)Gimmicks.Cage:    //檻
-                innerSquaresId = new int[GIMMICKS_INFO_ARR[_index][WIDTH] * GIMMICKS_INFO_ARR[_index][HEIGHT]];
+                innerSquaresId = new int[GIMMICKS_INFO_ARR[_index][SET_GMCK_WIDTH] * GIMMICKS_INFO_ARR[_index][SET_GMCK_HEIGHT]];
                 int i = 0;
-                for (int w = 0; w < GIMMICKS_INFO_ARR[_index][WIDTH]; w++)      //幅分ループ
+                for (int w = 0; w < GIMMICKS_INFO_ARR[_index][SET_GMCK_WIDTH]; w++)      //幅分ループ
                 {
-                    for (int h = 0; h < GIMMICKS_INFO_ARR[_index][HEIGHT]; h++) //高さ分ループ
+                    for (int h = 0; h < GIMMICKS_INFO_ARR[_index][SET_GMCK_HEIGHT]; h++) //高さ分ループ
                     {
                         innerSquaresId[i] = startSquareId + w * BOARD_LINE_COUNT + h;
                         i++;
@@ -109,8 +131,8 @@ public class GimmickInformation : MonoBehaviour
     {
         for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
         {
-            if (GIMMICKS_INFO_ARR[i][SQUARE] == _squareIndex && 
-                (GIMMICKS_INFO_ARR[i][GIMMICK] == _gimmickId || GIMMICKS_INFO_ARR[i][GROUP] == _groupId))
+            if (GIMMICKS_INFO_ARR[i][SET_GMCK_SQUARE] == _squareIndex && 
+                (GIMMICKS_INFO_ARR[i][SET_GMCK_TYPE] == _gimmickId || GIMMICKS_INFO_ARR[i][SET_GMCK_GROUP] == _groupId))
             {
                 InformationSetting(i);
                 break;
@@ -118,6 +140,17 @@ public class GimmickInformation : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ギミック情報の設定(落下ギミック)
+    /// </summary>
+    /// <param name="_index">管理番号</param>
+    /// <param name="_typeId">種類</param>
+    /// <param name="_colorId">色番号</param>
+    public void InformationSetting_FallGimmicks(int _index, int _typeId, int _colorId)
+    {
+        ComponentSetting();
+        CommonInfoSetting(_index, _typeId, _colorId);
+    }
 
     /// <summary>
     /// 駒としてフラグ設定

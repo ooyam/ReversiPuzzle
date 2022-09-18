@@ -44,10 +44,10 @@ namespace PuzzleMain
             for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
                 //駒として管理するギミック
-                if (GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[i][GIMMICK]].In_Square)
+                if (GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[i][SET_GMCK_TYPE]].In_Square)
                 {
-                    SetGimmicksInfomation(i);
-                    notPlaceIndex.Add(GIMMICKS_INFO_ARR[i][SQUARE]);
+                    SetGimmicksInfomation(i, GIMMICKS_INFO_ARR[i][SET_GMCK_SQUARE], true);
+                    notPlaceIndex.Add(GIMMICKS_INFO_ARR[i][SET_GMCK_SQUARE]);
                 }
             }
 
@@ -144,17 +144,15 @@ namespace PuzzleMain
         /// ギミック情報設定（駒として管理する）
         /// </summary>
         /// /// <param name="gimmickIndex"> ギミック管理番号</param>
-        /// /// <param name="startGenerate">初期生成？</param>
-        void SetGimmicksInfomation(int gimmickIndex, bool startGenerate = true)
+        void SetGimmicksInfomation(int gimmickIndex, int squareId, bool startGenerate)
         {
             //駒としても管理する
-            int pieceIndex = GIMMICKS_INFO_ARR[gimmickIndex][SQUARE];
-            sPieceObjArr[pieceIndex] = sGimmickObjArr[gimmickIndex];
-            pieceTraArr[pieceIndex] = sGimmickInfoArr[gimmickIndex].tra;
-            pieceTraArr[pieceIndex].SetParent(sSquareTraArr[GIMMICKS_INFO_ARR[gimmickIndex][SQUARE]], false);
-            pieceTraArr[pieceIndex].SetSiblingIndex(0);
-            pieceTraArr[pieceIndex].localPosition = sGimmickInfoArr[gimmickIndex].defaultPos;
-            sGimmickInfoArr[gimmickIndex].OperationFlagSetting(pieceIndex, startGenerate, sGimmickInfoArr);
+            sPieceObjArr[squareId] = sGimmickObjArr[gimmickIndex];
+            pieceTraArr[squareId] = sGimmickInfoArr[gimmickIndex].tra;
+            pieceTraArr[squareId].SetParent(sSquareTraArr[squareId], false);
+            pieceTraArr[squareId].SetSiblingIndex(0);
+            pieceTraArr[squareId].localPosition = sGimmickInfoArr[gimmickIndex].defaultPos;
+            sGimmickInfoArr[gimmickIndex].OperationFlagSetting(squareId, startGenerate, sGimmickInfoArr);
         }
 
         /// <summary>
@@ -206,6 +204,10 @@ namespace PuzzleMain
         /// <param name="on">      true:操作可能にする</param>
         public void PieceOperationFlagChange(int squareId, bool on)
         {
+            //空マスは処理しない
+            if (!SquaresMgr.IsSquareExists(squareId)) return;
+            if (!SquaresMgr.IsSquareActive(squareId)) return;
+
             //駒
             if (sPieceObjArr[squareId].CompareTag(PIECE_TAG))
             {
@@ -860,9 +862,25 @@ namespace PuzzleMain
                     //落下できる駒が盤上に存在しない場合
                     if (n == loopCount)
                     {
-                        //新規ランダム生成
-                        int prefabIndex = GetRandomPieceColor();
-                        GeneratePiece(prefabIndex, i);
+                        //落下ギミックのランダム生成
+                        int gimIndex = GimmicksMgr.GenerateFallGimmick();
+                        if (gimIndex != INT_NULL)
+                        {
+                            //生成ギミックの駒管理設定
+                            SetGimmicksInfomation(gimIndex, i, false);
+
+                            //マス番号指定
+                            sGimmickInfoArr[gimIndex].nowSquareId = i;
+                        }
+                        //ギミックの生成がなかった場合
+                        else
+                        {
+                            //新規ランダム生成
+                            int prefabIndex = GetRandomPieceColor();
+                            GeneratePiece(prefabIndex, i);
+                        }
+
+                        //落下開始位置に配置
                         pieceTraArr[i].localPosition = new Vector3(PIECE_DEFAULT_POS.x, BOARD_LINE_COUNT * SQUARE_DISTANCE, Z_PIECE);
                     }
                 }

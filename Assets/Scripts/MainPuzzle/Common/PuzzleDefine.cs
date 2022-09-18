@@ -98,6 +98,11 @@ public class PuzzleDefine : MonoBehaviour
     public const float Z_PIECE   = -1.0f;   //駒
     public const float Z_GIMMICK = -2.0f;   //ギミック(駒として管理しない)
 
+    //オブジェクトのタグ
+    public const string GIMMICK_TAG      = "Gimmick";       //ギミック
+    public const string PIECE_TAG        = "Piece";         //駒
+    public const string SUPPORT_ITEM_TAG = "SupportItem";   //援護アイテム
+
     //桁数判定用
     public const int TEN     = 10;
     public const int HUNDRED = 100;
@@ -118,7 +123,6 @@ public class PuzzleDefine : MonoBehaviour
     public static readonly Color COLOR_ALPHA_ZERO = new Color(1.0f, 1.0f, 1.0f, 0.0f);               //透明
     public static readonly Color[] COLOR_FADE_OUT = new Color[] { COLOR_PRIMARY, COLOR_ALPHA_ZERO }; //フェードアウト
     public static readonly Color[] COLOR_FADE_IN  = new Color[] { COLOR_ALPHA_ZERO, COLOR_PRIMARY }; //フェードイン
-
 
 
     //----------------演出定数----------------//
@@ -173,20 +177,30 @@ public class PuzzleDefine : MonoBehaviour
 
         Length  //情報配列サイズ
     }
-    public static readonly int TARGET_INFO_OBJ   = (int)TargetInfoIndex.Object; //オブジェクト
-    public static readonly int TARGET_INFO_COLOR = (int)TargetInfoIndex.Color;  //色
-    public static readonly int TARGET_INFO_COUNT = (int)TargetInfoIndex.Count;  //数量
+    public static readonly int TARGET_INFO_OBJ      = (int)TargetInfoIndex.Object;  //オブジェクト
+    public static readonly int TARGET_INFO_COLOR    = (int)TargetInfoIndex.Color;   //色
+    public static readonly int TARGET_INFO_COUNT    = (int)TargetInfoIndex.Count;   //数量
+    public static readonly int TARGET_INFO_LENGTH   = (int)TargetInfoIndex.Length;  //配列の長さ
 
-    //オブジェクトのタグ
-    public const string GIMMICK_TAG      = "Gimmick";       //ギミック
-    public const string PIECE_TAG        = "Piece";         //駒
-    public const string SUPPORT_ITEM_TAG = "SupportItem";   //援護アイテム
+    //落下ギミック情報配列のインデクス番号
+    enum FallGimmickInfoIndex
+    {
+        Type,    //ギミックの種類
+        Color,      //色
+        Count,      //数量
 
-    //ギミック情報配列のインデックス番号
-    enum GimmickInfoIndex
+        Length      //情報配列サイズ
+    }
+    public static readonly int FALL_GMCK_TYPE    = (int)FallGimmickInfoIndex.Type;       //ギミックの種類
+    public static readonly int FALL_GMCK_COLOR   = (int)FallGimmickInfoIndex.Color;      //色
+    public static readonly int FALL_GMCK_COUNT   = (int)FallGimmickInfoIndex.Count;      //数量
+    public static readonly int FALL_GMCK_LENGTH  = (int)FallGimmickInfoIndex.Length;     //配列の長さ
+
+    //配置ギミック情報配列のインデックス番号
+    enum SetGimmickInfoIndex
     {
         Square,     //配置マス
-        Gimmick,    //ギミックの種類
+        Type,       //ギミックの種類
         Color,      //指定色
         Group,      //管理グループ
         Width,      //横幅
@@ -196,24 +210,23 @@ public class PuzzleDefine : MonoBehaviour
 
         Length      //情報配列サイズ
     }
-    public static readonly int SQUARE   = (int)GimmickInfoIndex.Square;     //配置マス
-    public static readonly int GIMMICK  = (int)GimmickInfoIndex.Gimmick;    //ギミックの種類
-    public static readonly int COLOR    = (int)GimmickInfoIndex.Color;      //指定色
-    public static readonly int GROUP    = (int)GimmickInfoIndex.Group;      //管理グループ
-    public static readonly int WIDTH    = (int)GimmickInfoIndex.Width;      //横幅
-    public static readonly int HEIGHT   = (int)GimmickInfoIndex.Height;     //高さ
-    public static readonly int QUANTITY = (int)GimmickInfoIndex.Quantity;   //指定量
-    public static readonly int ORDER    = (int)GimmickInfoIndex.Order;      //指定順番
+    public static readonly int SET_GMCK_SQUARE   = (int)SetGimmickInfoIndex.Square;      //配置マス
+    public static readonly int SET_GMCK_TYPE     = (int)SetGimmickInfoIndex.Type;        //ギミックの種類
+    public static readonly int SET_GMCK_COLOR    = (int)SetGimmickInfoIndex.Color;       //指定色
+    public static readonly int SET_GMCK_GROUP    = (int)SetGimmickInfoIndex.Group;       //管理グループ
+    public static readonly int SET_GMCK_WIDTH    = (int)SetGimmickInfoIndex.Width;       //横幅
+    public static readonly int SET_GMCK_HEIGHT   = (int)SetGimmickInfoIndex.Height;      //高さ
+    public static readonly int SET_GMCK_QUANTITY = (int)SetGimmickInfoIndex.Quantity;    //指定量
+    public static readonly int SET_GMCK_ORDER    = (int)SetGimmickInfoIndex.Order;       //指定順番
+    public static readonly int SET_GMCK_LENGTH   = (int)SetGimmickInfoIndex.Length;      //配列の長さ
     public const int NOT_NUM = -1;  //各項目番号指示なし定数
 
     private const int TURN_MAX = 99;    //ターン最大数
 
 
-
     //----------------リソースデータ----------------//
 
     public  static GimmicksData GIMMICKS_DATA { get; private set; }  //ギミックデータ
-    private static StagesData   STAGES_DATA   { get; set; }          //ステージデータ
 
 
     //----------------ステージ別スタティック変数----------------//
@@ -246,9 +259,11 @@ public class PuzzleDefine : MonoBehaviour
     public static int[]   USE_COLOR_TYPE_ARR    { get; private set; }   //使用色の種類
     public static int     USE_COLOR_COUNT       { get; private set; }   //使用色の数
     public static int[]   HIDE_SQUARE_ARR       { get; private set; }   //非表示マスの管理番号
-    public static int[][] GIMMICKS_INFO_ARR     { get; private set; }   //ギミックの種類とマスの管理番号
+    public static int[][] GIMMICKS_INFO_ARR     { get; private set; }   //配置ギミックの種類とマスの管理番号
     public static int     GIMMICKS_DEPLOY_COUNT { get; private set; }   //初期ギミックの配置数
     public static int     GIMMICKS_GROUP_COUNT  { get; private set; }   //ギミックのグループの設定数
+    public static int[][] FALL_GMCK_INFO_ARR    { get; private set; }   //落下ギミックの種類と数量
+    public static int     FALL_GMCK_OBJ_COUNT   { get; private set; }   //落下ギミックの総数
     public static int[][] TARGETS_INFO_ARR      { get; private set; }   //目標情報
     public static int     TARGETS_COUNT         { get; private set; }   //目標のオブジェクト数
     public static int     TURN_COUNT            { get; private set; }   //ターン数
@@ -312,7 +327,6 @@ public class PuzzleDefine : MonoBehaviour
     public static void LoadResourcesData()
     {
         GIMMICKS_DATA = Resources.Load("GimmicksData") as GimmicksData;
-        STAGES_DATA = Resources.Load("StagesData") as StagesData;
     }
 
     /// <summary>
@@ -320,82 +334,163 @@ public class PuzzleDefine : MonoBehaviour
     /// </summary>
     public static void StageSetting()
     {
-        //ステージ番号設定
-        STAGE_NUMBER = GameManager.SelectStage;
+        //ステージ設定取得
+        StagesDataData stageData = GameManager.SelectStageData;
 
-        //ステージデータ読み込み
-        var stageData = STAGES_DATA.dataArray[STAGE_NUMBER - 1];
+        //ステージ番号設定
+        STAGE_NUMBER = stageData.Id;
 
         //使用色
-        USE_COLOR_TYPE_ARR = stageData.UseColor;
+        USE_COLOR_TYPE_ARR = stageData.Usecolor;
         USE_COLOR_COUNT = USE_COLOR_TYPE_ARR.Length;
 
         //非表示マス
-        HIDE_SQUARE_ARR = stageData.HideSqr;
+        HIDE_SQUARE_ARR = stageData.Hidesqr;
 
         //ターン数
         TurnSet(stageData.Turn);
 
         //強制表示するチュートリアルタイプ
-        OptionManager.ForcedTutorialType = stageData.TutorialType;
+        OptionManager.ForcedTutorialType = stageData.TUTORIALTYPE;
 
-        //配置ギミック取得用リスト,定数設定
-        const int gimInfoLength = (int)GimmickInfoIndex.Length;
-        const string gimInfoName = "Gimmicks_";
-        List<int[]> gimmicksList = new List<int[]>();
-
-        //目標取得用リスト,定数設定
-        const int targetInfoLength = (int)TargetInfoIndex.Length;
-        const string targetInfoName = "Tagets_";
-        List<int[]> targetsList = new List<int[]>();
+        //配置ギミック, 落下ギミック,目標の取得用リスト・定数設定
+        const string setGimInfoName     = "Setgimmicks_";
+        const string fallGimInfoName    = "Fallgimmicks_";
+        const string targetInfoName     = "Tagets_";
+        List<int[]> setGimList          = new List<int[]>();
+        List<int[]> fallGimList         = new List<int[]>();
+        List<int[]> piecesTargetsList   = new List<int[]>();
 
         //StagesDataDataクラスのメンバプロパティ(変数)を取得
         System.Reflection.PropertyInfo[] properties = typeof(StagesDataData).GetProperties();
         foreach (System.Reflection.PropertyInfo pro in properties)
         {
             //配置ギミック情報取得
-            if (pro.Name.Contains(gimInfoName))
+            if (pro.Name.Contains(setGimInfoName))
             {
                 //変数名に{gimInfoName}が含まれているものを取得
-                if (!(pro.GetValue(stageData) is int[] gimInfoArr)) continue;
+                int[] gimInfoArr = pro.GetValue(stageData) as int[];
                 if (gimInfoArr[0] < 0) continue;
 
                 //固定長配列に修正
-                int[] infoArr = new int[gimInfoLength];
-                for (int i = 0; i < gimInfoLength; i++)
+                int[] infoArr = new int[SET_GMCK_LENGTH];
+                for (int i = 0; i < SET_GMCK_LENGTH; i++)
                 {
                     if (gimInfoArr.Length > i) infoArr[i] = gimInfoArr[i];
                     else infoArr[i] = NOT_NUM;
                 }
-                gimmicksList.Add(infoArr);
+                setGimList.Add(infoArr);
             }
-
-            //目標情報取得
-            if (pro.Name.Contains(targetInfoName))
+            //落下ギミック情報取得
+            else if (pro.Name.Contains(fallGimInfoName))
+            {
+                int[] gimInfoArr = pro.GetValue(stageData) as int[];
+                if (gimInfoArr[0] < 0) continue;
+                fallGimList.Add(gimInfoArr);
+            }
+            //目標情報取得(駒のみ)
+            else if (pro.Name.Contains(targetInfoName))
             {
                 int[] targetInfoArr = pro.GetValue(stageData) as int[];
-                if (targetInfoArr.Length == targetInfoLength)
-                    targetsList.Add(targetInfoArr);
+                if (targetInfoArr[0] < 0) continue;
+
+                //固定長配列に修正
+                int[] infoArr = new int[TARGET_INFO_LENGTH];
+                for (int i = 0; i < TARGET_INFO_LENGTH; i++)
+                {
+                    if (i == TARGET_INFO_OBJ) infoArr[i] = -1;  //駒のオブジェクト番号は0未満を指定
+                    else infoArr[i] = targetInfoArr[i - 1];
+                }
+                piecesTargetsList.Add(infoArr);
             }
         }
 
         //配置ギミック情報設定
-        GIMMICKS_INFO_ARR = gimmicksList.ToArray();
+        GIMMICKS_INFO_ARR = setGimList.ToArray();
         GIMMICKS_DEPLOY_COUNT = GIMMICKS_INFO_ARR.Length;
+        List<int[]> targetsList = new List<int[]>();
         List<int> usedGroupNum = new List<int>();
         GIMMICKS_GROUP_COUNT = 0;
         foreach (int[] gimmickInfo in GIMMICKS_INFO_ARR)
         {
-            if (gimmickInfo[GROUP] > NOT_NUM && !usedGroupNum.Contains(gimmickInfo[GROUP]))
+            //ギミックのグループ数取得
+            if (gimmickInfo[SET_GMCK_GROUP] > NOT_NUM && !usedGroupNum.Contains(gimmickInfo[SET_GMCK_GROUP]))
             {
                 usedGroupNum.Add(GIMMICKS_GROUP_COUNT);
                 GIMMICKS_GROUP_COUNT++;
+
+                //目標追加（色枠系はここで追加）
+                TargetAdd(gimmickInfo[SET_GMCK_TYPE], gimmickInfo[SET_GMCK_COLOR], 1);
+            }
+
+            //色枠系はスキップ（グループ単位で1つ扱いの為例外）
+            switch (gimmickInfo[SET_GMCK_TYPE])
+            {
+                //色枠系はスキップ（グループ単位で1つ扱いの為例外）
+                case (int)Gimmicks.Frame:
+                case (int)Gimmicks.Frame_Color:
+                case (int)Gimmicks.Frame_Color_Change:
+                    break;
+
+                //目標追加
+                default:
+                    TargetAdd(gimmickInfo[SET_GMCK_TYPE], gimmickInfo[SET_GMCK_COLOR], 1);
+                    break;
             }
         }
 
-        //目標情報設定
+        //落下ギミック情報設定
+        FALL_GMCK_INFO_ARR = fallGimList.ToArray();
+        foreach (int[] fallGmckInfo in FALL_GMCK_INFO_ARR)
+        {
+            FALL_GMCK_OBJ_COUNT += fallGmckInfo[FALL_GMCK_COUNT];
+        }
+
+        //落下ギミックの目標追加
+        foreach (int[] gimmickInfo in FALL_GMCK_INFO_ARR)
+        {
+            TargetAdd(gimmickInfo[FALL_GMCK_TYPE], gimmickInfo[FALL_GMCK_COLOR], gimmickInfo[FALL_GMCK_COUNT]);
+        }
+
+        //目標駒情報設定
+        targetsList.AddRange(piecesTargetsList);    //駒とギミックの目標リストを結合
         TARGETS_INFO_ARR = targetsList.ToArray();
         TARGETS_COUNT = TARGETS_INFO_ARR.Length;
+
+        //目標の追加
+        void TargetAdd(int _gimTypeId, int _colorId, int _addCount)
+        {
+            //色番号修正
+            switch (_gimTypeId)
+            {
+                //色指定があるが目標を色別に設定しないもの
+                case (int)Gimmicks.Jewelry:             //宝石
+                case (int)Gimmicks.Frame_Color_Change:  //色枠(色変化)
+                case (int)Gimmicks.Cage:                //檻
+                    _colorId = COLORLESS_ID;
+                    break;
+            }
+
+            //目標設定(配置ギミック)
+            for (int i = 0; i < targetsList.Count; i++)
+            {
+                //オブジェクト番号と色番号が同じ場合
+                if (targetsList[i][TARGET_INFO_OBJ] == _gimTypeId &&
+                    targetsList[i][TARGET_INFO_COLOR] == _colorId)
+                {
+                    //追加して以降の処理をスキップ
+                    targetsList[i][TARGET_INFO_COUNT] += _addCount;
+                    return;
+                }
+            }
+
+            //対象ギミックの配列が未作成だった場合、新規作成
+            int[] newTragets = new int[TARGET_INFO_LENGTH];
+            newTragets[TARGET_INFO_OBJ] = _gimTypeId;
+            newTragets[TARGET_INFO_COLOR] = _colorId;
+            newTragets[TARGET_INFO_COUNT] = _addCount;
+            targetsList.Add(newTragets);
+        }
     }
 
     /// <summary>

@@ -61,6 +61,12 @@ namespace PuzzleMain
         //攻撃を行う駒リスト
         List<int> attackPiecesList;
 
+        //生成済落下ギミック管理番号
+        List<int[]> fallGimmicksList;
+        List<int> fallGimmicksCountList;
+        int nextManagementIndex;    //次に生成するギミックの管理番号
+        const int PROBABILITY = 4;  //落下ギミックの生成確立
+
 
         //==========================================================//
         //----------------------初期設定,取得-----------------------//
@@ -72,8 +78,9 @@ namespace PuzzleMain
         public void Initialize()
         {
             //ギミック生成
-            sGimmickObjArr  = new GameObject[GIMMICKS_DEPLOY_COUNT];
-            sGimmickInfoArr = new GimmickInformation[GIMMICKS_DEPLOY_COUNT];
+            int totalGimmick = GIMMICKS_DEPLOY_COUNT + FALL_GMCK_OBJ_COUNT;
+            sGimmickObjArr  = new GameObject[totalGimmick];
+            sGimmickInfoArr = new GimmickInformation[totalGimmick];
 
             //駒として配置しないギミックの生成
             PlaceGimmickNotInSquare();
@@ -81,11 +88,20 @@ namespace PuzzleMain
             //駒として管理するギミック
             for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
             {
-                if (GIMMICKS_DATA.dataArray[GIMMICKS_INFO_ARR[i][GIMMICK]].In_Square)
+                int[] gimInfo = GIMMICKS_INFO_ARR[i];
+                if (GIMMICKS_DATA.dataArray[gimInfo[SET_GMCK_TYPE]].In_Square)
                 {
-                    GeneraeGimmick(i);
+                    GeneraeGimmick(i, gimInfo[SET_GMCK_TYPE], gimInfo[SET_GMCK_COLOR], false);
                 }
             }
+
+            //落下ギミックのリスト作成
+            fallGimmicksList = new List<int[]>();
+            fallGimmicksCountList = new List<int>();
+            fallGimmicksList.AddRange(FALL_GMCK_INFO_ARR);
+            foreach (int[] fallGmckInfo in fallGimmicksList)
+            { fallGimmicksCountList.Add(fallGmckInfo[FALL_GMCK_COUNT]); }
+            nextManagementIndex = GIMMICKS_DEPLOY_COUNT;
 
             //攻撃を行う駒リスト
             attackPiecesList = new List<int>();
@@ -102,19 +118,56 @@ namespace PuzzleMain
         /// <summary>
         /// ギミック作成(駒として管理する)
         /// </summary>
-        /// /// <param name="gimmickIndex"> ギミック管理番号</param>
-        void GeneraeGimmick(int gimmickIndex)
+        /// <param name="index">    管理する番号</param>
+        /// <param name="typeId">   ギミック番号</param>
+        /// <param name="colorId">  色番号</param>
+        /// <param name="fall">     落下ギミック？</param>
+        void GeneraeGimmick(int index, int typeId, int colorId, bool fall)
         {
-            int colorId = (GIMMICKS_INFO_ARR[gimmickIndex][COLOR] < 0) ? 0 : GIMMICKS_INFO_ARR[gimmickIndex][COLOR];
-            sGimmickObjArr[gimmickIndex] = Instantiate(gimmickPrefabArr[GIMMICKS_INFO_ARR[gimmickIndex][GIMMICK]].prefab[colorId]);
+            //オブジェクト生成
+            if (colorId < 0) colorId = 0;
+            sGimmickObjArr[index] = Instantiate(gimmickPrefabArr[typeId].prefab[colorId]);
 
             //Component取得
-            sGimmickInfoArr[gimmickIndex] = sGimmickObjArr[gimmickIndex].GetComponent<GimmickInformation>();
-            sGimmickInfoArr[gimmickIndex].InformationSetting(gimmickIndex);
+            sGimmickInfoArr[index] = sGimmickObjArr[index].GetComponent<GimmickInformation>();
+            if (fall) sGimmickInfoArr[index].InformationSetting_FallGimmicks(index, typeId, colorId);
+            else  sGimmickInfoArr[index].InformationSetting(index);
 
             //番号札の場合
-            if (sGimmickInfoArr[gimmickIndex].id == (int)Gimmicks.NumberTag)
-                NumberTagOrderSetting(ref sGimmickInfoArr[gimmickIndex]);
+            if (typeId == (int)Gimmicks.NumberTag)
+                NumberTagOrderSetting(ref sGimmickInfoArr[index]);
+        }
+
+        /// <summary>
+        /// 落下ギミック生成
+        /// </summary>
+        /// <returns>生成したギミック管理番号</returns>
+        public int GenerateFallGimmick()
+        {
+            //生成ギミックの有無確認
+            int gimCount = fallGimmicksList.Count;
+            if (gimCount == 0) return INT_NULL;
+
+            //生成確率 1/{PROBABILITY}
+            if (UnityEngine.Random.Range(0, PROBABILITY) != 0) return INT_NULL;
+
+            //生成ギミックのランダム設定
+            int generateIndex = UnityEngine.Random.Range(0, gimCount);
+            int[] generateInfo = fallGimmicksList[generateIndex];
+
+            //生成
+            GeneraeGimmick(nextManagementIndex, generateInfo[FALL_GMCK_TYPE], generateInfo[FALL_GMCK_COLOR], true);
+
+            //生成分数量減、0になったらリストから
+            fallGimmicksCountList[generateIndex]--;
+            if (fallGimmicksCountList[generateIndex] <= 0)
+            {
+                fallGimmicksList.RemoveAt(generateIndex);
+                fallGimmicksCountList.RemoveAt(generateIndex);
+            }
+
+            //生成した管理番号を返す
+            return nextManagementIndex++;
         }
 
 
@@ -139,10 +192,7 @@ namespace PuzzleMain
         /// </summary>
         /// <param name="obj">マス管理番号</param>
         /// <returns>ギミックの管理番号</returns>
-        public int GetGimmickIndex_Obj(GameObject obj)
-        {
-            return Array.IndexOf(sGimmickObjArr, obj);
-        }
+        public int GetGimmickIndex_Obj(GameObject obj) => Array.IndexOf(sGimmickObjArr, obj);
 
         //===============================================//
         //=========ギミックダメージ・状態変化============//
@@ -156,6 +206,9 @@ namespace PuzzleMain
         /// <param name="assault">          強撃</param>
         public bool DamageCheck(ref int putPieceColorId, ref int gimmickIndex, bool assault = false)
         {
+            //破壊不可判定
+            if (!sGimmickInfoArr[gimmickIndex].destructible_Piece) return false;
+
             //ダメージの有無フラグ
             bool damage = false;
 
@@ -451,16 +504,16 @@ namespace PuzzleMain
             //オブジェクト管理リスト作成
             foreach (int[] gimInfo in GIMMICKS_INFO_ARR)
             {
-                switch (gimInfo[GIMMICK])
+                switch (gimInfo[SET_GMCK_TYPE])
                 {
                     //枠
                     case (int)Gimmicks.Frame:               //枠
                     case (int)Gimmicks.Frame_Color:         //枠(色)
                     case (int)Gimmicks.Frame_Color_Change:  //枠(色変更)
                         //グループごとにリスト作成
-                        if (frameSquareIdListArr[gimInfo[GROUP]] == null)
-                            frameSquareIdListArr[gimInfo[GROUP]] = new List<int>();
-                        frameSquareIdListArr[gimInfo[GROUP]].Add(gimInfo[SQUARE]);
+                        if (frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]] == null)
+                            frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]] = new List<int>();
+                        frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]].Add(gimInfo[SET_GMCK_SQUARE]);
                         break;
 
                     //サイズ可変ギミック
@@ -470,7 +523,7 @@ namespace PuzzleMain
                 }
 
                 //グループの指定色番号
-                if (gimInfo[GROUP] != NOT_NUM) groupColorNumArr[gimInfo[GROUP]] = gimInfo[COLOR];
+                if (gimInfo[SET_GMCK_GROUP] != NOT_NUM) groupColorNumArr[gimInfo[SET_GMCK_GROUP]] = gimInfo[SET_GMCK_COLOR];
             }
 
             //枠配置
@@ -694,25 +747,25 @@ namespace PuzzleMain
                 int[] cageInfo = cageInfoArrList[i];
 
                 //檻生成,配置
-                cageObjArr[i]  = Instantiate(gimmickPrefabArr[cageInfo[GIMMICK]].prefab[0]);
+                cageObjArr[i]  = Instantiate(gimmickPrefabArr[cageInfo[SET_GMCK_TYPE]].prefab[0]);
                 cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
-                cageSquareIdArr[i] = cageInfo[SQUARE];
-                PiecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SQUARE]);
-                cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SQUARE], cageInfo[GIMMICK], NOT_NUM);
+                cageSquareIdArr[i] = cageInfo[SET_GMCK_SQUARE];
+                PiecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SET_GMCK_SQUARE]);
+                cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SET_GMCK_SQUARE], cageInfo[SET_GMCK_TYPE], NOT_NUM);
                 sGimmickInfoArr[cageInfoArr[i].settingIndex] = cageInfoArr[i];
-                cageInfoArr[i].spriRenChild[CAGE_BOBM].sprite = CageBobmSprArr[cageInfo[COLOR]];
+                cageInfoArr[i].spriRenChild[CAGE_BOBM].sprite = CageBobmSprArr[cageInfo[SET_GMCK_COLOR]];
 
                 //座標指定
                 Vector3 _pos = new Vector3(
-                    cageInfoArr[i].defaultPos.x * (cageInfo[WIDTH] - 1),
-                    cageInfoArr[i].defaultPos.y * (cageInfo[HEIGHT] - 1),
+                    cageInfoArr[i].defaultPos.x * (cageInfo[SET_GMCK_WIDTH] - 1),
+                    cageInfoArr[i].defaultPos.y * (cageInfo[SET_GMCK_HEIGHT] - 1),
                     cageInfoArr[i].defaultPos.z);
                 cageInfoArr[i].tra.localPosition = _pos;
 
                 //スケール指定
                 Vector3 _scale = new Vector3(
-                    cageInfoArr[i].defaultScale.x * cageInfo[WIDTH],
-                    cageInfoArr[i].defaultScale.y * cageInfo[HEIGHT],
+                    cageInfoArr[i].defaultScale.x * cageInfo[SET_GMCK_WIDTH],
+                    cageInfoArr[i].defaultScale.y * cageInfo[SET_GMCK_HEIGHT],
                     cageInfoArr[i].defaultScale.z);
                 cageInfoArr[i].spriRen.size = _scale;
 
@@ -767,6 +820,7 @@ namespace PuzzleMain
                     //sprite更新(数字)
                     BobmCountSpriteUpdate(cageInfoArr[i]);
                     corList.Add(StartCoroutine(AnimationStart(cageInfoArr[i].ani, STATE_NAME_DAMAGE)));
+                    break;
                 }
             }
 

@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     }
 
     //選択ステージ番号
-    public static int SelectStage { get; set; }
+    public static StagesDataData SelectStageData { get; set; }
 
     /// <summary>
     /// シーン移管終了時の処理

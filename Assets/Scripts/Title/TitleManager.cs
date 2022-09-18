@@ -340,7 +340,7 @@ namespace Title
             }
 
             //ステージ決定
-            GameManager.SelectStage = _stageNum;
+            GameManager.SelectStageData = AllStagesData.dataArray[_stageNum - 1];
 
             //SE再生
             SE_OneShot(SE_Type.StageSelect);

@@ -28,9 +28,10 @@ namespace Title
         CanvasManager mCanvasManager;
 
         //----スタティック変数----//
-        public static TitleManager  TitleMgr  { get; private set; }
-        public static OptionManager OptionMgr { get; private set; }
-        public static CanvasManager CanvasMgr { get; private set; }
+        public static TitleManager  TitleMgr    { get; private set; }
+        public static OptionManager OptionMgr   { get; private set; }
+        public static CanvasManager CanvasMgr   { get; private set; }
+        public static StagesData AllStagesData  { get; private set; }
         public static TitleState sTitleState;
         //-----------------------//
 
@@ -51,6 +52,9 @@ namespace Title
 
             //オプション初期化
             OptionMgr.Initialize();
+
+            //ステージデータ取得
+            AllStagesData = Resources.Load("StagesData") as StagesData;
         }
     }
 }

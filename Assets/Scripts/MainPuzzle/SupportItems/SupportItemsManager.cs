@@ -245,7 +245,7 @@ namespace PuzzleMain
         }
 
         /// <summary>
-        /// 
+        /// 生成アイテムの取得
         /// </summary>
         /// <param name="_line">      一行削除？</param>
         /// <param name="_column">    一列削除？</param>
