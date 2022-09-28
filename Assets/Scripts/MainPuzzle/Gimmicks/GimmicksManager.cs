@@ -1056,13 +1056,25 @@ namespace PuzzleMain
 
                     //if (0 <= piecesIndex && piecesIndex < SQUARES_COUNT)   //必要のない条件であると思われる
                     {
-                        if (sPieceObjArr[piecesIndex] == null)
+                        //ギミックマスの場合でも取得するように変更
+                        //if (sPieceObjArr[piecesIndex] == null)
+                        //{
+                        //    //空マス
+                        //    squareNull[(int)dir] = true;
+                        //    atkPossibleSquares[(int)dir] = true;
+                        //}
+                        //else if (sPieceInfoArr[piecesIndex] != null && sPieceInfoArr[piecesIndex].invertable)
+                        //{
+                        //    //反転可能駒
+                        //    atkPossibleSquares[(int)dir] = true;
+                        //}
+                        if (sPieceObjArr[piecesIndex] == null || sPieceInfoArr[piecesIndex] != null)
                         {
-                            //空マス
+                            //空マス,ギミックマス
                             squareNull[(int)dir] = true;
                             atkPossibleSquares[(int)dir] = true;
                         }
-                        else if (sPieceInfoArr[piecesIndex] != null && sPieceInfoArr[piecesIndex].invertable)
+                        else if (sPieceInfoArr[piecesIndex].invertable)
                         {
                             //反転可能駒
                             atkPossibleSquares[(int)dir] = true;
@@ -1225,6 +1237,9 @@ namespace PuzzleMain
         {
             int gimIndex = tornadoInfoList.IndexOf(gimInfo);
             int nowPieceColor = PiecesMgr.GetSquarePieceColorId(tornadoAttackInfoArr[gimIndex][atkNum]);
+
+            //ギミックマスの場合は処理をスキップ
+            if (nowPieceColor == INT_NULL) return;
 
             StartCoroutine(PiecesMgr.ReversingPieces(tornadoAttackInfoArr[gimIndex][atkNum], PiecesMgr.GetRandomPieceColor(nowPieceColor)));
         }
