@@ -308,4 +308,44 @@ public class StagesDataData
   int[] setgimmicks_60 = new int[0];
   public int[] Setgimmicks_60 { get {return setgimmicks_60; } set { this.setgimmicks_60 = value;} }
   
+  [SerializeField]
+  int[] setgimmicks_61 = new int[0];
+  public int[] Setgimmicks_61 { get {return setgimmicks_61; } set { this.setgimmicks_61 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_62 = new int[0];
+  public int[] Setgimmicks_62 { get {return setgimmicks_62; } set { this.setgimmicks_62 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_63 = new int[0];
+  public int[] Setgimmicks_63 { get {return setgimmicks_63; } set { this.setgimmicks_63 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_64 = new int[0];
+  public int[] Setgimmicks_64 { get {return setgimmicks_64; } set { this.setgimmicks_64 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_65 = new int[0];
+  public int[] Setgimmicks_65 { get {return setgimmicks_65; } set { this.setgimmicks_65 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_66 = new int[0];
+  public int[] Setgimmicks_66 { get {return setgimmicks_66; } set { this.setgimmicks_66 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_67 = new int[0];
+  public int[] Setgimmicks_67 { get {return setgimmicks_67; } set { this.setgimmicks_67 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_68 = new int[0];
+  public int[] Setgimmicks_68 { get {return setgimmicks_68; } set { this.setgimmicks_68 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_69 = new int[0];
+  public int[] Setgimmicks_69 { get {return setgimmicks_69; } set { this.setgimmicks_69 = value;} }
+  
+  [SerializeField]
+  int[] setgimmicks_70 = new int[0];
+  public int[] Setgimmicks_70 { get {return setgimmicks_70; } set { this.setgimmicks_70 = value;} }
+  
 }

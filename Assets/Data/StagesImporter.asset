@@ -318,6 +318,46 @@ MonoBehaviour:
     name: SetGimmicks_60
     isEnable: 0
     isArray: 1
+  - type: 3
+    name: SetGimmicks_61
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_62
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_63
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_64
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_65
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_66
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_67
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_68
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_69
+    isEnable: 0
+    isArray: 1
+  - type: 3
+    name: SetGimmicks_70
+    isEnable: 0
+    isArray: 1
   excelFilePath: Assets/Data/Excel/StagesData.xls
   SheetNames:
   - StagesData

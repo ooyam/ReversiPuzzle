@@ -368,7 +368,7 @@ public class PuzzleDefine : MonoBehaviour
             //配置ギミック情報取得
             if (pro.Name.Contains(setGimInfoName))
             {
-                //変数名に{gimInfoName}が含まれているものを取得
+                //変数名に{setGimInfoName}が含まれているものを取得
                 int[] gimInfoArr = pro.GetValue(stageData) as int[];
                 if (gimInfoArr[0] < 0) continue;
 

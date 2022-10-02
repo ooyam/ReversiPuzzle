@@ -131,8 +131,8 @@ public class GimmickInformation : MonoBehaviour
     {
         for (int i = 0; i < GIMMICKS_DEPLOY_COUNT; i++)
         {
-            if (GIMMICKS_INFO_ARR[i][SET_GMCK_SQUARE] == _squareIndex && 
-                (GIMMICKS_INFO_ARR[i][SET_GMCK_TYPE] == _gimmickId || GIMMICKS_INFO_ARR[i][SET_GMCK_GROUP] == _groupId))
+            if (GIMMICKS_INFO_ARR[i][SET_GMCK_SQUARE] == _squareIndex &&
+                (GIMMICKS_INFO_ARR[i][SET_GMCK_TYPE] == _gimmickId || (_groupId >= 0 && GIMMICKS_INFO_ARR[i][SET_GMCK_GROUP] == _groupId)))
             {
                 InformationSetting(i);
                 break;

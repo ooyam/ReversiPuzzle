@@ -751,7 +751,9 @@ namespace PuzzleMain
                 cageInfoArr[i] = cageObjArr[i].GetComponent<GimmickInformation>();
                 cageSquareIdArr[i] = cageInfo[SET_GMCK_SQUARE];
                 PiecesMgr.PlaceGimmick(cageObjArr[i], cageInfo[SET_GMCK_SQUARE]);
+
                 cageInfoArr[i].InformationSetting_SquareIndex(cageInfo[SET_GMCK_SQUARE], cageInfo[SET_GMCK_TYPE], NOT_NUM);
+
                 sGimmickInfoArr[cageInfoArr[i].settingIndex] = cageInfoArr[i];
                 cageInfoArr[i].spriRenChild[CAGE_BOBM].sprite = CageBobmSprArr[cageInfo[SET_GMCK_COLOR]];
 
