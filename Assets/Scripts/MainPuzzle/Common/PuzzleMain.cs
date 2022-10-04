@@ -83,7 +83,7 @@ namespace PuzzleMain
         public static List<int>             sDestroyPiecesIndexList = new List<int>();  //削除駒の管理番号リスト
         public static int                   sDestroyBasePieceIndex = 0;                 //削除駒内の基準駒(置いた駒)の格納インデックス
 
-        public static int                   sNumberTagNextOrder = 0;                    //次に破壊する番号(番号札ギミック用)
+        public static int                   sNumberTagNextOrder = 1;                    //次に破壊する番号(番号札ギミック用)
         //------------------------//
 
         /// <summary>

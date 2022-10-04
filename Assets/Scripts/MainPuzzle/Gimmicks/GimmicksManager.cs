@@ -107,7 +107,7 @@ namespace PuzzleMain
             attackPiecesList = new List<int>();
 
             //番号札順番リセット
-            sNumberTagNextOrder = 0;
+            sNumberTagNextOrder = 1;
         }
 
 
@@ -890,7 +890,7 @@ namespace PuzzleMain
         /// <param name="gimInfo">ギミック情報</param>
         public void NumberTagOrderSetting(ref GimmickInformation gimInfo)
         {
-            gimInfo.spriRenChild[NUMBERTAG_FRONT].sprite = NumberTagSprArr[gimInfo.order];
+            gimInfo.spriRenChild[NUMBERTAG_FRONT].sprite = NumberTagSprArr[gimInfo.order - 1];
         }
 
 

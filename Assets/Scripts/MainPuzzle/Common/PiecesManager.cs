@@ -219,6 +219,7 @@ namespace PuzzleMain
             {
                 foreach (GimmickInformation gimInfo in sGimmickInfoArr)
                 {
+                    if (gimInfo == null) continue;
                     if (gimInfo.startSquareId == squareId && gimInfo.inSquare)
                     {
                         if (on) gimInfo.OperationFlagON();
