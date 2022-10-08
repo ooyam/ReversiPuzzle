@@ -511,8 +511,7 @@ namespace PuzzleMain
                     case (int)Gimmicks.Frame_Color:         //枠(色)
                     case (int)Gimmicks.Frame_Color_Change:  //枠(色変更)
                         //グループごとにリスト作成
-                        if (frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]] == null)
-                            frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]] = new List<int>();
+                        frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]] ??= new List<int>();
                         frameSquareIdListArr[gimInfo[SET_GMCK_GROUP]].Add(gimInfo[SET_GMCK_SQUARE]);
                         break;
 
@@ -738,11 +737,11 @@ namespace PuzzleMain
         /// <param name="cageInfoArrList">檻の情報配列</param>
         void GenerateCage(ref List<int[]> cageInfoArrList)
         {
-            int cageCount   = cageInfoArrList.Count;
-            cageObjArr      = new GameObject[cageCount];            //檻オブジェクトリスト
-            cageInfoArr     = new GimmickInformation[cageCount];    //檻オブジェクト情報リスト
-            cageSquareIdArr = new int[cageCount];                   //檻配置マスリスト
-            for (int i = 0; i < cageCount; i++)
+            int cageCnt     = cageInfoArrList.Count;
+            cageObjArr      = new GameObject[cageCnt];            //檻オブジェクトリスト
+            cageInfoArr     = new GimmickInformation[cageCnt];    //檻オブジェクト情報リスト
+            cageSquareIdArr = new int[cageCnt];                   //檻配置マスリスト
+            for (int i = 0; i < cageCnt; i++)
             {
                 int[] cageInfo = cageInfoArrList[i];
 
@@ -1056,31 +1055,17 @@ namespace PuzzleMain
                     //すでに攻撃予定駒の場合は処理スキップ
                     if (attackPiecesList.Contains(piecesIndex)) continue;
 
-                    //if (0 <= piecesIndex && piecesIndex < SQUARES_COUNT)   //必要のない条件であると思われる
+                    //攻撃可能マスの取得
+                    if (sPieceObjArr[piecesIndex] == null || sPieceInfoArr[piecesIndex] == null)
                     {
-                        //ギミックマスの場合でも取得するように変更
-                        //if (sPieceObjArr[piecesIndex] == null)
-                        //{
-                        //    //空マス
-                        //    squareNull[(int)dir] = true;
-                        //    atkPossibleSquares[(int)dir] = true;
-                        //}
-                        //else if (sPieceInfoArr[piecesIndex] != null && sPieceInfoArr[piecesIndex].invertable)
-                        //{
-                        //    //反転可能駒
-                        //    atkPossibleSquares[(int)dir] = true;
-                        //}
-                        if (sPieceObjArr[piecesIndex] == null || sPieceInfoArr[piecesIndex] != null)
-                        {
-                            //空マス,ギミックマス
-                            squareNull[(int)dir] = true;
-                            atkPossibleSquares[(int)dir] = true;
-                        }
-                        else if (sPieceInfoArr[piecesIndex].invertable)
-                        {
-                            //反転可能駒
-                            atkPossibleSquares[(int)dir] = true;
-                        }
+                        //空マス,ギミックマス
+                        squareNull[(int)dir] = true;
+                        atkPossibleSquares[(int)dir] = true;
+                    }
+                    else if (sPieceInfoArr[piecesIndex].invertable)
+                    {
+                        //反転可能駒
+                        atkPossibleSquares[(int)dir] = true;
                     }
 
                     //配列に格納

@@ -72,8 +72,10 @@ namespace Sound
         const float BGM_FADE_IN_TIME = 1.0f;
         const float BGM_FADE_OUT_TIME = 0.5f;
 
-        //SE同時再生最大数
-        const int SE_PLAY_MAX = 30;
+        //SE定数
+        const int SE_PLAY_MAX = 30;                     //SE同時再生最大数
+        const int SE_MAX_DUPLICATE = 3;                 //同じSEの最大重複再生数
+        const float TIME_CONSIDERED_DUPLICATE = 0.2f;   //重複とみなす時間
 
         //AudioSource
         static AudioSource mBGM_Audio;
@@ -258,6 +260,7 @@ namespace Sound
             if (mBGM_FadeCor != null) instance.StopCoroutine(mBGM_FadeCor);
         }
 
+
         //=============================================
         //SE
         //=============================================
@@ -266,14 +269,30 @@ namespace Sound
         /// 使用可能なAudioSourceの管理番号取得
         /// </summary>
         /// <returns>使用可能なAudioSource</returns>
-        static AudioSource SE_GetAudioSource()
+        static AudioSource SE_GetAudioSource(AudioClip clip)
         {
+            AudioSource returnAudioSrc = null;
+            int duplicateSeCnt = 0;
             for (int i = 0; i < SE_PLAY_MAX; i++)
             {
-                if (!mSE_AudioArr[i].isPlaying)
-                    return mSE_AudioArr[i];
+                //再生中のAudioSource
+                if (mSE_AudioArr[i].isPlaying)
+                {
+                    //同じSEが同じタイミングで流れている場合
+                    if (mSE_AudioArr[i].clip == clip && mSE_AudioArr[i].time < TIME_CONSIDERED_DUPLICATE)
+                    {
+                        //一定数を超えた場合はnullを返す
+                        if (++duplicateSeCnt >= SE_MAX_DUPLICATE) return null;
+                    }
+                }
+                //未再生
+                else
+                {
+                    //AudioSourceの取得
+                    returnAudioSrc ??= mSE_AudioArr[i];
+                }
             }
-            return null;
+            return returnAudioSrc;
         }
 
         /// <summary>
@@ -286,12 +305,13 @@ namespace Sound
             if (!Preferences.Se) return null;
 
             //使用可能なAudioSourceがない場合は再生しない
-            AudioSource audio = SE_GetAudioSource();
+            AudioSource audio = SE_GetAudioSource(mSE_ClipDic[_seType]);
             if (audio == null) return null;
 
             //音量,クリップ設定,再生
             audio.volume = mSE_InfoDic[_seType].Volume;
-            audio.PlayOneShot(mSE_ClipDic[_seType]);
+            audio.clip = mSE_ClipDic[_seType];
+            audio.Play();
             return audio;
         }
 
@@ -305,7 +325,7 @@ namespace Sound
             if (!Preferences.Se) return null;
 
             //使用可能なAudioSourceがない場合は再生しない
-            AudioSource audio = SE_GetAudioSource();
+            AudioSource audio = SE_GetAudioSource(mSE_ClipDic[_seType]);
             if (audio == null) return null;
 
             //再生開始
@@ -332,7 +352,8 @@ namespace Sound
             for (int i = 0; i < _data.Playtimes; i++)
             {
                 if (!Preferences.Se) break;
-                _audio.PlayOneShot(seClip);
+                _audio.clip = seClip;
+                _audio.Play();
                 yield return playSpan;
             }
         }

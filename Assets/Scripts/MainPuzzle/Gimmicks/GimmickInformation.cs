@@ -83,8 +83,29 @@ public class GimmickInformation : MonoBehaviour
         destructible        = !data.Continuous;
         assaultOnly         = data.Assault_Only;
         inSquare            = data.In_Square;
-        defaultPos          = new Vector3(data.Position_X, data.Position_Y, (inSquare) ? Z_PIECE : Z_GIMMICK);
         defaultScale        = new Vector3(data.Scale_X, data.Scale_Y, 1.0f);
+
+        float posZ;
+        switch (id)
+        {
+            //˜g
+            case (int)Gimmicks.Frame:
+            case (int)Gimmicks.Frame_Color:
+            case (int)Gimmicks.Frame_Color_Change:
+                posZ = Z_GIMMICK;
+                break;
+
+            //ŸB
+            case (int)Gimmicks.Cage:
+                posZ = Z_FRONT_GIMMICK;
+                break;
+
+            //‚»‚Ì‘¼
+            default:
+                posZ = Z_PIECE;
+                break;
+        }
+        defaultPos = new Vector3(data.Position_X, data.Position_Y, posZ);
     }
 
     /// <summary>

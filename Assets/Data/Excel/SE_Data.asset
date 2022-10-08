@@ -167,11 +167,11 @@ MonoBehaviour:
     playspan: 0
   - se_type: 30
     clipname: tornado_attack
-    volume: 0.3
+    volume: 0.4
     playtimes: 0
     playspan: 0
   - se_type: 31
     clipname: tornado_burst
-    volume: 0.4
+    volume: 0.3
     playtimes: 0
     playspan: 0

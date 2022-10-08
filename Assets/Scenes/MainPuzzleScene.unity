@@ -5604,6 +5604,8 @@ MonoBehaviour:
   - {fileID: 1420985274}
   - {fileID: 1420985271}
   - {fileID: 1420985270}
+  mTutorialViewCloseBtnObj: {fileID: 1420985284}
+  mTutorialViewNextBtnObj: {fileID: 1420985283}
 --- !u!1 &1275519623
 GameObject:
   m_ObjectHideFlags: 0
@@ -6527,6 +6529,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa2136234f3af0e498f6b0d440abae32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1420985283 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 845915657954864441, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1420985267}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1420985284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3488077477838204996, guid: 40b6628323a0b5e4f9d3ce3c60a4c79a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1420985267}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1423094058
 GameObject:
   m_ObjectHideFlags: 0

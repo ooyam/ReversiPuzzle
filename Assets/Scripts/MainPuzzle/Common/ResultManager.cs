@@ -6,6 +6,7 @@ using static CommonDefine;
 using static PuzzleDefine;
 using static PuzzleMain.PuzzleMain;
 using static animation.AnimationManager;
+using static Sound.SoundManager;
 
 namespace PuzzleMain
 {
@@ -168,8 +169,6 @@ namespace PuzzleMain
 
         const float LOADING_MAX_TIME = 30.0f;   //広告読み込み最大時間
 
-        readonly WaitForSeconds TEST_WAIT = new WaitForSeconds(3.0f);//テスト待機
-
         //---インタースティシャル---//
 
         const int SHOW_STAGE_NUM = 5;                                               //5ステージごとに表示を行う
@@ -289,6 +288,9 @@ namespace PuzzleMain
             //表示中の場合は処理をしない
             if (mRewardState != AdRewardState.None) return;
 
+            //SE
+            SE_OneShot(SE_Type.BtnYes);
+
             //リザルトオブジェクトの削除
             ObjectDestroy();
 
@@ -404,7 +406,7 @@ namespace PuzzleMain
 
                 //ボタンテキスト,横幅取得
                 mMessageBtnTra = winTra.GetChild(1).GetComponent<RectTransform>();
-                mMessageBtnText = mMessageBtnTra.GetChild(0).GetChild(0).GetComponent<Text>();
+                mMessageBtnText = mMessageBtnTra.GetChild(0).GetChild(2).GetComponent<Text>();
             }
 
             //テキスト反映
@@ -432,6 +434,9 @@ namespace PuzzleMain
             //フラグのリセット
             FlagReset();
             FlagOn(PuzzleFlag.TurnRecovered);
+
+            //BGM再開
+            BGM_FadeRestart();
         }
 
         /// <summary>
@@ -462,6 +467,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushYes()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnYes);
+
             switch (mConfirmWinState)
             {
                 //再挑戦する？
@@ -481,6 +489,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushNo()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnNo);
+
             switch (mConfirmWinState)
             {
                 //再挑戦する？
@@ -509,6 +520,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushGiveUp()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnYes);
+
             mConfirmWinState = ConfirmWinStatus.TryAgain;
             GenerateConfirmObj();
         }
@@ -518,6 +532,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushClose()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnNo);
+
             switch (mRewardState)
             {
                 case AdRewardState.Loading: //読み込み中
@@ -558,6 +575,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushTryAgain()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnYes);
+
             TryAgain();
         }
 
@@ -566,6 +586,9 @@ namespace PuzzleMain
         /// </summary>
         public void IsPushReturnTitle()
         {
+            //SE
+            SE_OneShot(SE_Type.BtnYes);
+
             ReturnTitle();
         }
     }

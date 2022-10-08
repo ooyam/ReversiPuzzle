@@ -34,19 +34,20 @@ namespace Ui
         //---------------------オプション画面-----------------------//
         //==========================================================//
 
-        public void IsPushOption_Option()           => mOptionMgr.IsPushOption();           //オプション
-        public void IsPushBGM_Option()              => mOptionMgr.IsPushBGM();              //BGM_ON・OFF
-        public void IsPushSE_Option()               => mOptionMgr.IsPushSE();               //SE_ON・OFF
-        public void IsPushCredit_Option()           => mOptionMgr.IsPushCredit();           //クレジット
-        public void IsPushQuitGame_Option()         => mOptionMgr.IsPushQuitGame();         //ゲームをやめる
-        public void IsPushYes_Option()              => mOptionMgr.IsPushYes();              //はい
-        public void IsPushNo_Option()               => mOptionMgr.IsPushNo();               //いいえ
-        public void IsPushClose_Option()            => mOptionMgr.IsPushClose();            //閉じる
-        public void IsPushTutorial_Option()         => mOptionMgr.IsPushTutorial();         //チュートリアル
-        public void IsPushRedo_Option()             => mOptionMgr.IsPushRedo();             //やり直す
-        public void IsPushReturnTitle_Option()      => mOptionMgr.IsPushReturnTitle();      //タイトルに戻る
-        public void IsPushRightArrow_Option()       => mOptionMgr.IsPushRightArrow();       //右矢印
-        public void IsPushLeftArrow_Option()        => mOptionMgr.IsPushLeftArrow();        //左矢印
+        public void IsPushOption_Option()      => mOptionMgr.IsPushOption();        //オプション
+        public void IsPushBGM_Option()         => mOptionMgr.IsPushBGM();           //BGM_ON・OFF
+        public void IsPushSE_Option()          => mOptionMgr.IsPushSE();            //SE_ON・OFF
+        public void IsPushCredit_Option()      => mOptionMgr.IsPushCredit();        //クレジット
+        public void IsPushQuitGame_Option()    => mOptionMgr.IsPushQuitGame();      //ゲームをやめる
+        public void IsPushYes_Option()         => mOptionMgr.IsPushYes();           //はい
+        public void IsPushNo_Option()          => mOptionMgr.IsPushNo();            //いいえ
+        public void IsPushClose_Option()       => mOptionMgr.IsPushClose();         //閉じる
+        public void IsPushNext_Option()        => mOptionMgr.IsPushNext();          //次へ
+        public void IsPushTutorial_Option()    => mOptionMgr.IsPushTutorial();      //チュートリアル
+        public void IsPushRedo_Option()        => mOptionMgr.IsPushRedo();          //やり直す
+        public void IsPushReturnTitle_Option() => mOptionMgr.IsPushReturnTitle();   //タイトルに戻る
+        public void IsPushRightArrow_Option()  => mOptionMgr.IsPushRightArrow();    //右矢印
+        public void IsPushLeftArrow_Option()   => mOptionMgr.IsPushLeftArrow();     //左矢印
 
 
         //==========================================================//

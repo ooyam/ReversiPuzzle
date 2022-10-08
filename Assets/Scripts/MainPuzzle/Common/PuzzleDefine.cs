@@ -94,9 +94,11 @@ public class PuzzleDefine : MonoBehaviour
     }
 
     //Z座標
-    public const float Z_ZERO    = 0.0f;    //0
-    public const float Z_PIECE   = -1.0f;   //駒
-    public const float Z_GIMMICK = -2.0f;   //ギミック(駒として管理しない)
+    public const float Z_ZERO           = 0f;   //0
+    public const float Z_PIECE          = -1f;  //駒
+    public const float Z_GIMMICK        = -2f;  //ギミック(駒として管理しない)
+    public const float Z_FRONT_GIMMICK  = -3f;  //より手前のギミック
+    public const float Z_MOST_FRONT     = -4f;  //最も手前
 
     //オブジェクトのタグ
     public const string GIMMICK_TAG      = "Gimmick";       //ギミック
@@ -154,11 +156,11 @@ public class PuzzleDefine : MonoBehaviour
     public const float DESTROY_PIECE_CHANGE_SCALE  = 0.0f;   //破壊時のスケール
 
     //駒配置
-    public const float PUT_PIECE_SCALING_SPEED = 0.02f;             //拡縮速度
-    public const float PUT_PIECE_CHANGE_SCALE  = 0.8f;              //拡大時のスケール
-    public const float PUT_PIECE_MOVE_START_Z  = Z_GIMMICK - 0.1f;  //移動開始z座標(localPosition)
-    public const float PUT_PIECE_MOVE_SPEED    = 0.2f;              //移動速度
-    public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;              //待機駒のスライド速度
+    public const float PUT_PIECE_SCALING_SPEED = 0.02f;         //拡縮速度
+    public const float PUT_PIECE_CHANGE_SCALE  = 0.8f;          //拡大時のスケール
+    public const float PUT_PIECE_MOVE_SPEED    = 0.2f;          //移動速度
+    public const float NEXT_PIECE_SLIDE_SPEED  = 0.3f;          //待機駒のスライド速度
+    public static readonly Vector3 PUT_PIECE_MOVE_TARGET_POS = new Vector3(0.0f, 0.0f, Z_MOST_FRONT);   //移動目標座標
 
     //駒落下
     public const float FALL_PIECE_MOVE_SPEED  = 0.07f;  //落下速度

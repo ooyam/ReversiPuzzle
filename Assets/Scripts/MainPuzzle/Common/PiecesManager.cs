@@ -385,13 +385,14 @@ namespace PuzzleMain
 
             //待機駒の移動
             Vector3 nowPos = nextPieceTraArr[nextPuPieceIndex].localPosition;
-            nextPieceTraArr[nextPuPieceIndex].localPosition = new Vector3(nowPos.x, nowPos.y, PUT_PIECE_MOVE_START_Z);
-            yield return StartCoroutine(DecelerationMovement(nextPieceTraArr[nextPuPieceIndex], PUT_PIECE_MOVE_SPEED, PIECE_DEFAULT_POS));
+            nextPieceTraArr[nextPuPieceIndex].localPosition = new Vector3(nowPos.x, nowPos.y, Z_MOST_FRONT);
+            yield return StartCoroutine(DecelerationMovement(nextPieceTraArr[nextPuPieceIndex], PUT_PIECE_MOVE_SPEED, PUT_PIECE_MOVE_TARGET_POS));
 
             //駒反転カウント
             PieceReverseCount(sPieceInfoArr[putIndex].colorId);
 
             //待機駒を置く
+            nextPieceTraArr[nextPuPieceIndex].localPosition = PIECE_DEFAULT_POS;
             PutPiece(putIndex);
 
             //90°回転

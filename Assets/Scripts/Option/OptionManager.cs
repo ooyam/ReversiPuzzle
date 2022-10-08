@@ -125,6 +125,14 @@ namespace Option
         [SerializeField]
         GameObject[] mArrowObjArr = new GameObject[(int)ArrowType.Count];
 
+        [Header("チュートリアル表示中の閉じるボタン")]
+        [SerializeField]
+        GameObject mTutorialViewCloseBtnObj;
+
+        [Header("チュートリアル表示中の次へボタン")]
+        [SerializeField]
+        GameObject mTutorialViewNextBtnObj;
+
         //矢印タイプ
         enum ArrowType
         {
@@ -232,7 +240,7 @@ namespace Option
                 //オプション画面全非表示
                 ObjInactive();
 
-                //強制チュートリアル中フラグセット
+                //強制チュートリアル中フラグリセット
                 FlagOff(PuzzleFlag.NowForcedTutorial);
             }
         }
@@ -414,6 +422,19 @@ namespace Option
 
             //SE再生
             SE_OneShot(SE_Type.BtnNo);
+        }
+
+        /// <summary>
+        /// 次へ
+        /// </summary>
+        public void IsPushNext()
+        {
+            //強制チュートリアル次のページへ
+            mTutorialViewPage++;
+            TutorialViewPageChange();
+
+            //SE再生
+            SE_OneShot(SE_Type.BtnYes);
         }
 
         /// <summary>
@@ -625,8 +646,17 @@ namespace Option
             mPageMoveCor = StartCoroutine(DecelerationMovement(mTutorialPagesTraArr[(int)mTutorialType], PAGE_MOVE_SPEED, targetPos));
 
             //矢印表示状態変更
-            mArrowObjArr[(int)ArrowType.ViewRight].SetActive(mTutorialViewPage < mTutorialMaxPageArr[(int)mTutorialType] - 1);
+            bool maxPage = mTutorialViewPage >= mTutorialMaxPageArr[(int)mTutorialType] - 1;
+            mArrowObjArr[(int)ArrowType.ViewRight].SetActive(!maxPage);
             mArrowObjArr[(int)ArrowType.ViewLeft].SetActive(mTutorialViewPage > 0);
+
+            //強制チュートリアルの場合
+            if (GetFlag(PuzzleFlag.NowForcedTutorial))
+            {
+                //最終ページを表示するまで閉じるボタン表示しない
+                mTutorialViewCloseBtnObj.SetActive(maxPage);
+                mTutorialViewNextBtnObj.SetActive(!maxPage);
+            }
         }
 
         /// <summary>
