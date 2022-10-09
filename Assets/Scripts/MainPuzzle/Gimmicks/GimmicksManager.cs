@@ -404,9 +404,13 @@ namespace PuzzleMain
                                 if (gimmInfo.tra.localPosition.x == 0.0f) newSprite = frameWidthSprArr[gimmInfo.colorId];
                                 gimmInfo.spriRenChild[0].sprite = newSprite;
 
-                                //sprit変更
-                                coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
-                                coroutineList.Add(coroutine);
+                                //SpriteRendererがアクティブの場合
+                                if (gimmInfo.spriRen.enabled)
+                                {
+                                    //sprit変更
+                                    coroutine = StartCoroutine(SpriteChange(gimmInfo.ani, gimmInfo.spriRen, newSprite));
+                                    coroutineList.Add(coroutine);
+                                }
 
                                 //マスの色変更
                                 if (!changedSquare.Contains(gimmInfo.startSquareId))
@@ -583,14 +587,20 @@ namespace PuzzleMain
                 foreach (int squareIndex in squareList)
                 {
                     //枠生成
-                    if (!squareList.Contains(squareIndex - 1))
-                        GenerateFrame(groupColorNumArr[groupId], squareIndex, frameWidthSprArr, Directions.Up, groupId);        //上        
-                    if (!squareList.Contains(squareIndex + 1))
-                        GenerateFrame(groupColorNumArr[groupId], squareIndex, frameWidthSprArr, Directions.Down, groupId);      //下        
-                    if (!squareList.Contains(squareIndex - BOARD_LINE_COUNT))
-                        GenerateFrame(groupColorNumArr[groupId], squareIndex, frameHeightSprArr, Directions.Left, groupId);     //左        
-                    if (!squareList.Contains(squareIndex + BOARD_LINE_COUNT))
-                        GenerateFrame(groupColorNumArr[groupId], squareIndex, frameHeightSprArr, Directions.Right, groupId);    //右
+                    bool generate = false;
+                    if (!squareList.Contains(squareIndex - 1))                Generate(frameWidthSprArr,  Directions.Up);       //上        
+                    if (!squareList.Contains(squareIndex + 1))                Generate(frameWidthSprArr,  Directions.Down);     //下        
+                    if (!squareList.Contains(squareIndex - BOARD_LINE_COUNT)) Generate(frameHeightSprArr, Directions.Left);     //左        
+                    if (!squareList.Contains(squareIndex + BOARD_LINE_COUNT)) Generate(frameHeightSprArr, Directions.Right);    //右
+
+                    void Generate(Sprite[] sprAry, Directions dir)
+                    {
+                        GenerateFrame(groupColorNumArr[groupId], squareIndex, sprAry, dir, groupId);
+                        generate = true;
+                    }
+
+                    //生成されなかった場合(四方を囲まれた場合)
+                    if (!generate) GenerateFrameInactive(squareIndex, groupId);
 
                     //マスの色指定
                     Color color = GetSquareColor(groupColorNumArr[groupId]);
@@ -626,6 +636,30 @@ namespace PuzzleMain
             gimInfo.spriRen.sprite = spriArr[colorId];
             gimInfo.spriRenChild[FRAME_CORNER_1].sprite = frameCornerSprArr[colorId]; //角1
             gimInfo.spriRenChild[FRAME_CORNER_2].sprite = frameCornerSprArr[colorId]; //角2
+        }
+
+        /// <summary>
+        /// 枠生成(SpriteRendererを非アクティブ)
+        /// </summary>
+        /// <param name="squareIndex">マス管理番号</param>
+        /// <param name="groupId">    グループ番号</param>
+        void GenerateFrameInactive(int squareIndex, int groupId)
+        {
+            //フレーム生成,配置
+            GameObject frameObj = Instantiate(gimmickPrefabArr[(int)Gimmicks.Frame].prefab[0]);
+            frameObjListArr[groupId].Add(frameObj);
+            PiecesMgr.PlaceGimmick(frameObj, squareIndex);
+
+            //フレームギミックの情報取得
+            GimmickInformation gimInfo = frameObj.GetComponent<GimmickInformation>();
+            frameInfoListArr[groupId].Add(gimInfo);
+            gimInfo.InformationSetting_SquareIndex(squareIndex, INT_NULL, groupId);
+            sGimmickInfoArr[gimInfo.settingIndex] = gimInfo;
+
+            //非表示
+            gimInfo.spriRen.enabled = false;
+            foreach (SpriteRenderer spriRen in gimInfo.spriRenChild)
+            { spriRen.enabled = false; }
         }
 
         /// <summary>

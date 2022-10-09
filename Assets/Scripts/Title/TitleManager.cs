@@ -228,7 +228,7 @@ namespace Title
         const int STAGE_BTN_OFFSET_Y        = 150;
         const int STAGE_BTN_COLUMN_COUNT    = 5;
         const int STAGE_BTN_LINE_COUNT      = 10;
-        const int STAGE_PAGE_COUNT          = 5;
+        const int STAGE_PAGE_COUNT          = 4;
         readonly float STAGE_BTN_POS_X      = (STAGE_BTN_COLUMN_COUNT - 1) / 2.0f * -STAGE_BTN_OFFSET_X;
         readonly float STAGE_BTN_POS_Y      = STAGE_BTN_LINE_COUNT / 2.0f * STAGE_BTN_OFFSET_Y;
         readonly int STAGE_MAX_PAGE_INDEX   = STAGE_PAGE_COUNT - 1;

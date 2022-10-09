@@ -75,7 +75,7 @@ namespace Sound
         //SE定数
         const int SE_PLAY_MAX = 30;                     //SE同時再生最大数
         const int SE_MAX_DUPLICATE = 3;                 //同じSEの最大重複再生数
-        const float TIME_CONSIDERED_DUPLICATE = 0.2f;   //重複とみなす時間
+        const float TIME_CONSIDERED_DUPLICATE = 0.02f;  //重複とみなす時間
 
         //AudioSource
         static AudioSource mBGM_Audio;
