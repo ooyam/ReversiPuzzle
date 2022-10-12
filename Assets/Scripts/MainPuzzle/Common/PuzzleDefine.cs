@@ -240,6 +240,7 @@ public class PuzzleDefine : MonoBehaviour
         GameOver,               //ゲームオーバー？
         GameClear,              //ゲームクリア？
         TurnRecovered,          //ターン回復済？(一度ゲームーバーした)
+        Uncontinuable,          //ゲーム継続不可能
         NowPuttingPieces,       //駒配置中？
         NowReversingPieces,     //駒反転中？
         NowDestroyingPieces,    //駒破壊中？

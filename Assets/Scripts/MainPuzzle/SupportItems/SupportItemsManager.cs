@@ -361,6 +361,18 @@ namespace PuzzleMain
             FlagOff(PuzzleFlag.NowSupportItemUse);
         }
 
+        /// <summary>
+        /// アクティブな援護アイテムが存在する？
+        /// </summary>
+        /// <returns>true：存在する</returns>
+        public bool IsActiveSupportItemExists()
+        {
+            foreach (GameObject witeItemObj in mWaitItemObjArr)
+            { if (witeItemObj.activeSelf) return true; }
+
+            //存在しない
+            return false;
+        }
 
         //==========================================================//
         //--------------------------0アヒル-------------------------//

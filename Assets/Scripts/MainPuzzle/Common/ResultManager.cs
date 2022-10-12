@@ -18,7 +18,9 @@ namespace PuzzleMain
 
         [Header("ゲームオーバープレハブ")]
         [SerializeField]
-        GameObject[] mGameOverPreArr;   //0:ターン回復有, 1:ボタン無し
+        GameObject[] mGameOverPreArr;
+        enum GameOverObjType
+        { WithRecovery, NoRecovery, Count }   //0:ターン回復有, 1:ボタン無し
 
         [Header("確認ウィンドウプレハブ")]
         [SerializeField]
@@ -96,7 +98,11 @@ namespace PuzzleMain
         {
             StartCoroutine(CanvasMgr.SetFilter(true));
             ObjectDestroy();
-            mDisplayObj = Instantiate(mGameOverPreArr[GetFlag(PuzzleFlag.TurnRecovered) ? 1 : 0]);
+
+            //継続不可能の場合
+            mDisplayObj = Instantiate(mGameOverPreArr[
+                !GetFlag(PuzzleFlag.Uncontinuable) && !GetFlag(PuzzleFlag.TurnRecovered) ?
+                (int)GameOverObjType.WithRecovery : (int)GameOverObjType.NoRecovery]);
             yield return StartCoroutine(ObjectAppearance());
         }
 
@@ -157,8 +163,8 @@ namespace PuzzleMain
         {
             if (mDisplayObj != null)
             {
-                StopCoroutine(mAppearanceCor);  //出現アニメーション中止
-                Destroy(mDisplayObj);           //オブジェクト破壊
+                if (mAppearanceCor != null) StopCoroutine(mAppearanceCor);  //出現アニメーション中止
+                Destroy(mDisplayObj);   //オブジェクト破壊
             }
         }
 
@@ -361,35 +367,46 @@ namespace PuzzleMain
         /// <summary>
         /// メッセージ表示
         /// </summary>
-        void GenerateMessageWindow()
+        public void GenerateMessageWindow()
         {
             //表示文字列指定
             string msg = "";
             string btnText = BUTTON_TEXT_CLOSE;
-            switch (mRewardState)
+
+            //置く場所がない
+            if (GetFlag(PuzzleFlag.Uncontinuable))
             {
-                //読み込み中
-                case AdRewardState.Loading:
-                    msg = "広告を読み込んでいます\nしばらくお待ちください";
-                    btnText = BUTTON_TEXT_CANCEL;
-                    break;
+                msg = "駒を置ける場所がありません\nゲームオーバーとなります";
+            }
+            //その他
+            else
+            {
+                //リワード広告
+                switch (mRewardState)
+                {
+                    //読み込み中
+                    case AdRewardState.Loading:
+                        msg = "広告を読み込んでいます\nしばらくお待ちください";
+                        btnText = BUTTON_TEXT_CANCEL;
+                        break;
 
-                //読み込みキャンセル
-                case AdRewardState.LoadCancel:
-                    msg = "広告をキャンセルしました";
-                    break;
+                    //読み込みキャンセル
+                    case AdRewardState.LoadCancel:
+                        msg = "広告をキャンセルしました";
+                        break;
 
-                //表示失敗
-                case AdRewardState.Loaded:          //読み込み完了(表示失敗)
-                case AdRewardState.FailedToLoad:    //読み込み失敗
-                case AdRewardState.FailedToOpen:    //広告表示失敗
-                    msg = "広告の表示に失敗しました\nもう一度お試しください";
-                    break;
+                    //表示失敗
+                    case AdRewardState.Loaded:          //読み込み完了(表示失敗)
+                    case AdRewardState.FailedToLoad:    //読み込み失敗
+                    case AdRewardState.FailedToOpen:    //広告表示失敗
+                        msg = "広告の表示に失敗しました\nもう一度お試しください";
+                        break;
 
-                //報酬獲得
-                case AdRewardState.EarnedReward:
-                    msg = "5ターン回復しました\nゲームを再開します";
-                    break;
+                    //報酬獲得
+                    case AdRewardState.EarnedReward:
+                        msg = "5ターン回復しました\nゲームを再開します";
+                        break;
+                }
             }
 
             //各メンバ変数の参照が存在する(オブジェクトがある)場合は改め生成しない
@@ -535,38 +552,49 @@ namespace PuzzleMain
             //SE
             SE_OneShot(SE_Type.BtnNo);
 
-            switch (mRewardState)
+            //置く場所がない
+            if (GetFlag(PuzzleFlag.Uncontinuable))
             {
-                case AdRewardState.Loading: //読み込み中
-                case AdRewardState.Loaded:  //読み込み完了(表示失敗)
-                    //広告オブジェクトの破壊
-                    mRewardState = AdRewardState.LoadCancel;
-                    StopCoroutine(mStatusMonitoringAdsCor);
-                    mAdReward.RewardOnDestroy();
-                    GenerateMessageWindow();
-                    break;
+                //ゲームオーバー
+                sPuzzleMain.GameOver();
+            }
+            //その他
+            else
+            {
+                //リワード広告
+                switch (mRewardState)
+                {
+                    case AdRewardState.Loading: //読み込み中
+                    case AdRewardState.Loaded:  //読み込み完了(表示失敗)
+                                                //広告オブジェクトの破壊
+                        mRewardState = AdRewardState.LoadCancel;
+                        StopCoroutine(mStatusMonitoringAdsCor);
+                        mAdReward.RewardOnDestroy();
+                        GenerateMessageWindow();
+                        break;
 
-                case AdRewardState.LoadCancel:      //読み込みキャンセル
-                case AdRewardState.FailedToLoad:    //読み込み失敗
-                case AdRewardState.FailedToOpen:    //広告表示失敗
-                    //ゲームーバーオブジェクト生成
-                    StartCoroutine(GenerateGameOverObj());
-                    mRewardState = AdRewardState.None;
-                    break;
+                    case AdRewardState.LoadCancel:      //読み込みキャンセル
+                    case AdRewardState.FailedToLoad:    //読み込み失敗
+                    case AdRewardState.FailedToOpen:    //広告表示失敗
+                                                        //ゲームーバーオブジェクト生成
+                        StartCoroutine(GenerateGameOverObj());
+                        mRewardState = AdRewardState.None;
+                        break;
 
-                //報酬獲得
-                case AdRewardState.EarnedReward:
-                    //ゲーム再開
-                    ObjectDestroy();
-                    StartCoroutine(GameRestart());
-                    mRewardState = AdRewardState.None;
-                    break;
+                    //報酬獲得
+                    case AdRewardState.EarnedReward:
+                        //ゲーム再開
+                        ObjectDestroy();
+                        StartCoroutine(GameRestart());
+                        mRewardState = AdRewardState.None;
+                        break;
 
-                //その他(入ることはないはず)
-                default:
-                    ObjectDestroy();
-                    mRewardState = AdRewardState.None;
-                    break;
+                    //その他(入ることはないはず)
+                    default:
+                        ObjectDestroy();
+                        mRewardState = AdRewardState.None;
+                        break;
+                }
             }
         }
 

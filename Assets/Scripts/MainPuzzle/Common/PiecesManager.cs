@@ -260,6 +260,28 @@ namespace PuzzleMain
             return sPieceInfoArr[squareId].colorId;
         }
 
+        /// <summary>
+        /// 継続判定
+        /// </summary>
+        public void ContinuationJudgment()
+        {
+            //援護アイテムがない
+            if (!SupportItemsMgr.IsActiveSupportItemExists())
+            {
+                //反転可能駒の確認
+                foreach (PieceInformation info in sPieceInfoArr)
+                {
+                    if (info == null) continue;
+                    if (info.invertable) return;
+                }
+
+                //継続不可能フラグセット
+                FlagOn(PuzzleFlag.Uncontinuable);
+
+                //メッセージ表示
+                ResultMgr.GenerateMessageWindow();
+            }
+        }
         //==========================================================//
 
 
@@ -275,7 +297,11 @@ namespace PuzzleMain
         public void TapObject(GameObject tapObj)
         {
             //援護アイテム準備中以外はギミックをタップできない
-            if (tapObj.CompareTag(GIMMICK_TAG) && !GetFlag(PuzzleFlag.NowSupportItemReady)) return;
+            if (tapObj.CompareTag(GIMMICK_TAG) && !GetFlag(PuzzleFlag.NowSupportItemReady))
+            {
+                //SE_OneShot(SE_Type.TornadoAttack);
+                return;
+            }
 
             //オブジェクト番号取得
             int pieceObjIndex = Array.IndexOf(sPieceObjArr, tapObj);

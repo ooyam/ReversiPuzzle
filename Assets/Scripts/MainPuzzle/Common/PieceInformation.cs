@@ -25,7 +25,7 @@ public class PieceInformation : MonoBehaviour
     /// <param name="gimmickInfoArr">ギミック情報配列</param>
     public void InformationSetting(int _squareIndex, bool _generate, GimmickInformation[] gimmickInfoArr = null)
     {
-        tra        = this.transform;
+        tra        = transform;
         colorId    = (colorRless) ? COLORLESS_ID : (int)color;
         squareId   = _squareIndex;
         OperationFlagON();
@@ -57,7 +57,7 @@ public class PieceInformation : MonoBehaviour
     }
 
     /// <summary>
-    /// 操作フラグをオンにする
+    /// 操作フラグをオフにする
     /// </summary>
     public void OperationFlagOFF()
     {

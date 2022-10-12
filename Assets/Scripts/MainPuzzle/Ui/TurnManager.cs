@@ -123,8 +123,15 @@ namespace PuzzleMain.Ui
             //目標残数確認
             TargetMgr.TargetCheck();
 
-            //ターン数確認
-            if (!GetFlag(PuzzleFlag.GameClear)) TurnCountCheck();
+            //クリアでなければ
+            if (!GetFlag(PuzzleFlag.GameClear))
+            {
+                //ターン数確認
+                TurnCountCheck();
+
+                //継続可能判定
+                PiecesMgr.ContinuationJudgment();
+            }
 
             //ターン終了処理中フラグリセット
             FlagOff(PuzzleFlag.NowTurnEndProcessing);
