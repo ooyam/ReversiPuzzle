@@ -51,7 +51,7 @@ public class GoogleAdmobInterstitial : MonoBehaviour
     {
         //広告ユニットID
 #if UNITY_ANDROID
-        //string adUnitId = ""; //本番
+        //string adUnitId = "ca-app-pub-6016270395550592/3862918575"; //本番
         string adUnitId = "ca-app-pub-3940256099942544/1033173712"; //テスト
 #else
         string adUnitId = "unexpected_platform";

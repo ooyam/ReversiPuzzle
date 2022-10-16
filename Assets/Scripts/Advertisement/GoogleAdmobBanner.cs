@@ -20,7 +20,7 @@ public class GoogleAdmobBanner : MonoBehaviour
     {
         //広告ユニットID
 #if UNITY_ANDROID
-        //string adUnitId = ""; //本番
+        //string adUnitId = "ca-app-pub-6016270395550592/9969748657"; //本番
         string adUnitId = "ca-app-pub-3940256099942544/6300978111"; //テスト
 #else
         string adUnitId = "unexpected_platform";

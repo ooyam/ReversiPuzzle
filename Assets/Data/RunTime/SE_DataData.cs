@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using static Sound.SoundManager;
+using Sound;
 
 ///
 /// !!! Machine generated code !!!
@@ -10,8 +10,8 @@ using static Sound.SoundManager;
 public class SE_DataData
 {
   [SerializeField]
-  SE_Type se_type;
-  public SE_Type SE_TYPE { get {return se_type; } set { this.se_type = value;} }
+  SoundManager.SE_Type se_type;
+  public SoundManager.SE_Type SE_TYPE { get {return se_type; } set { this.se_type = value;} }
   
   [SerializeField]
   string clipname;

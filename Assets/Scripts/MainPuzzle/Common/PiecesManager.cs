@@ -299,7 +299,7 @@ namespace PuzzleMain
             //援護アイテム準備中以外はギミックをタップできない
             if (tapObj.CompareTag(GIMMICK_TAG) && !GetFlag(PuzzleFlag.NowSupportItemReady))
             {
-                //SE_OneShot(SE_Type.TornadoAttack);
+                SE_OneShot(SE_Type.GimmickTap);
                 return;
             }
 
@@ -627,7 +627,7 @@ namespace PuzzleMain
             if (sPieceObjArr[reversIndex].CompareTag(GIMMICK_TAG))
             {
                 //ギミック終了待機
-                yield return sGimmickCorList[sGimmickCorList.Count - 1];
+                yield return sGimmickDamageCorList[sGimmickDamageCorList.Count - 1];
             }
             //駒
             else
@@ -692,7 +692,7 @@ namespace PuzzleMain
             }
 
             //ギミック終了待機
-            foreach (Coroutine c in sGimmickCorList)
+            foreach (Coroutine c in sGimmickDamageCorList)
             { yield return c; }
 
             //反転終了待機

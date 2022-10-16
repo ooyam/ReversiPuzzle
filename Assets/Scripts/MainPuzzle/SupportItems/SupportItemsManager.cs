@@ -216,12 +216,9 @@ namespace PuzzleMain
             bool maxColumnFlag = false;
 
             //駒の数,存在フラグを取得
-            int delPieceCount = 0;
+            int damagePieceCnt = 0;
             foreach (int i in sDestroyPiecesIndexList)
             {
-                //破壊方向数カウント
-                if (Array.IndexOf(perSquares, i) >= 0) dirCount++;
-
                 //駒以外は処理をスキップ
                 if (!sPieceObjArr[i].CompareTag(PIECE_TAG)) continue;
 
@@ -231,17 +228,31 @@ namespace PuzzleMain
                 if (minColumn == i) minColumnFlag = true;
                 if (maxColumn == i) maxColumnFlag = true;
 
-                //破壊駒の数カウント
-                delPieceCount++;
+                //破壊駒のカウント
+                Add(i);
             }
+
+            //ダメージギミックのカウント
+            foreach (int i in sDamageGimmickIndexList)
+            { Add(i); }
 
             //1行,列の破壊フラグ設定
             bool delLine   = minLineFlag && maxLineFlag;
             bool delcolumn = minColumnFlag && maxColumnFlag;
 
             //生成アイテムの待機オブジェクト表示
-            int itemNum = GetGenerateItemNumber(delLine, delcolumn, dirCount, delPieceCount);
+            int itemNum = GetGenerateItemNumber(delLine, delcolumn, dirCount, damagePieceCnt);
             if (itemNum != INT_NULL) StartCoroutine(SetWaitItemsActive(itemNum, true));
+
+            //破壊方向とダメージ駒のカウント
+            void Add(int sqrIndex)
+            {
+                //周辺8マスに含まれている場合,方向数カウント
+                if (Array.IndexOf(perSquares, sqrIndex) >= 0) dirCount++;
+
+                //破壊駒,ダメージギミック数カウント
+                damagePieceCnt++;
+            }
         }
 
         /// <summary>
@@ -347,7 +358,7 @@ namespace PuzzleMain
             }
 
             //ギミック破壊待機
-            foreach (Coroutine c in sGimmickCorList)
+            foreach (Coroutine c in sGimmickDamageCorList)
             { yield return c; }
 
             //駒破壊

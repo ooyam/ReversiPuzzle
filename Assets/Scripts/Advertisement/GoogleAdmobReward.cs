@@ -10,6 +10,7 @@ public class GoogleAdmobReward : MonoBehaviour
     private RewardedAd rewardedAd = null;
 
     //広告ユニットID
+    //private const string adId = "ca-app-pub-6016270395550592/1566297415"; //本番
     private const string adId = "ca-app-pub-3940256099942544/5224354917"; //テスト
     private bool rewardedAdRetry = false;
 

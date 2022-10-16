@@ -55,6 +55,11 @@ MonoBehaviour:
     volume: 0.5
     playtimes: 0
     playspan: 0
+  - se_type: 32
+    clipname: gimmick_tap
+    volume: 0.5
+    playtimes: 0
+    playspan: 0
   - se_type: 8
     clipname: support_item_appearance
     volume: 0.2

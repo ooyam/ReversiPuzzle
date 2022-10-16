@@ -288,7 +288,8 @@ namespace PuzzleMain
 
             //ダメージアニメーション開始
             Coroutine coroutine = StartCoroutine(AnimationStart(gimmInfo.ani, stateName));
-            sGimmickCorList.Add(coroutine);
+            sGimmickDamageCorList.Add(coroutine);
+            sDamageGimmickIndexList.Add(gimmInfo.nowSquareId);
 
             //ダメージ回数計算
             gimmInfo.remainingTimes--;
@@ -482,8 +483,9 @@ namespace PuzzleMain
                 gimmickInfo.nowTurnDamage = false;
             }
 
-            //ギミック待機リストの初期化
-            sGimmickCorList = new List<Coroutine>();
+            //ダメージギミックリストの初期化
+            sGimmickDamageCorList = new List<Coroutine>();
+            sDamageGimmickIndexList = new List<int>();
 
             //攻撃を行う駒リストの初期化
             attackPiecesList = new List<int>();

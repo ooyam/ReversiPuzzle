@@ -64,6 +64,7 @@ namespace Sound
             SteelBurst,             //鋼破壊
             TornadoAttack,          //竜巻いたずら
             TornadoBurst,           //竜巻破壊
+            GimmickTap,             //ギミックのタップ
 
             Count   //総数
         }
