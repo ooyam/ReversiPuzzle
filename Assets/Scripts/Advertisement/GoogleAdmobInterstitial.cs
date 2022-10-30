@@ -47,7 +47,7 @@ public class GoogleAdmobInterstitial : MonoBehaviour
     /// <summary>
     /// 広告読み込み処理
     /// </summary>
-    private void RequestInterstitial()
+    void RequestInterstitial()
     {
         //広告ユニットID
 #if UNITY_ANDROID
@@ -61,16 +61,16 @@ public class GoogleAdmobInterstitial : MonoBehaviour
         interstitial = new InterstitialAd(adUnitId);
 
         //広告リクエストが正常に読み込まれたとき
-        this.interstitial.OnAdLoaded += HandleOnAdLoaded;
+        interstitial.OnAdLoaded += HandleOnAdLoaded;
 
         //広告リクエストの読み込みに失敗したとき
-        this.interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+        interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
 
         //広告が表示されたとき
-        this.interstitial.OnAdOpening += HandleOnAdOpened;
+        interstitial.OnAdOpening += HandleOnAdOpened;
 
         //広告が閉じられたとき
-        this.interstitial.OnAdClosed += HandleOnAdClosed;
+        interstitial.OnAdClosed += HandleOnAdClosed;
 
         // 空の広告リクエストを作成
         AdRequest request = new AdRequest.Builder().Build();

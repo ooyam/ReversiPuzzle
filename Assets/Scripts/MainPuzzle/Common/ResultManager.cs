@@ -206,6 +206,7 @@ namespace PuzzleMain
             float waitTime = 0.0f;
             while (!end)
             {
+                yield return FIXED_UPDATE;
                 switch (mAdInterstitial.AdState)
                 {
                     //çLçêï\é¶
@@ -257,7 +258,6 @@ namespace PuzzleMain
                 }
 
                 if (end) break;
-                yield return FIXED_UPDATE;
                 waitTime += ONE_FRAME_TIMES;
             }
 

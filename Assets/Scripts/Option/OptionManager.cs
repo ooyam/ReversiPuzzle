@@ -401,7 +401,7 @@ namespace Option
             {
                 //通常表示
                 case OptionState.None:
-                    OptionEnd();
+                    StartCoroutine(OptionEnd());
                     break;
 
                 //クレジット表示,チュートリアル(選択)
@@ -659,16 +659,20 @@ namespace Option
             }
         }
 
+
         /// <summary>
         /// オプション終了
         /// </summary>
-        void OptionEnd()
+        IEnumerator OptionEnd()
         {
             //フィルター解除
             SetFilter(false);
 
             //オプション画面全非表示
             ObjInactive();
+
+            //フラグ解除まで1フレーム待機(駒の誤動作対策)
+            yield return null;
 
             //パズルシーンの場合はオプション表示フラグリセット
             if (mOptionType == OptionType.Puzzle)
