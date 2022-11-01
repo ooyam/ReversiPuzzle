@@ -36,18 +36,17 @@ public class GoogleAdmobReward : MonoBehaviour
     /// çLçêäJén
     /// </summary>
     /// <returns></returns>
-    public bool ShowRewardAd()
+    public void ShowRewardAd()
     {
         if (rewardedAd.IsLoaded())
         {
             rewardedAd.Show();
-            return true;
+            ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdOpen;
         }
-        else
-        {
-            //Debug.Log("not loaded");
-            return false;
-        }
+        //else
+        //{
+        //    Debug.Log("not loaded");
+        //}
     }
 
     /// <summary>
@@ -156,7 +155,12 @@ public class GoogleAdmobReward : MonoBehaviour
     public void HandleRewardedAdAdClosed(object sender, EventArgs args)
     {
         //Debug.Log("HandleRewardedAdClosed event received");
-        ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdClosed;
+
+        //ïÒèVälìæå„Ç≈Ç»Ç¢èÍçá
+        if (ResultMgr.mRewardState != PuzzleMain.ResultManager.AdRewardState.EarnedReward)
+        {
+            ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdClosed;
+        }
     }
 
     /// <summary>
@@ -165,6 +169,6 @@ public class GoogleAdmobReward : MonoBehaviour
     public void RewardOnDestroy()
     {
         rewardedAd.Destroy();
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 }

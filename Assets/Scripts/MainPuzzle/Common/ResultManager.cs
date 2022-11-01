@@ -328,16 +328,17 @@ namespace PuzzleMain
                     //読み込み完了
                     case AdRewardState.Loaded:
                         //広告開始
-                        end = !mAdReward.ShowRewardAd();
+                        mAdReward.ShowRewardAd();
                         break;
 
+                    //報酬獲得失敗
                     case AdRewardState.LoadCancel:      //読み込みキャンセル
                     case AdRewardState.FailedToLoad:    //読み込み失敗
                     case AdRewardState.FailedToOpen:    //広告表示失敗
                         end = true;
                         break;
 
-                    //報酬獲得
+                    //報酬獲得成功
                     case AdRewardState.EarnedReward:
                         StartCoroutine(TurnMgr.TurnRecovery_AdReward());
                         end = true;
@@ -345,16 +346,17 @@ namespace PuzzleMain
                 }
 
                 //待機時間の上限を超えた場合
-                if (waitTime > LOADING_MAX_TIME)
+                if (mRewardState != AdRewardState.AdOpen && waitTime > LOADING_MAX_TIME)
                 {
                     //読み込み失敗
                     mRewardState = AdRewardState.FailedToLoad;
                     end = true;
+                    waitTime += ONE_FRAME_TIMES;
                 }
 
+                //状態監視終了
                 if (end) break;
                 yield return FIXED_UPDATE;
-                waitTime += ONE_FRAME_TIMES;
             }
 
             //メッセージ表示
@@ -391,12 +393,17 @@ namespace PuzzleMain
                         break;
 
                     //読み込みキャンセル
-                    case AdRewardState.LoadCancel:
+                    case AdRewardState.LoadCancel:  //読み込みキャンセル
+                    case AdRewardState.AdClosed:    //報酬獲得せずに広告を閉じた
                         msg = "広告をキャンセルしました";
                         break;
 
+                    //読み込み完了
+                    case AdRewardState.Loaded:
+                        msg = "広告を表示します";
+                        break;
+
                     //表示失敗
-                    case AdRewardState.Loaded:          //読み込み完了(表示失敗)
                     case AdRewardState.FailedToLoad:    //読み込み失敗
                     case AdRewardState.FailedToOpen:    //広告表示失敗
                         msg = "広告の表示に失敗しました\nもう一度お試しください";
@@ -565,8 +572,9 @@ namespace PuzzleMain
                 switch (mRewardState)
                 {
                     case AdRewardState.Loading: //読み込み中
-                    case AdRewardState.Loaded:  //読み込み完了(表示失敗)
-                                                //広告オブジェクトの破壊
+                    case AdRewardState.Loaded:  //読み込み完了
+                        
+                        //広告オブジェクトの破壊
                         mRewardState = AdRewardState.LoadCancel;
                         StopCoroutine(mStatusMonitoringAdsCor);
                         mAdReward.RewardOnDestroy();
@@ -576,13 +584,16 @@ namespace PuzzleMain
                     case AdRewardState.LoadCancel:      //読み込みキャンセル
                     case AdRewardState.FailedToLoad:    //読み込み失敗
                     case AdRewardState.FailedToOpen:    //広告表示失敗
-                                                        //ゲームーバーオブジェクト生成
+                    case AdRewardState.AdClosed:        //報酬獲得せずに広告を閉じた
+
+                        //ゲームーバーオブジェクト再生成
                         StartCoroutine(GenerateGameOverObj());
                         mRewardState = AdRewardState.None;
                         break;
 
                     //報酬獲得
                     case AdRewardState.EarnedReward:
+
                         //ゲーム再開
                         ObjectDestroy();
                         StartCoroutine(GameRestart());
@@ -591,7 +602,9 @@ namespace PuzzleMain
 
                     //その他(入ることはないはず)
                     default:
-                        ObjectDestroy();
+
+                        //ゲームオバー表示をやり直す
+                        StartCoroutine(GenerateGameOverObj());
                         mRewardState = AdRewardState.None;
                         break;
                 }

@@ -42,6 +42,7 @@ namespace Option
             Redo,           //やり直す
             ReturnTitle,    //タイトルに戻る
             QiteGame,       //ゲームを終了する
+            EndingGame      //ゲームを終了中
         }
         ConfirmType mConfirmType;
 
@@ -357,9 +358,6 @@ namespace Option
         /// </summary>
         public void IsPushYes()
         {
-            //SE再生
-            SE_OneShot(SE_Type.BtnYes);
-            
             //シーン移管
             switch (mConfirmType)
             {
@@ -377,9 +375,18 @@ namespace Option
 
                 //ゲーム終了
                 case ConfirmType.QiteGame:
-                    GameManager.QuitGame();
+                    StartCoroutine(BGM_FadeStop()); //BGMフェードアウト
+                    StartCoroutine(QuitGame());
                     break;
+
+                //終了処理中
+                case ConfirmType.EndingGame:
+                    return;
             }
+
+            //SE再生
+            SE_OneShot(SE_Type.BtnYes);
+
         }
 
         /// <summary>
@@ -387,6 +394,9 @@ namespace Option
         /// </summary>
         public void IsPushNo()
         {
+            //終了中は処理しない
+            if (mConfirmType == ConfirmType.EndingGame) return;
+
             //SE再生
             SE_OneShot(SE_Type.BtnNo);
             StartCoroutine(ObjectAppearance(OptionState.None));
@@ -677,6 +687,17 @@ namespace Option
             //パズルシーンの場合はオプション表示フラグリセット
             if (mOptionType == OptionType.Puzzle)
                 FlagOff(PuzzleFlag.NowOptionView);
+        }
+
+        /// <summary>
+        /// ゲーム終了
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator QuitGame()
+        {
+            mConfirmType = ConfirmType.EndingGame;
+            yield return StartCoroutine(SceneFader.FadeOut());
+            GameManager.QuitGame();
         }
     }
 }

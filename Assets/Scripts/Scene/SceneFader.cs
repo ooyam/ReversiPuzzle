@@ -34,28 +34,46 @@ public class SceneFader : MonoBehaviour
     /// <param name="_sceneName">シーン名</param>
     public static void SceneChangeFade(string _sceneName)
     {
-        instance.StartCoroutine(FadeOut(_sceneName));
+        instance.StartCoroutine(SceneChangeFadeOut(_sceneName));
+    }
+
+    /// <summary>
+    /// シーン移管フェードアウト
+    /// </summary>
+    /// <param name="_sceneName">シーン名</param>
+    static IEnumerator SceneChangeFadeOut(string _sceneName)
+    {
+        yield return instance.StartCoroutine(FadeOut());
+        SceneManager.LoadScene(_sceneName);
+        yield return null;
+        instance.StartCoroutine(SceneChangeFadeIn());
+    }
+
+    /// <summary>
+    /// シーン移管フェードイン
+    /// </summary>
+
+    static IEnumerator SceneChangeFadeIn()
+    {
+        yield return instance.StartCoroutine(FadeIn());
+        GameManager.SceneChangeEnd();
     }
 
     /// <summary>
     /// フェードアウト
     /// </summary>
-    /// <param name="_sceneName">シーン名</param>
-    static IEnumerator FadeOut(string _sceneName)
+    /// <returns></returns>
+    public static IEnumerator FadeOut()
     {
         yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilter, FADE_SPEED, mFadeOutColors));
-        SceneManager.LoadScene(_sceneName);
-        yield return null;
-        instance.StartCoroutine(FadeIn());
     }
 
     /// <summary>
     /// フェードイン
     /// </summary>
-
+    /// <returns></returns>
     static IEnumerator FadeIn()
     {
         yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilter, FADE_SPEED, mFadeInColors));
-        GameManager.SceneChangeEnd();
     }
 }

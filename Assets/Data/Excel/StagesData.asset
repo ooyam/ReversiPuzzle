@@ -526,7 +526,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 7
-    turn: 10
+    turn: 15
     usecolor: 0100000002000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -611,7 +611,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 8
-    turn: 15
+    turn: 20
     usecolor: 0100000002000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -696,7 +696,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 9
-    turn: 15
+    turn: 20
     usecolor: 030000000400000005000000
     hidesqr: 18000000190000001a0000001b0000001c0000001d0000001e0000001f000000
     tutorialtype: -1
@@ -781,7 +781,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 10
-    turn: 20
+    turn: 25
     usecolor: 000000000100000002000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -866,7 +866,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 11
-    turn: 15
+    turn: 20
     usecolor: 0200000004000000
     hidesqr: 9dffffff
     tutorialtype: 4
@@ -951,7 +951,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 12
-    turn: 15
+    turn: 20
     usecolor: 00000000010000000200000004000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -1036,7 +1036,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 13
-    turn: 15
+    turn: 20
     usecolor: 0000000001000000
     hidesqr: 2000000021000000220000002300000024000000250000002600000027000000
     tutorialtype: -1
@@ -1121,7 +1121,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 14
-    turn: 15
+    turn: 20
     usecolor: 02000000030000000400000005000000
     hidesqr: 030000000b000000130000001b000000230000002b000000330000003b000000
     tutorialtype: -1
@@ -1206,7 +1206,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 15
-    turn: 15
+    turn: 20
     usecolor: 000000000200000003000000
     hidesqr: 030000000b000000130000001b000000230000002b000000330000003b000000
     tutorialtype: -1
@@ -1291,7 +1291,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 16
-    turn: 10
+    turn: 15
     usecolor: 010000000400000005000000
     hidesqr: 030000000b000000130000001b000000230000002b000000330000003b000000
     tutorialtype: -1
@@ -1376,7 +1376,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 17
-    turn: 10
+    turn: 15
     usecolor: 0000000002000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -1461,7 +1461,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 18
-    turn: 20
+    turn: 25
     usecolor: 000000000100000002000000030000000400000005000000
     hidesqr: 03000000040000000b0000000c000000130000001400000018000000190000001a0000001b0000001c0000001d0000001e0000001f00000020000000210000002200000023000000240000002500000026000000270000002b0000002c00000033000000340000003b0000003c000000
     tutorialtype: -1
@@ -1546,7 +1546,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 19
-    turn: 10
+    turn: 15
     usecolor: 000000000100000002000000030000000400000005000000
     hidesqr: 0000000001000000060000000700000008000000090000000e0000000f0000003000000031000000360000003700000038000000390000003e0000003f000000
     tutorialtype: -1
@@ -1631,7 +1631,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 20
-    turn: 10
+    turn: 15
     usecolor: 0100000005000000
     hidesqr: 090000000a0000000d0000000e00000011000000160000001b0000001c0000002300000024000000290000002e00000031000000320000003500000036000000
     tutorialtype: -1
@@ -1716,7 +1716,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 21
-    turn: 10
+    turn: 12
     usecolor: 000000000200000004000000
     hidesqr: 9dffffff
     tutorialtype: 5
@@ -1801,7 +1801,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 22
-    turn: 10
+    turn: 12
     usecolor: 010000000200000003000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -1886,7 +1886,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 23
-    turn: 10
+    turn: 12
     usecolor: 000000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -1971,7 +1971,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 24
-    turn: 15
+    turn: 17
     usecolor: 010000000200000003000000
     hidesqr: 0e000000150000001c000000230000002a00000031000000
     tutorialtype: -1
@@ -2056,7 +2056,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 25
-    turn: 15
+    turn: 17
     usecolor: 00000000010000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -2141,7 +2141,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 26
-    turn: 10
+    turn: 12
     usecolor: 02000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -2226,7 +2226,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 27
-    turn: 10
+    turn: 12
     usecolor: 000000000100000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -2311,7 +2311,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 28
-    turn: 10
+    turn: 12
     usecolor: 0200000003000000
     hidesqr: 0000000001000000020000000300000004000000050000000600000007000000080000000f0000001000000017000000180000001f0000002000000027000000280000002f000000300000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000
     tutorialtype: -1
@@ -2396,7 +2396,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 29
-    turn: 20
+    turn: 16
     usecolor: 00000000010000000200000004000000
     hidesqr: 00000000010000000600000007000000080000000f000000300000003700000038000000390000003e0000003f000000
     tutorialtype: -1
@@ -2481,7 +2481,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 30
-    turn: 14
+    turn: 17
     usecolor: 0300000005000000
     hidesqr: 00000000010000000600000007000000080000000f000000300000003700000038000000390000003e0000003f000000
     tutorialtype: -1
