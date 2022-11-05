@@ -315,10 +315,15 @@ namespace PuzzleMain
                 {
                     StartCoroutine(SupportItemsMgr.UseItems(pieceObjIndex));
                 }
-                //駒反転フラグ確認
+                //駒反転可能
                 else if (sPieceInfoArr[pieceObjIndex].invertable)
                 {
                     StartCoroutine(PutPieceToSquare(tapObj));
+                }
+                //反転不可
+                else
+                {
+                    SE_OneShot(SE_Type.GimmickTap);
                 }
             }
             //待機駒の場合

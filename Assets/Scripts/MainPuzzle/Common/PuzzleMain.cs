@@ -90,13 +90,10 @@ namespace PuzzleMain
         /// <summary>
         /// パズルモード開始
         /// </summary>
-        void Awake()
+        public void Initialize()
         {
-            //インスタンス生成
-            if (sPuzzleMain == null)
-            {
-                sPuzzleMain = this;
-            }
+            //インスタンス取得
+            sPuzzleMain = this;
 
             //初期化開始
             PuzzuleInitialize();

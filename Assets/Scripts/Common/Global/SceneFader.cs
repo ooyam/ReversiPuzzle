@@ -6,27 +6,21 @@ using ObjectMove;
 
 public class SceneFader : MonoBehaviour
 {
+    [Header("GlobalFilter")]
+    [SerializeField]
+    Image mGlobalFilter;
+
     //シーンフェード速度
     const float FADE_SPEED = 0.2f;
 
-    static Image mFilter;
     static readonly Color32[] mFadeOutColors = new Color32[] { Color.clear, Color.black };
     static readonly Color32[] mFadeInColors  = new Color32[] { Color.black, Color.clear };
     public static SceneFader instance;
 
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            mFilter = transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Initialize() => instance = this;
 
     /// <summary>
     /// フェードでシーン移管
@@ -46,6 +40,7 @@ public class SceneFader : MonoBehaviour
         yield return instance.StartCoroutine(FadeOut());
         SceneManager.LoadScene(_sceneName);
         yield return null;
+        GameManager.SceneInitialize();
         instance.StartCoroutine(SceneChangeFadeIn());
     }
 
@@ -65,7 +60,7 @@ public class SceneFader : MonoBehaviour
     /// <returns></returns>
     public static IEnumerator FadeOut()
     {
-        yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilter, FADE_SPEED, mFadeOutColors));
+        yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(instance.mGlobalFilter, FADE_SPEED, mFadeOutColors));
     }
 
     /// <summary>
@@ -74,6 +69,6 @@ public class SceneFader : MonoBehaviour
     /// <returns></returns>
     static IEnumerator FadeIn()
     {
-        yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(mFilter, FADE_SPEED, mFadeInColors));
+        yield return instance.StartCoroutine(ObjectMove_UI.ImagePaletteChange(instance.mGlobalFilter, FADE_SPEED, mFadeInColors));
     }
 }

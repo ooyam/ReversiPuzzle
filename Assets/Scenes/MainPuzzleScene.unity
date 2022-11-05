@@ -793,41 +793,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &176285564
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 176285565}
-  m_Layer: 5
-  m_Name: TapEffectBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &176285565
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176285564}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 850570568}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &177737193
 GameObject:
   m_ObjectHideFlags: 0
@@ -3577,7 +3542,7 @@ GameObject:
   - component: {fileID: 646406368}
   m_Layer: 0
   m_Name: PuzzleMain
-  m_TagString: Untagged
+  m_TagString: MainObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4256,7 +4221,6 @@ GameObject:
   - component: {fileID: 850570567}
   - component: {fileID: 850570566}
   - component: {fileID: 850570565}
-  - component: {fileID: 850570569}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4341,7 +4305,6 @@ RectTransform:
   - {fileID: 537541406}
   - {fileID: 1490074027}
   - {fileID: 1103986002}
-  - {fileID: 176285565}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4350,20 +4313,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &850570569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 850570564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61a51f3bf194a0a46b471f1b85b6c569, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mEffect: {fileID: 1577101016887382123, guid: e3601e1d8c9c74d4e9575266c6019c98, type: 3}
-  mEffectBox: {fileID: 176285565}
 --- !u!4 &887474359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3875978289479638847, guid: 4fb65e3304ab98c4185587d27a42788d,

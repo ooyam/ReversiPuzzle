@@ -41,22 +41,14 @@ namespace PuzzleMain
         [Header("メッセージウィンドウプレハブ")]
         [SerializeField]
         GameObject mMessageWinPre;
-        const string BUTTON_TEXT_CLOSE = "閉じる";
-        const string BUTTON_TEXT_CANCEL = "キャンセル";
-        readonly Dictionary<string, float> BUTTON_WIDTH = new Dictionary<string, float>()
-        {
-            { BUTTON_TEXT_CLOSE,  350.0f },
-            { BUTTON_TEXT_CANCEL, 450.0f }
-        };
 
         [Header("Resultオブジェクト格納場所")]
         [SerializeField]
         RectTransform mResultTra;
 
-        GameObject mDisplayObj;             //表示中オブジェクト
-        GoogleAdmobReward mAdReward;        //リワード広告クラス
-        Coroutine mAppearanceCor;           //出現アニメーションコルーチン
-        Coroutine mStatusMonitoringAdsCor;  //広告の状態監視コルーチン
+        GameObject mDisplayObj;         //表示中オブジェクト
+        GoogleAdmobReward mAdReward;    //リワード広告クラス
+        Coroutine mAppearanceCor;       //出現アニメーションコルーチン
 
         //==========================================================//
         //------------------------リザルト画面----------------------//
@@ -173,7 +165,30 @@ namespace PuzzleMain
         //------------------------広告表示--------------------------//
         //==========================================================//
 
+        //---共通---//
+
         const float LOADING_MAX_TIME = 30.0f;   //広告読み込み最大時間
+        GameObject mMessageWaitObj;             //待機中オブジェクト
+        Text mMessageMsgText;                   //メッセージテキスト
+
+        /// <summary>
+        /// 読み込み中メッセージ表示
+        /// </summary>
+        void AdLoadingMessageDisplay()
+        {
+            //読み込み中メッセージ表示
+            ObjectDestroy();
+            mDisplayObj = Instantiate(mMessageWinNoBtnPre);
+            StartCoroutine(ObjectAppearance(false));
+            Transform winTra = mDisplayObj.transform.GetChild(0);
+            mMessageMsgText = winTra.GetChild(0).GetComponent<Text>();
+            mMessageMsgText.text = "広告を読み込んでいます\nしばらくお待ちください\n\n";
+
+            //待機中オブジェクト表示
+            mMessageWaitObj = winTra.GetChild(1).gameObject;
+            mMessageWaitObj.SetActive(true);
+        }
+
 
         //---インタースティシャル---//
 
@@ -188,16 +203,7 @@ namespace PuzzleMain
             if (STAGE_NUMBER % SHOW_STAGE_NUM != 0) yield break;
 
             //読み込み中メッセージ表示
-            ObjectDestroy();
-            mDisplayObj = Instantiate(mMessageWinNoBtnPre);
-            StartCoroutine(ObjectAppearance(false));
-            Transform winTra = mDisplayObj.transform.GetChild(0);
-            mMessageMsgText = winTra.GetChild(0).GetComponent<Text>();
-            mMessageMsgText.text = "広告を読み込んでいます\nしばらくお待ちください\n\n";
-
-            //待機中オブジェクト表示
-            GameObject waitObj = winTra.GetChild(1).gameObject;
-            waitObj.SetActive(true);
+            AdLoadingMessageDisplay();
 
             //読み込み開始
             mAdInterstitial.AdInterstitialStart();
@@ -223,7 +229,7 @@ namespace PuzzleMain
 
                         //メッセージ切替
                         mMessageMsgText.text = "広告の取得に失敗しました\nタイトルに戻ります";
-                        waitObj.SetActive(false);
+                        mMessageWaitObj.SetActive(false);
                         yield return MESSAGE_DISPLAY_TIME;
 
                         //処理終了
@@ -250,7 +256,7 @@ namespace PuzzleMain
 
                     //メッセージ表示
                     mMessageMsgText.text = "広告の取得に失敗しました\nタイトルに戻ります";
-                    waitObj.SetActive(false);
+                    mMessageWaitObj.SetActive(false);
                     yield return MESSAGE_DISPLAY_TIME;
 
                     //処理終了
@@ -275,7 +281,6 @@ namespace PuzzleMain
         {
             None,
             Loading,        //読み込み中
-            LoadCancel,     //読み込みキャンセル
             Loaded,         //読み込み完了
             FailedToLoad,   //読み込み失敗
             AdOpen,         //広告表示
@@ -301,15 +306,15 @@ namespace PuzzleMain
             ObjectDestroy();
 
             //読み込み開始表示
-            mRewardState = AdRewardState.Loading;
-            GenerateMessageWindow();
+            AdLoadingMessageDisplay();
 
             //オブジェクト生成
             GameObject obj = Instantiate(mAdRewardPre);
             mAdReward = obj.GetComponent<GoogleAdmobReward>();
 
-            //状態監視
-            mStatusMonitoringAdsCor = StartCoroutine(StatusMonitoringRewardAds());
+            //状態監視開始
+            mRewardState = AdRewardState.Loading;
+            StartCoroutine(StatusMonitoringRewardAds());
         }
 
         /// <summary>
@@ -332,7 +337,6 @@ namespace PuzzleMain
                         break;
 
                     //報酬獲得失敗
-                    case AdRewardState.LoadCancel:      //読み込みキャンセル
                     case AdRewardState.FailedToLoad:    //読み込み失敗
                     case AdRewardState.FailedToOpen:    //広告表示失敗
                         end = true;
@@ -373,7 +377,6 @@ namespace PuzzleMain
         {
             //表示文字列指定
             string msg = "";
-            string btnText = BUTTON_TEXT_CLOSE;
 
             //置く場所がない
             if (GetFlag(PuzzleFlag.Uncontinuable))
@@ -386,15 +389,8 @@ namespace PuzzleMain
                 //リワード広告
                 switch (mRewardState)
                 {
-                    //読み込み中
-                    case AdRewardState.Loading:
-                        msg = "広告を読み込んでいます\nしばらくお待ちください";
-                        btnText = BUTTON_TEXT_CANCEL;
-                        break;
-
-                    //読み込みキャンセル
-                    case AdRewardState.LoadCancel:  //読み込みキャンセル
-                    case AdRewardState.AdClosed:    //報酬獲得せずに広告を閉じた
+                    //報酬獲得せずに広告を閉じた
+                    case AdRewardState.AdClosed:
                         msg = "広告をキャンセルしました";
                         break;
 
@@ -413,11 +409,12 @@ namespace PuzzleMain
                     case AdRewardState.EarnedReward:
                         msg = "5ターン回復しました\nゲームを再開します";
                         break;
+
                 }
             }
 
-            //各メンバ変数の参照が存在する(オブジェクトがある)場合は改め生成しない
-            if (!mMessageMsgText || !mMessageBtnText || !mMessageBtnTra)
+            //待機中オブジェクトがある or メッセージウィンドウが出ていない
+            if (mMessageWaitObj || !mMessageMsgText)
             {
                 //オブジェクト表示
                 ObjectDestroy();
@@ -427,20 +424,11 @@ namespace PuzzleMain
                 //テキスト取得
                 Transform winTra = mDisplayObj.transform.GetChild(0);
                 mMessageMsgText = winTra.GetChild(0).GetComponent<Text>();
-
-                //ボタンテキスト,横幅取得
-                mMessageBtnTra = winTra.GetChild(1).GetComponent<RectTransform>();
-                mMessageBtnText = mMessageBtnTra.GetChild(0).GetChild(2).GetComponent<Text>();
             }
 
             //テキスト反映
             mMessageMsgText.text = msg;
-            mMessageBtnText.text = btnText;
-            mMessageBtnTra.sizeDelta = new Vector2(BUTTON_WIDTH[btnText], mMessageBtnTra.sizeDelta.y);
         }
-        Text mMessageMsgText;           //メッセージテキスト
-        Text mMessageBtnText;           //ボタンテキスト
-        RectTransform mMessageBtnTra;   //ボタンRectTransform
 
         /// <summary>
         /// ゲーム再開
@@ -571,17 +559,6 @@ namespace PuzzleMain
                 //リワード広告
                 switch (mRewardState)
                 {
-                    case AdRewardState.Loading: //読み込み中
-                    case AdRewardState.Loaded:  //読み込み完了
-                        
-                        //広告オブジェクトの破壊
-                        mRewardState = AdRewardState.LoadCancel;
-                        StopCoroutine(mStatusMonitoringAdsCor);
-                        mAdReward.RewardOnDestroy();
-                        GenerateMessageWindow();
-                        break;
-
-                    case AdRewardState.LoadCancel:      //読み込みキャンセル
                     case AdRewardState.FailedToLoad:    //読み込み失敗
                     case AdRewardState.FailedToOpen:    //広告表示失敗
                     case AdRewardState.AdClosed:        //報酬獲得せずに広告を閉じた

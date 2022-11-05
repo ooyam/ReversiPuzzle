@@ -3161,8 +3161,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 38
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 10
+    usecolor: 00000000010000000300000004000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -3170,23 +3170,23 @@ MonoBehaviour:
     tagets_3: 9dffffff
     tagets_4: 9dffffff
     tagets_5: 9dffffff
-    fallgimmicks_1: 9dffffff
+    fallgimmicks_1: 04000000ffffffff0f000000
     fallgimmicks_2: 9dffffff
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
+    setgimmicks_1: 0a00000004000000ffffffff
+    setgimmicks_2: 0c00000004000000ffffffff
+    setgimmicks_3: 1300000004000000ffffffff
+    setgimmicks_4: 1500000004000000ffffffff
+    setgimmicks_5: 1a00000004000000ffffffff
+    setgimmicks_6: 1c00000004000000ffffffff
+    setgimmicks_7: 2300000004000000ffffffff
+    setgimmicks_8: 2500000004000000ffffffff
+    setgimmicks_9: 2a00000004000000ffffffff
+    setgimmicks_10: 2c00000004000000ffffffff
+    setgimmicks_11: 3300000004000000ffffffff
+    setgimmicks_12: 3500000004000000ffffffff
     setgimmicks_13: 9dffffff
     setgimmicks_14: 9dffffff
     setgimmicks_15: 9dffffff
@@ -3246,9 +3246,9 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 39
-    turn: 20
+    turn: 17
     usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    hidesqr: 03000000040000003b0000003c000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
@@ -3260,38 +3260,38 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
-    setgimmicks_25: 9dffffff
-    setgimmicks_26: 9dffffff
-    setgimmicks_27: 9dffffff
-    setgimmicks_28: 9dffffff
-    setgimmicks_29: 9dffffff
-    setgimmicks_30: 9dffffff
-    setgimmicks_31: 9dffffff
-    setgimmicks_32: 9dffffff
+    setgimmicks_1: 0000000003000000ffffffff
+    setgimmicks_2: 0100000003000000ffffffff
+    setgimmicks_3: 0200000003000000ffffffff
+    setgimmicks_4: 3800000003000000ffffffff
+    setgimmicks_5: 3900000003000000ffffffff
+    setgimmicks_6: 3a00000003000000ffffffff
+    setgimmicks_7: 0500000004000000ffffffff
+    setgimmicks_8: 0600000004000000ffffffff
+    setgimmicks_9: 0700000004000000ffffffff
+    setgimmicks_10: 0f00000004000000ffffffff
+    setgimmicks_11: 1700000004000000ffffffff
+    setgimmicks_12: 2f00000004000000ffffffff
+    setgimmicks_13: 3700000004000000ffffffff
+    setgimmicks_14: 3d00000004000000ffffffff
+    setgimmicks_15: 3e00000004000000ffffffff
+    setgimmicks_16: 3f00000004000000ffffffff
+    setgimmicks_17: 120000000100000004000000
+    setgimmicks_18: 140000000100000004000000
+    setgimmicks_19: 1b0000000100000004000000
+    setgimmicks_20: 1d0000000100000004000000
+    setgimmicks_21: 220000000100000004000000
+    setgimmicks_22: 240000000100000004000000
+    setgimmicks_23: 2b0000000100000004000000
+    setgimmicks_24: 2d0000000100000004000000
+    setgimmicks_25: 130000000100000005000000
+    setgimmicks_26: 150000000100000005000000
+    setgimmicks_27: 1a0000000100000005000000
+    setgimmicks_28: 1c0000000100000005000000
+    setgimmicks_29: 230000000100000005000000
+    setgimmicks_30: 250000000100000005000000
+    setgimmicks_31: 2a0000000100000005000000
+    setgimmicks_32: 2c0000000100000005000000
     setgimmicks_33: 9dffffff
     setgimmicks_34: 9dffffff
     setgimmicks_35: 9dffffff
@@ -3331,9 +3331,9 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 40
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    turn: 10
+    usecolor: 020000000400000005000000
+    hidesqr: 03000000040000000b0000000c00000018000000190000001e0000001f0000002000000021000000260000002700000033000000340000003b0000003c000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
@@ -3345,38 +3345,38 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
-    setgimmicks_25: 9dffffff
-    setgimmicks_26: 9dffffff
-    setgimmicks_27: 9dffffff
-    setgimmicks_28: 9dffffff
-    setgimmicks_29: 9dffffff
-    setgimmicks_30: 9dffffff
-    setgimmicks_31: 9dffffff
-    setgimmicks_32: 9dffffff
+    setgimmicks_1: 0000000004000000ffffffff
+    setgimmicks_2: 0100000004000000ffffffff
+    setgimmicks_3: 0600000004000000ffffffff
+    setgimmicks_4: 0700000004000000ffffffff
+    setgimmicks_5: 0800000004000000ffffffff
+    setgimmicks_6: 0900000004000000ffffffff
+    setgimmicks_7: 0e00000004000000ffffffff
+    setgimmicks_8: 0f00000004000000ffffffff
+    setgimmicks_9: 3000000004000000ffffffff
+    setgimmicks_10: 3100000004000000ffffffff
+    setgimmicks_11: 3600000004000000ffffffff
+    setgimmicks_12: 3700000004000000ffffffff
+    setgimmicks_13: 3800000004000000ffffffff
+    setgimmicks_14: 3900000004000000ffffffff
+    setgimmicks_15: 3e00000004000000ffffffff
+    setgimmicks_16: 3f00000004000000ffffffff
+    setgimmicks_17: 120000000200000002000000
+    setgimmicks_18: 130000000200000002000000
+    setgimmicks_19: 140000000200000002000000
+    setgimmicks_20: 150000000200000002000000
+    setgimmicks_21: 1a0000000200000004000000
+    setgimmicks_22: 1d0000000200000004000000
+    setgimmicks_23: 220000000200000004000000
+    setgimmicks_24: 250000000200000004000000
+    setgimmicks_25: 2a0000000200000005000000
+    setgimmicks_26: 2b0000000200000005000000
+    setgimmicks_27: 2c0000000200000005000000
+    setgimmicks_28: 2d0000000200000005000000
+    setgimmicks_29: 1b00000004000000ffffffff
+    setgimmicks_30: 1c00000004000000ffffffff
+    setgimmicks_31: 2300000004000000ffffffff
+    setgimmicks_32: 2400000004000000ffffffff
     setgimmicks_33: 9dffffff
     setgimmicks_34: 9dffffff
     setgimmicks_35: 9dffffff
@@ -3416,7 +3416,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 41
-    turn: 20
+    turn: 8
     usecolor: 000000000100000002000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: 7
@@ -3430,15 +3430,15 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
+    setgimmicks_1: 1200000005000000ffffffff00000000
+    setgimmicks_2: 1a00000005000000ffffffff00000000
+    setgimmicks_3: 2200000005000000ffffffff00000000
+    setgimmicks_4: 1c000000060000000000000001000000
+    setgimmicks_5: 24000000060000000000000001000000
+    setgimmicks_6: 2c000000060000000000000001000000
+    setgimmicks_7: 16000000070000000100000002000000
+    setgimmicks_8: 1e000000070000000100000002000000
+    setgimmicks_9: 26000000070000000100000002000000
     setgimmicks_10: 9dffffff
     setgimmicks_11: 9dffffff
     setgimmicks_12: 9dffffff
@@ -3501,8 +3501,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 42
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 8
+    usecolor: 01000000020000000300000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -3515,28 +3515,28 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
+    setgimmicks_1: 0000000003000000ffffffff
+    setgimmicks_2: 0700000003000000ffffffff
+    setgimmicks_3: 3800000003000000ffffffff
+    setgimmicks_4: 3f00000003000000ffffffff
+    setgimmicks_5: 09000000060000000500000000000000
+    setgimmicks_6: 11000000060000000500000000000000
+    setgimmicks_7: 19000000060000000500000000000000
+    setgimmicks_8: 21000000060000000500000000000000
+    setgimmicks_9: 29000000060000000500000000000000
+    setgimmicks_10: 31000000060000000500000000000000
+    setgimmicks_11: 0b000000060000000300000001000000
+    setgimmicks_12: 13000000060000000300000001000000
+    setgimmicks_13: 1b000000060000000300000001000000
+    setgimmicks_14: 23000000060000000300000001000000
+    setgimmicks_15: 2b000000060000000300000001000000
+    setgimmicks_16: 33000000060000000300000001000000
+    setgimmicks_17: 0d000000060000000200000002000000
+    setgimmicks_18: 15000000060000000200000002000000
+    setgimmicks_19: 1d000000060000000200000002000000
+    setgimmicks_20: 25000000060000000200000002000000
+    setgimmicks_21: 2d000000060000000200000002000000
+    setgimmicks_22: 35000000060000000200000002000000
     setgimmicks_23: 9dffffff
     setgimmicks_24: 9dffffff
     setgimmicks_25: 9dffffff
@@ -3586,28 +3586,28 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 43
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    turn: 6
+    usecolor: 000000000100000002000000
+    hidesqr: 03000000040000000b0000000c00000018000000190000001e0000001f0000002000000021000000260000002700000033000000340000003b0000003c000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
     tagets_3: 9dffffff
     tagets_4: 9dffffff
     tagets_5: 9dffffff
-    fallgimmicks_1: 9dffffff
+    fallgimmicks_1: 00000000ffffffff05000000
     fallgimmicks_2: 9dffffff
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
+    setgimmicks_1: 0900000000000000ffffffff
+    setgimmicks_2: 0e00000000000000ffffffff
+    setgimmicks_3: 3100000000000000ffffffff
+    setgimmicks_4: 3600000000000000ffffffff
+    setgimmicks_5: 1b000000070000000000000000000000
+    setgimmicks_6: 1c000000070000000000000000000000
+    setgimmicks_7: 23000000070000000000000000000000
+    setgimmicks_8: 24000000070000000000000000000000
     setgimmicks_9: 9dffffff
     setgimmicks_10: 9dffffff
     setgimmicks_11: 9dffffff
@@ -3671,8 +3671,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 44
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 10
+    usecolor: 000000000200000004000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -3685,31 +3685,31 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
-    setgimmicks_25: 9dffffff
+    setgimmicks_1: 00000000060000000200000000000000
+    setgimmicks_2: 08000000060000000200000000000000
+    setgimmicks_3: 10000000060000000200000000000000
+    setgimmicks_4: 18000000060000000200000000000000
+    setgimmicks_5: 20000000060000000200000000000000
+    setgimmicks_6: 28000000060000000200000000000000
+    setgimmicks_7: 30000000060000000200000000000000
+    setgimmicks_8: 38000000060000000200000000000000
+    setgimmicks_9: 07000000060000000200000001000000
+    setgimmicks_10: 0f000000060000000200000001000000
+    setgimmicks_11: 17000000060000000200000001000000
+    setgimmicks_12: 1f000000060000000200000001000000
+    setgimmicks_13: 27000000060000000200000001000000
+    setgimmicks_14: 2f000000060000000200000001000000
+    setgimmicks_15: 37000000060000000200000001000000
+    setgimmicks_16: 3f000000060000000200000001000000
+    setgimmicks_17: 090000000200000000000000
+    setgimmicks_18: 0b0000000200000000000000
+    setgimmicks_19: 0d0000000200000000000000
+    setgimmicks_20: 190000000200000000000000
+    setgimmicks_21: 1b0000000200000000000000
+    setgimmicks_22: 1d0000000200000000000000
+    setgimmicks_23: 290000000200000000000000
+    setgimmicks_24: 2b0000000200000000000000
+    setgimmicks_25: 2d0000000200000000000000
     setgimmicks_26: 9dffffff
     setgimmicks_27: 9dffffff
     setgimmicks_28: 9dffffff
@@ -3756,8 +3756,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 45
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 6
+    usecolor: 00000000010000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -3770,20 +3770,20 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
+    setgimmicks_1: 01000000060000000100000000000000
+    setgimmicks_2: 02000000060000000100000000000000
+    setgimmicks_3: 09000000060000000100000000000000
+    setgimmicks_4: 0a000000060000000100000000000000
+    setgimmicks_5: 35000000060000000000000001000000
+    setgimmicks_6: 36000000060000000000000001000000
+    setgimmicks_7: 3d000000060000000000000001000000
+    setgimmicks_8: 3e000000060000000000000001000000
+    setgimmicks_9: 0e00000000000000ffffffff
+    setgimmicks_10: 1500000000000000ffffffff
+    setgimmicks_11: 1c00000000000000ffffffff
+    setgimmicks_12: 2300000000000000ffffffff
+    setgimmicks_13: 2a00000000000000ffffffff
+    setgimmicks_14: 3100000000000000ffffffff
     setgimmicks_15: 9dffffff
     setgimmicks_16: 9dffffff
     setgimmicks_17: 9dffffff
@@ -3841,8 +3841,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 46
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 15
+    usecolor: 00000000020000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -3850,35 +3850,35 @@ MonoBehaviour:
     tagets_3: 9dffffff
     tagets_4: 9dffffff
     tagets_5: 9dffffff
-    fallgimmicks_1: 9dffffff
-    fallgimmicks_2: 9dffffff
+    fallgimmicks_1: 010000000000000005000000
+    fallgimmicks_2: 010000000200000005000000
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
+    setgimmicks_1: 04000000060000000000000000000000
+    setgimmicks_2: 0b000000060000000000000000000000
+    setgimmicks_3: 0c000000060000000000000000000000
+    setgimmicks_4: 0d000000060000000000000000000000
+    setgimmicks_5: 14000000060000000000000000000000
+    setgimmicks_6: 11000000060000000000000001000000
+    setgimmicks_7: 18000000060000000000000001000000
+    setgimmicks_8: 19000000060000000000000001000000
+    setgimmicks_9: 1a000000060000000000000001000000
+    setgimmicks_10: 21000000060000000000000001000000
+    setgimmicks_11: 1e000000060000000400000002000000
+    setgimmicks_12: 25000000060000000400000002000000
+    setgimmicks_13: 26000000060000000400000002000000
+    setgimmicks_14: 27000000060000000400000002000000
+    setgimmicks_15: 2e000000060000000400000002000000
+    setgimmicks_16: 2b000000060000000400000003000000
+    setgimmicks_17: 32000000060000000400000003000000
+    setgimmicks_18: 33000000060000000400000003000000
+    setgimmicks_19: 34000000060000000400000003000000
+    setgimmicks_20: 3b000000060000000400000003000000
+    setgimmicks_21: 0c00000003000000ffffffff
+    setgimmicks_22: 1900000003000000ffffffff
+    setgimmicks_23: 260000000100000002000000
+    setgimmicks_24: 330000000100000000000000
     setgimmicks_25: 9dffffff
     setgimmicks_26: 9dffffff
     setgimmicks_27: 9dffffff
@@ -3926,9 +3926,9 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 47
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    turn: 8
+    usecolor: 0100000003000000
+    hidesqr: 1b0000001c0000002300000024000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
@@ -3940,34 +3940,34 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
-    setgimmicks_25: 9dffffff
-    setgimmicks_26: 9dffffff
-    setgimmicks_27: 9dffffff
-    setgimmicks_28: 9dffffff
+    setgimmicks_1: 02000000060000000100000000000000
+    setgimmicks_2: 03000000060000000100000000000000
+    setgimmicks_3: 04000000060000000100000000000000
+    setgimmicks_4: 05000000060000000100000000000000
+    setgimmicks_5: 0b000000060000000100000000000000
+    setgimmicks_6: 0c000000060000000100000000000000
+    setgimmicks_7: 08000000070000000100000001000000
+    setgimmicks_8: 10000000070000000100000001000000
+    setgimmicks_9: 11000000070000000100000001000000
+    setgimmicks_10: 18000000070000000100000001000000
+    setgimmicks_11: 0f000000070000000300000002000000
+    setgimmicks_12: 16000000070000000300000002000000
+    setgimmicks_13: 17000000070000000300000002000000
+    setgimmicks_14: 1f000000070000000300000002000000
+    setgimmicks_15: 20000000070000000300000003000000
+    setgimmicks_16: 28000000070000000300000003000000
+    setgimmicks_17: 29000000070000000300000003000000
+    setgimmicks_18: 30000000070000000300000003000000
+    setgimmicks_19: 27000000070000000100000004000000
+    setgimmicks_20: 2e000000070000000100000004000000
+    setgimmicks_21: 2f000000070000000100000004000000
+    setgimmicks_22: 37000000070000000100000004000000
+    setgimmicks_23: 33000000060000000300000005000000
+    setgimmicks_24: 34000000060000000300000005000000
+    setgimmicks_25: 3a000000060000000300000005000000
+    setgimmicks_26: 3b000000060000000300000005000000
+    setgimmicks_27: 3c000000060000000300000005000000
+    setgimmicks_28: 3d000000060000000300000005000000
     setgimmicks_29: 9dffffff
     setgimmicks_30: 9dffffff
     setgimmicks_31: 9dffffff
@@ -4011,52 +4011,52 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 48
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    turn: 23
+    usecolor: 000000000400000005000000
+    hidesqr: 03000000040000000b0000000c00000013000000140000001b0000001c00000023000000240000002b0000002c00000033000000340000003b0000003c000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
     tagets_3: 9dffffff
     tagets_4: 9dffffff
     tagets_5: 9dffffff
-    fallgimmicks_1: 9dffffff
-    fallgimmicks_2: 9dffffff
-    fallgimmicks_3: 9dffffff
+    fallgimmicks_1: 01000000000000000a000000
+    fallgimmicks_2: 01000000040000000a000000
+    fallgimmicks_3: 01000000050000000a000000
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
-    setgimmicks_21: 9dffffff
-    setgimmicks_22: 9dffffff
-    setgimmicks_23: 9dffffff
-    setgimmicks_24: 9dffffff
-    setgimmicks_25: 9dffffff
-    setgimmicks_26: 9dffffff
-    setgimmicks_27: 9dffffff
-    setgimmicks_28: 9dffffff
-    setgimmicks_29: 9dffffff
-    setgimmicks_30: 9dffffff
-    setgimmicks_31: 9dffffff
-    setgimmicks_32: 9dffffff
+    setgimmicks_1: 01000000060000000000000000000000
+    setgimmicks_2: 09000000060000000000000000000000
+    setgimmicks_3: 11000000060000000000000000000000
+    setgimmicks_4: 19000000060000000000000000000000
+    setgimmicks_5: 21000000060000000000000000000000
+    setgimmicks_6: 29000000060000000000000000000000
+    setgimmicks_7: 31000000060000000000000000000000
+    setgimmicks_8: 39000000060000000000000000000000
+    setgimmicks_9: 06000000060000000500000001000000
+    setgimmicks_10: 0e000000060000000500000001000000
+    setgimmicks_11: 16000000060000000500000001000000
+    setgimmicks_12: 1e000000060000000500000001000000
+    setgimmicks_13: 26000000060000000500000001000000
+    setgimmicks_14: 2e000000060000000500000001000000
+    setgimmicks_15: 36000000060000000500000001000000
+    setgimmicks_16: 3e000000060000000500000001000000
+    setgimmicks_17: 010000000100000000000000
+    setgimmicks_18: 160000000100000000000000
+    setgimmicks_19: 190000000100000000000000
+    setgimmicks_20: 2e0000000100000000000000
+    setgimmicks_21: 310000000100000000000000
+    setgimmicks_22: 060000000100000004000000
+    setgimmicks_23: 090000000100000004000000
+    setgimmicks_24: 1e0000000100000004000000
+    setgimmicks_25: 210000000100000004000000
+    setgimmicks_26: 360000000100000004000000
+    setgimmicks_27: 390000000100000004000000
+    setgimmicks_28: 0e0000000100000005000000
+    setgimmicks_29: 110000000100000005000000
+    setgimmicks_30: 260000000100000005000000
+    setgimmicks_31: 290000000100000005000000
+    setgimmicks_32: 3e0000000100000005000000
     setgimmicks_33: 9dffffff
     setgimmicks_34: 9dffffff
     setgimmicks_35: 9dffffff
@@ -4096,30 +4096,30 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 49
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
-    hidesqr: 9dffffff
+    turn: 8
+    usecolor: 010000000200000003000000
+    hidesqr: 150000001a0000001c0000001d0000001e000000210000002200000023000000250000002a000000
     tutorialtype: -1
     tagets_1: 9dffffff
     tagets_2: 9dffffff
     tagets_3: 9dffffff
     tagets_4: 9dffffff
     tagets_5: 9dffffff
-    fallgimmicks_1: 9dffffff
+    fallgimmicks_1: 00000000ffffffff0a000000
     fallgimmicks_2: 9dffffff
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
+    setgimmicks_1: 0b000000070000000100000000000000
+    setgimmicks_2: 12000000070000000100000000000000
+    setgimmicks_3: 13000000070000000100000000000000
+    setgimmicks_4: 14000000070000000100000000000000
+    setgimmicks_5: 1b000000070000000100000000000000
+    setgimmicks_6: 24000000070000000300000001000000
+    setgimmicks_7: 2b000000070000000300000001000000
+    setgimmicks_8: 2c000000070000000300000001000000
+    setgimmicks_9: 2d000000070000000300000001000000
+    setgimmicks_10: 34000000070000000300000001000000
     setgimmicks_11: 9dffffff
     setgimmicks_12: 9dffffff
     setgimmicks_13: 9dffffff
@@ -4181,8 +4181,8 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 50
-    turn: 20
-    usecolor: 000000000100000002000000030000000400000005000000
+    turn: 5
+    usecolor: 0000000003000000
     hidesqr: 9dffffff
     tutorialtype: -1
     tagets_1: 9dffffff
@@ -4195,26 +4195,26 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 9dffffff
-    setgimmicks_2: 9dffffff
-    setgimmicks_3: 9dffffff
-    setgimmicks_4: 9dffffff
-    setgimmicks_5: 9dffffff
-    setgimmicks_6: 9dffffff
-    setgimmicks_7: 9dffffff
-    setgimmicks_8: 9dffffff
-    setgimmicks_9: 9dffffff
-    setgimmicks_10: 9dffffff
-    setgimmicks_11: 9dffffff
-    setgimmicks_12: 9dffffff
-    setgimmicks_13: 9dffffff
-    setgimmicks_14: 9dffffff
-    setgimmicks_15: 9dffffff
-    setgimmicks_16: 9dffffff
-    setgimmicks_17: 9dffffff
-    setgimmicks_18: 9dffffff
-    setgimmicks_19: 9dffffff
-    setgimmicks_20: 9dffffff
+    setgimmicks_1: 0900000005000000ffffffff00000000
+    setgimmicks_2: 0a00000005000000ffffffff00000000
+    setgimmicks_3: 0b00000005000000ffffffff00000000
+    setgimmicks_4: 0c00000005000000ffffffff00000000
+    setgimmicks_5: 1100000005000000ffffffff00000000
+    setgimmicks_6: 1200000005000000ffffffff00000000
+    setgimmicks_7: 1300000005000000ffffffff00000000
+    setgimmicks_8: 1900000005000000ffffffff00000000
+    setgimmicks_9: 1a00000005000000ffffffff00000000
+    setgimmicks_10: 2100000005000000ffffffff00000000
+    setgimmicks_11: 1e00000005000000ffffffff01000000
+    setgimmicks_12: 2500000005000000ffffffff01000000
+    setgimmicks_13: 2600000005000000ffffffff01000000
+    setgimmicks_14: 2c00000005000000ffffffff01000000
+    setgimmicks_15: 2d00000005000000ffffffff01000000
+    setgimmicks_16: 2e00000005000000ffffffff01000000
+    setgimmicks_17: 3300000005000000ffffffff01000000
+    setgimmicks_18: 3400000005000000ffffffff01000000
+    setgimmicks_19: 3500000005000000ffffffff01000000
+    setgimmicks_20: 3600000005000000ffffffff01000000
     setgimmicks_21: 9dffffff
     setgimmicks_22: 9dffffff
     setgimmicks_23: 9dffffff
@@ -5031,7 +5031,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 60
-    turn: 25
+    turn: 16
     usecolor: 000000000100000002000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -5045,38 +5045,38 @@ MonoBehaviour:
     fallgimmicks_3: 9dffffff
     fallgimmicks_4: 9dffffff
     fallgimmicks_5: 9dffffff
-    setgimmicks_1: 00000000070000000400000000000000
-    setgimmicks_2: 01000000070000000400000000000000
-    setgimmicks_3: 02000000070000000400000000000000
-    setgimmicks_4: 03000000070000000400000000000000
-    setgimmicks_5: 04000000070000000400000000000000
-    setgimmicks_6: 05000000070000000400000000000000
-    setgimmicks_7: 06000000070000000400000000000000
-    setgimmicks_8: 08000000070000000400000000000000
-    setgimmicks_9: 09000000070000000400000000000000
-    setgimmicks_10: 10000000070000000400000000000000
-    setgimmicks_11: 12000000070000000400000000000000
-    setgimmicks_12: 18000000070000000400000000000000
-    setgimmicks_13: 1b000000070000000400000000000000
-    setgimmicks_14: 20000000070000000400000000000000
-    setgimmicks_15: 28000000070000000400000000000000
-    setgimmicks_16: 30000000070000000400000000000000
-    setgimmicks_17: 0f000000070000000500000001000000
-    setgimmicks_18: 17000000070000000500000001000000
-    setgimmicks_19: 1f000000070000000500000001000000
-    setgimmicks_20: 24000000070000000500000001000000
-    setgimmicks_21: 27000000070000000500000001000000
-    setgimmicks_22: 2d000000070000000500000001000000
-    setgimmicks_23: 2f000000070000000500000001000000
-    setgimmicks_24: 36000000070000000500000001000000
-    setgimmicks_25: 37000000070000000500000001000000
-    setgimmicks_26: 39000000070000000500000001000000
-    setgimmicks_27: 3a000000070000000500000001000000
-    setgimmicks_28: 3b000000070000000500000001000000
-    setgimmicks_29: 3c000000070000000500000001000000
-    setgimmicks_30: 3d000000070000000500000001000000
-    setgimmicks_31: 3e000000070000000500000001000000
-    setgimmicks_32: 3f000000070000000500000001000000
+    setgimmicks_1: 00000000060000000400000000000000
+    setgimmicks_2: 01000000060000000400000000000000
+    setgimmicks_3: 02000000060000000400000000000000
+    setgimmicks_4: 03000000060000000400000000000000
+    setgimmicks_5: 04000000060000000400000000000000
+    setgimmicks_6: 05000000060000000400000000000000
+    setgimmicks_7: 06000000060000000400000000000000
+    setgimmicks_8: 08000000060000000400000000000000
+    setgimmicks_9: 09000000060000000400000000000000
+    setgimmicks_10: 10000000060000000400000000000000
+    setgimmicks_11: 12000000060000000400000000000000
+    setgimmicks_12: 18000000060000000400000000000000
+    setgimmicks_13: 1b000000060000000400000000000000
+    setgimmicks_14: 20000000060000000400000000000000
+    setgimmicks_15: 28000000060000000400000000000000
+    setgimmicks_16: 30000000060000000400000000000000
+    setgimmicks_17: 0f000000060000000500000001000000
+    setgimmicks_18: 17000000060000000500000001000000
+    setgimmicks_19: 1f000000060000000500000001000000
+    setgimmicks_20: 24000000060000000500000001000000
+    setgimmicks_21: 27000000060000000500000001000000
+    setgimmicks_22: 2d000000060000000500000001000000
+    setgimmicks_23: 2f000000060000000500000001000000
+    setgimmicks_24: 36000000060000000500000001000000
+    setgimmicks_25: 37000000060000000500000001000000
+    setgimmicks_26: 39000000060000000500000001000000
+    setgimmicks_27: 3a000000060000000500000001000000
+    setgimmicks_28: 3b000000060000000500000001000000
+    setgimmicks_29: 3c000000060000000500000001000000
+    setgimmicks_30: 3d000000060000000500000001000000
+    setgimmicks_31: 3e000000060000000500000001000000
+    setgimmicks_32: 3f000000060000000500000001000000
     setgimmicks_33: 0000000000000000ffffffff
     setgimmicks_34: 0700000000000000ffffffff
     setgimmicks_35: 1b00000000000000ffffffff
@@ -16336,7 +16336,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 193
-    turn: 19
+    turn: 17
     usecolor: 000000000100000002000000030000000400000005000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -16846,7 +16846,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 199
-    turn: 15
+    turn: 14
     usecolor: 000000000200000003000000
     hidesqr: 9dffffff
     tutorialtype: -1
@@ -16931,7 +16931,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 200
-    turn: 14
+    turn: 15
     usecolor: 0100000004000000
     hidesqr: 9dffffff
     tutorialtype: -1

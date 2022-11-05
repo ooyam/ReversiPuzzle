@@ -9,41 +9,41 @@ public class ScreenTap : MonoBehaviour
     const float RAY_DISTANCE = 10.0f;
     Camera mMainCamera;  //メインカメラ
 
-    //スマホだとなぜかInput.GetMouseButtonUpが効きにくい為代用
-    bool mIsPush = false;
-    bool mIsRelease = false;
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
+    Touch mTouch;
+#endif
 
+    /// <summary>
+    /// 初期化
+    /// </summary>
     public void Initialize()
     {
         mMainCamera = Camera.main;
     }
 
+    /// <summary>
+    /// 更新
+    /// </summary>
     void Update()
     {
-        if (mIsPush)
+        //操作可能
+        if (IsOperable())
         {
-            if (!Input.GetMouseButton(0))
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
+            //画面に触れている
+            if (Input.touchCount > 0)
             {
-                mIsPush = false;
-                mIsRelease = true;
-            }
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            mIsPush = true;
-        }
+                //タップ情報取得
+                mTouch = Input.GetTouch(0);
 
-        //指を離した
-        if (mIsRelease)
-        {
-            //操作可能
-            if (IsOperable())
-            {
-                FlyRay();
+                //タップを離した
+                if (mTouch.phase == TouchPhase.Ended) FlyRay();
             }
-            mIsRelease = false;
+#else
+            //マウスを離した
+            if (Input.GetMouseButtonUp(0)) FlyRay();
+#endif
         }
-
     }
 
     /// <summary>
@@ -51,8 +51,12 @@ public class ScreenTap : MonoBehaviour
     /// </summary>
     void FlyRay()
     {
-        Vector3 mousePos = mMainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Ray ray = new Ray(mousePos, Vector3.forward);
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
+        Vector3 touchPos = mMainCamera.ScreenToWorldPoint(mTouch.position);
+#else
+        Vector3 touchPos = mMainCamera.ScreenToWorldPoint(Input.mousePosition);
+#endif
+        Ray ray = new Ray(touchPos, Vector3.forward);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, RAY_DISTANCE);
         var hitCollider = hit.collider;
         if (hitCollider)

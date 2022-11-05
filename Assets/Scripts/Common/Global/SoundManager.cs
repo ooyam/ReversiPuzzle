@@ -95,50 +95,46 @@ namespace Sound
         static Coroutine mBGM_FadeCor;
 
         static SoundManager instance = null;
-        void Awake()
+
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        public void Initialize()
         {
-            if (instance == null)
+            instance = this;
+
+            //BGM用AudioSourceの取得
+            mBGM_Audio = GetComponent<AudioSource>();
+
+            //SE用AudioSourceの追加
+            mSE_AudioArr = new AudioSource[SE_PLAY_MAX];
+            for (int i = 0; i < SE_PLAY_MAX; i++)
             {
-                instance = this;
-                DontDestroyOnLoad(this.gameObject);
-
-                //BGM用AudioSourceの取得
-                mBGM_Audio = GetComponent<AudioSource>();
-
-                //SE用AudioSourceの追加
-                mSE_AudioArr = new AudioSource[SE_PLAY_MAX];
-                for (int i = 0; i < SE_PLAY_MAX; i++)
-                {
-                    mSE_AudioArr[i] = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
-                }
-
-                //データの取得
-                BGM_Data bgmData = Resources.Load(BGM_DATA_OBJ) as BGM_Data;
-                SE_Data seData = Resources.Load(SE_DATA_OBJ) as SE_Data;
-                BGM_DataData[] bgmDataArr = bgmData.dataArray;
-                SE_DataData[]  seDataArr = seData.dataArray;
-
-                //BGMクリップ,情報取得
-                mBGM_InfoDic = new Dictionary<BGM_Type, BGM_DataData>();
-                mBGM_ClipDic = new Dictionary<BGM_Type, AudioClip>();
-                for (int i = 0; i < bgmDataArr.Length; i++)
-                {
-                    mBGM_InfoDic.Add(bgmDataArr[i].BGM_TYPE, bgmDataArr[i]);
-                    mBGM_ClipDic.Add(bgmDataArr[i].BGM_TYPE, (AudioClip)Resources.Load(BGM_DIR + bgmDataArr[i].Clipname));
-                }
-
-                //SEクリップ,情報取得
-                mSE_InfoDic = new Dictionary<SE_Type, SE_DataData>();
-                mSE_ClipDic = new Dictionary<SE_Type, AudioClip>();
-                for (int i = 0; i < seDataArr.Length; i++)
-                {
-                    mSE_InfoDic.Add(seDataArr[i].SE_TYPE, seDataArr[i]);
-                    mSE_ClipDic.Add(seDataArr[i].SE_TYPE, (AudioClip)Resources.Load(SE_DIR + seDataArr[i].Clipname));
-                }
+                mSE_AudioArr[i] = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
             }
-            else
+
+            //データの取得
+            BGM_Data bgmData = Resources.Load(BGM_DATA_OBJ) as BGM_Data;
+            SE_Data seData   = Resources.Load(SE_DATA_OBJ)  as SE_Data;
+            BGM_DataData[] bgmDataArr = bgmData.dataArray;
+            SE_DataData[]  seDataArr  = seData.dataArray;
+
+            //BGMクリップ,情報取得
+            mBGM_InfoDic = new Dictionary<BGM_Type, BGM_DataData>();
+            mBGM_ClipDic = new Dictionary<BGM_Type, AudioClip>();
+            for (int i = 0; i < bgmDataArr.Length; i++)
             {
-                Destroy(this.gameObject);
+                mBGM_InfoDic.Add(bgmDataArr[i].BGM_TYPE, bgmDataArr[i]);
+                mBGM_ClipDic.Add(bgmDataArr[i].BGM_TYPE, (AudioClip)Resources.Load(BGM_DIR + bgmDataArr[i].Clipname));
+            }
+
+            //SEクリップ,情報取得
+            mSE_InfoDic = new Dictionary<SE_Type, SE_DataData>();
+            mSE_ClipDic = new Dictionary<SE_Type, AudioClip>();
+            for (int i = 0; i < seDataArr.Length; i++)
+            {
+                mSE_InfoDic.Add(seDataArr[i].SE_TYPE, seDataArr[i]);
+                mSE_ClipDic.Add(seDataArr[i].SE_TYPE, (AudioClip)Resources.Load(SE_DIR + seDataArr[i].Clipname));
             }
         }
 

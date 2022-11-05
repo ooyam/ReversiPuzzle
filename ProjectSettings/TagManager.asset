@@ -8,6 +8,7 @@ TagManager:
   - Piece
   - SupportItem
   - Undefined
+  - MainObject
   layers:
   - Default
   - TransparentFX

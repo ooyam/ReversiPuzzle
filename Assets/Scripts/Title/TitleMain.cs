@@ -38,7 +38,7 @@ namespace Title
         /// <summary>
         /// タイトル開始
         /// </summary>
-        void Awake()
+        public void Initialize()
         {
             //セーブデータ読み込み
             SaveDataManager.DataLoad();

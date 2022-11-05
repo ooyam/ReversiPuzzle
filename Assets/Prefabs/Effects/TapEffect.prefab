@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7336156235711829195}
   - component: {fileID: 2395087485272138762}
   - component: {fileID: 5974156949823424013}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Inside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4820,7 +4820,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6388058413027654137}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TapEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4859,7 +4859,7 @@ GameObject:
   - component: {fileID: 8564534872082329518}
   - component: {fileID: 4991792609326219296}
   - component: {fileID: 1981797381993503289}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Outside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
