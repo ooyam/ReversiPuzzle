@@ -16,6 +16,7 @@ public class SceneFader : MonoBehaviour
     static readonly Color32[] mFadeOutColors = new Color32[] { Color.clear, Color.black };
     static readonly Color32[] mFadeInColors  = new Color32[] { Color.black, Color.clear };
     public static SceneFader instance;
+    public static bool IsSceneChanging { get; private set; } = false;  //シーン移管中？
 
     /// <summary>
     /// 初期化
@@ -37,6 +38,8 @@ public class SceneFader : MonoBehaviour
     /// <param name="_sceneName">シーン名</param>
     static IEnumerator SceneChangeFadeOut(string _sceneName)
     {
+        if (IsSceneChanging) yield break;
+        IsSceneChanging = true;
         yield return instance.StartCoroutine(FadeOut());
         SceneManager.LoadScene(_sceneName);
         yield return null;
@@ -52,6 +55,7 @@ public class SceneFader : MonoBehaviour
     {
         yield return instance.StartCoroutine(FadeIn());
         GameManager.SceneChangeEnd();
+        IsSceneChanging = false;
     }
 
     /// <summary>

@@ -332,9 +332,12 @@ namespace Title
         /// <param name="_stageNum"></param>
         void IsPushStageBtn(int _stageNum)
         {
+            //シーン移管中は処理しない
+            if (SceneFader.IsSceneChanging) return;
+
+            //未開放ステージ
             if (ClearStageNum + 1 < _stageNum)
             {
-                //未開放ステージ
                 SE_OneShot(SE_Type.BtnNo);
                 return;
             }
