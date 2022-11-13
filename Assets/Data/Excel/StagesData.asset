@@ -13531,7 +13531,7 @@ MonoBehaviour:
     setgimmicks_69: 9dffffff
     setgimmicks_70: 9dffffff
   - id: 160
-    turn: 6
+    turn: 8
     usecolor: 00000000020000000300000004000000
     hidesqr: 9dffffff
     tutorialtype: -1

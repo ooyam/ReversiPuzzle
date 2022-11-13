@@ -10,32 +10,24 @@ public class GoogleAdmobBanner : MonoBehaviour
 
     public void Start()
     {
-        // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(initStatus => { });
 
-        this.RequestBanner();
+        RequestBanner();
     }
 
-    private void RequestBanner()
+    void RequestBanner()
     {
-        //広告ユニットID
-#if UNITY_ANDROID
-        //string adUnitId = "ca-app-pub-6016270395550592/9969748657"; //本番
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111"; //テスト
-#else
-        string adUnitId = "unexpected_platform";
-#endif
         //バナー作成
-        this.bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
+        bannerView = new BannerView(GoogleAdmobDefine.BANNER_AD_UNIT_ID, AdSize.Banner, AdPosition.Top);
 
         //空のバナーリクエスト作成
         AdRequest request = new AdRequest.Builder().Build();
 
         //バナーを読み込む
-        this.bannerView.LoadAd(request);
+        bannerView.LoadAd(request);
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
         bannerView.Destroy();
     }

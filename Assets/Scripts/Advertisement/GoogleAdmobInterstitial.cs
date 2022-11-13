@@ -49,16 +49,8 @@ public class GoogleAdmobInterstitial : MonoBehaviour
     /// </summary>
     void RequestInterstitial()
     {
-        //広告ユニットID
-#if UNITY_ANDROID
-        //string adUnitId = "ca-app-pub-6016270395550592/3862918575"; //本番
-        string adUnitId = "ca-app-pub-3940256099942544/1033173712"; //テスト
-#else
-        string adUnitId = "unexpected_platform";
-#endif
-
         //InterstitialAdを初期化
-        interstitial = new InterstitialAd(adUnitId);
+        interstitial = new InterstitialAd(GoogleAdmobDefine.INTERSTITIAL_AD_UNIT_ID);
 
         //広告リクエストが正常に読み込まれたとき
         interstitial.OnAdLoaded += HandleOnAdLoaded;

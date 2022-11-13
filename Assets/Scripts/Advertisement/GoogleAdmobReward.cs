@@ -8,16 +8,11 @@ using static PuzzleMain.PuzzleMain;
 public class GoogleAdmobReward : MonoBehaviour
 {
     private RewardedAd rewardedAd = null;
-
-    //広告ユニットID
-    //private const string adId = "ca-app-pub-6016270395550592/1566297415"; //本番
-    private const string adId = "ca-app-pub-3940256099942544/5224354917"; //テスト
     private bool rewardedAdRetry = false;
 
     //初期化
     void Start()
     {
-        // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(initStatus => { });
         LoadRewardAd();
     }
@@ -43,10 +38,6 @@ public class GoogleAdmobReward : MonoBehaviour
             rewardedAd.Show();
             ResultMgr.mRewardState = PuzzleMain.ResultManager.AdRewardState.AdOpen;
         }
-        //else
-        //{
-        //    Debug.Log("not loaded");
-        //}
     }
 
     /// <summary>
@@ -54,14 +45,12 @@ public class GoogleAdmobReward : MonoBehaviour
     /// </summary>
     void LoadRewardAd()
     {
-        // Clean up banner ad before creating a new one.
         if (rewardedAd != null)
         {
             rewardedAd = null;
         }
 
-        rewardedAd = new RewardedAd(adId);
-        // Register for ad events.
+        rewardedAd = new RewardedAd(GoogleAdmobDefine.REWARD_AD_UNIT_ID);
         rewardedAd.OnAdLoaded += HandleRewardAdLoaded;
         rewardedAd.OnAdFailedToLoad += HandleRewardAdFailedToLoad;
         rewardedAd.OnAdOpening += HandleRewardedAdAdOpened;

@@ -590,13 +590,17 @@ namespace PuzzleMain
                 {
                     //ògê∂ê¨
                     bool generate = false;
-                    if (!squareList.Contains(squareIndex - 1))                Generate(frameWidthSprArr,  Directions.Up);       //è„        
-                    if (!squareList.Contains(squareIndex + 1))                Generate(frameWidthSprArr,  Directions.Down);     //â∫        
-                    if (!squareList.Contains(squareIndex - BOARD_LINE_COUNT)) Generate(frameHeightSprArr, Directions.Left);     //ç∂        
-                    if (!squareList.Contains(squareIndex + BOARD_LINE_COUNT)) Generate(frameHeightSprArr, Directions.Right);    //âE
-
+                    Generate(frameWidthSprArr,  Directions.Up);     //è„
+                    Generate(frameWidthSprArr,  Directions.Down);   //â∫
+                    Generate(frameHeightSprArr, Directions.Left);   //ç∂
+                    Generate(frameHeightSprArr, Directions.Right);  //âE
                     void Generate(Sprite[] sprAry, Directions dir)
                     {
+                        //éwíËï˚å¸Ç…ìØÉOÉãÅ[ÉvÇÃògÇ™Ç†ÇÈèÍçáÇÕê∂ê¨ÇµÇ»Ç¢
+                        int sqrIndex = SquaresMgr.GetDesignatedDirectionIndex((int)dir, squareIndex);
+                        if (sqrIndex >= 0 && squareList.Contains(sqrIndex)) return;
+
+                        //ògê∂ê¨
                         GenerateFrame(groupColorNumArr[groupId], squareIndex, sprAry, dir, groupId);
                         generate = true;
                     }
