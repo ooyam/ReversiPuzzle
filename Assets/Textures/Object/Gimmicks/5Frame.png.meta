@@ -72,7 +72,7 @@ TextureImporter:
       213: -6764253080313636567
     second: 5Frame_22
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -93,6 +93,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -131,6 +132,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -182,6 +184,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -688,6 +702,30 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      5Frame_Corner_5: 8105563520457583153
+      5Frame_Height_1: -6410736420833545352
+      5Frame_Width_4: 6330303358413833145
+      5Frame_Width_3: 4331789683812778160
+      5Frame_Corner_0: 8298992965995363818
+      5Frame_Corner_4: -2478225976228696629
+      5Frame_Corner_6: -3228498151692597494
+      5Frame_22: -6764253080313636567
+      5Frame_Height_6: 8679866908141749107
+      5Frame_Height_3: -7981568268312073242
+      5Frame_Corner_3: 2559459226266817593
+      5Frame_Width_6: 4737004004558028305
+      5Frame_21: 231524622665748979
+      5Frame_Height_0: 2026050046903943169
+      5Frame_Height_2: 7529054058486951801
+      5Frame_Height_5: -3395206875920193147
+      5Frame_Width_1: -1059120847671460363
+      5Frame_Width_2: -4980935580504190551
+      5Frame_Height_4: 6988424230340560118
+      5Frame_Width_5: 545860261897712455
+      5Frame_Corner_7: 4477579932311772232
+      5Frame_Width_0: -6259536678415048971
+      5Frame_Corner_1: -4247205190418404607
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
