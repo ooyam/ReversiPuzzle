@@ -92,9 +92,13 @@ namespace PuzzleMain
             ObjectDestroy();
 
             //継続不可能の場合
+#if UNITY_ANDROID
             mDisplayObj = Instantiate(mGameOverPreArr[
                 !GetFlag(PuzzleFlag.Uncontinuable) && !GetFlag(PuzzleFlag.TurnRecovered) ?
                 (int)GameOverObjType.WithRecovery : (int)GameOverObjType.NoRecovery]);
+#else
+            mDisplayObj = Instantiate(mGameOverPreArr[(int)GameOverObjType.NoRecovery]);
+#endif
             yield return StartCoroutine(ObjectAppearance());
         }
 
@@ -200,6 +204,9 @@ namespace PuzzleMain
         /// </summary>
         IEnumerator ShowAdInterstitial()
         {
+#if !UNITY_ANDROID
+            yield break;
+#endif
             if (STAGE_NUMBER % SHOW_STAGE_NUM != 0) yield break;
 
             //読み込み中メッセージ表示

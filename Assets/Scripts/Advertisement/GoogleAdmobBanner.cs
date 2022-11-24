@@ -10,9 +10,11 @@ public class GoogleAdmobBanner : MonoBehaviour
 
     public void Start()
     {
+#if UNITY_ANDROID
         MobileAds.Initialize(initStatus => { });
 
         RequestBanner();
+#endif
     }
 
     void RequestBanner()
